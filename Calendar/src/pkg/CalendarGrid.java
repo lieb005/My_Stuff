@@ -21,17 +21,19 @@ public class CalendarGrid extends JPanel
 		GridLayout gL = new GridLayout (5, 7, 0, 0);
 		setLayout (gL);
 		Calendar c = Calendar.getInstance ();
-		boolean brk = false;
+		Calendar timeTravel = Calendar.getInstance ();
+		boolean brk = false, firstLoop = true;;
 		for (int w = 0; w < 5 && !brk; w++)
 		{
-			for (int d = c.get (Calendar.DAY_OF_MONTH) % 7 - 1; d < 6; d++)
+			for (int d = firstLoop ? c.get (Calendar.DAY_OF_MONTH) % 7 - 1 : 0; d < 7; d++)
 			{
-				if (7 * w + d + 1 >= c
-						.getActualMaximum (Calendar.DAY_OF_MONTH))
+				timeTravel.set (Calendar.WEEK_OF_MONTH, w + 1);
+				if (timeTravel.getActualMaximum (Calendar.DAY_OF_WEEK) <= d && timeTravel.getActualMaximum (Calendar.DAY_OF_WEEK) < 7)
 					brk = true;
 				days[d][w] = new Day (d, 7 * w + d + 1);
 				add (days[d][w]);
 			}
+			firstLoop = false;
 		}
 	}
 
@@ -74,11 +76,11 @@ class Day extends JButton
 	public void paint (Graphics g)
 	{
 		super.paint (g);
-//		int w = g.getClipBounds ().width, h = g.getClipBounds ().height;
-//		g.clearRect (0, 0, w, h);
-//		g.setColor (Color.WHITE);
-//		g.fillRect (0, 0, w, h);
-//		g.setColor (Color.BLACK);
-//		g.drawRect (0, 0, w, h);
+		// int w = g.getClipBounds ().width, h = g.getClipBounds ().height;
+		// g.clearRect (0, 0, w, h);
+		// g.setColor (Color.WHITE);
+		// g.fillRect (0, 0, w, h);
+		// g.setColor (Color.BLACK);
+		// g.drawRect (0, 0, w, h);
 	}
 }
