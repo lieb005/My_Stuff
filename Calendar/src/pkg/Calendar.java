@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JApplet;
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 
 public class Calendar extends JApplet implements ActionListener
 {
@@ -20,11 +21,11 @@ public class Calendar extends JApplet implements ActionListener
 		JFrame f = new JFrame ("Calendar");
 		Calendar c = new Calendar ();
 		f.add (c);
-		c.init();
-		c.start();
+		c.init ();
+		c.start ();
 		f.setVisible (true);
 		c.repaint ();
-		f.setSize (900, 900);
+		f.setSize (500, 500);
 		f.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
 	}
 
@@ -33,10 +34,11 @@ public class Calendar extends JApplet implements ActionListener
 	{
 		super.init ();
 		java.util.Calendar c = java.util.Calendar.getInstance ();
-		System.out.println (java.util.Calendar.SATURDAY);
-		int day = c.get(java.util.Calendar.DAY_OF_WEEK), month = c.get(java.util.Calendar.MONTH), year = c.get(java.util.Calendar.YEAR);
+		int day = c.get (java.util.Calendar.DAY_OF_WEEK), month = c
+				.get (java.util.Calendar.MONTH), year = c
+				.get (java.util.Calendar.YEAR);
 		CalendarGrid cg = new CalendarGrid (day, month, year);
-		add(cg);
+		add (new JScrollPane (cg));
 	}
 
 	@Override
