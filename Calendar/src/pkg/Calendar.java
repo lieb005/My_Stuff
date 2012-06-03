@@ -34,10 +34,9 @@ public class Calendar extends JApplet implements ActionListener
 	{
 		super.init ();
 		java.util.Calendar c = java.util.Calendar.getInstance ();
-		int day = c.get (java.util.Calendar.DAY_OF_WEEK), month = c
-				.get (java.util.Calendar.MONTH), year = c
+		int month = c.get (java.util.Calendar.MONTH), year = c
 				.get (java.util.Calendar.YEAR);
-		CalendarGrid cg = new CalendarGrid (day, month, year);
+		CalendarGrid cg = new CalendarGrid (month, year);
 		add (new JScrollPane (cg));
 	}
 
