@@ -6,6 +6,9 @@ import java.awt.event.ActionListener;
 import javax.swing.JApplet;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class Calendar extends JApplet implements ActionListener
 {
@@ -27,6 +30,31 @@ public class Calendar extends JApplet implements ActionListener
 		c.repaint ();
 		f.setSize (500, 500);
 		f.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
+		try {
+		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		        if ("Nimbus".equals(info.getName())) {
+		            UIManager.setLookAndFeel(info.getClassName());
+		            break;
+		        }
+		    }
+		} catch (Exception e) {
+			try
+			{
+				UIManager.setLookAndFeel (UIManager.getCrossPlatformLookAndFeelClassName ());
+			} catch (ClassNotFoundException e1)
+			{
+				e1.printStackTrace();
+			} catch (InstantiationException e1)
+			{
+				e1.printStackTrace();
+			} catch (IllegalAccessException e1)
+			{
+				e1.printStackTrace();
+			} catch (UnsupportedLookAndFeelException e1)
+			{
+				e1.printStackTrace();
+			}
+		}
 	}
 
 	@Override
