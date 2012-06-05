@@ -8,10 +8,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.MouseInfo;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.BufferedReader;
@@ -21,31 +20,45 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JWindow;
+import javax.swing.JTextArea;
 import javax.swing.event.MouseInputListener;
 
 public class CalendarGrid extends JPanel implements MouseListener
 {
-	public final static boolean	INPUT_MONTH	= false;
-	private GridBagConstraints	constraints	= new GridBagConstraints ();
-	// 7 days a week, 5 weeks long
+	public final static boolean	INPUT_MONTH		= false;
+	String[]					daysOfWeekShort	= {"Sun", "Mon", "Tue", "Wed",
+			"Thu", "Fri", "Sat"					};
+	private GridBagConstraints	constraints		= new GridBagConstraints ();
+	// 7 days a week, 6 weeks long
 	// width x height in squares
-	private Day[][]				days		= new Day[7][6];
+	private Day[][]				days			= new Day[7][6];
 	private int					first, month, year;
-	private JWindow				popup		= new JWindow ();
+	private JFrame				popup			= new JFrame ();
 
 	public CalendarGrid (int month, int year)
 	{
 		this.month = month;
 		this.year = year;
-		GridBagLayout gL = new GridBagLayout ();
-		setLayout (gL);
+		init ();
+		constraints.gridy = 0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		for (int dw = 0; dw < 7; dw++)
+		{
+			constraints.gridx = dw;
+			JLabel dayName = new JLabel (daysOfWeekShort[dw]);
+			dayName.setBackground (Color.WHITE);
+			dayName.setOpaque (true);
+			dayName.setBorder (BorderFactory.createLineBorder (Color.BLACK));
+			add (dayName, constraints);
+		}
 		Calendar timeTravel = Calendar.getInstance ();
 		boolean brk = false;
-		// timeTravel.setTimeInMillis (System.currentTimeMillis ());
 		if (INPUT_MONTH)
 		{
 			try
@@ -63,13 +76,10 @@ public class CalendarGrid extends JPanel implements MouseListener
 		}
 		else
 		{
+			timeTravel.setTimeInMillis (System.currentTimeMillis ());
 			timeTravel.set (Calendar.MONTH, month);
 			timeTravel.set (Calendar.YEAR, year);
 		}
-		System.out.println (timeTravel.get (Calendar.DAY_OF_MONTH));
-		System.out.println (timeTravel.get (Calendar.MONTH) + 1);
-		System.out.println (timeTravel.get (Calendar.YEAR));
-		System.out.println ("\n\n\n\n");
 		timeTravel.set (Calendar.WEEK_OF_MONTH, 1);
 		timeTravel.set (Calendar.DAY_OF_MONTH, 1);
 		first = timeTravel.get (Calendar.DAY_OF_WEEK);
@@ -95,35 +105,24 @@ public class CalendarGrid extends JPanel implements MouseListener
 				constraints.anchor = GridBagConstraints.CENTER;
 				constraints.fill = GridBagConstraints.BOTH;
 				constraints.gridx = d;
-				constraints.gridy = w;
+				constraints.gridy = w + 1;
 				add (days[d][w], constraints);
 				days[d][w].setText (String.valueOf (day));
-				repaint ();
-				days[d][w].tasks.add (new Task (Integer.toString (d + 1)
-						+ " day of " + Integer.toString (w + 1) + " week"));
-				days[d][w].addFocusListener (new FocusAdapter () {
-					@Override
-					public void focusLost (FocusEvent e)
-					{
-						super.focusLost (e);
-						System.out.println ("focus lost day");
-						System.out.println (e.getSource ());
-						hidePopoup ();
-					}
-				});
+				days[d][w].getTasks ().add (
+						new Task (Integer.toString (d) + " day of "
+								+ Integer.toString (w) + " week"));
+				days[d][w].getTasks ().add (
+						new Task ("Test Task with a single line."));
 			}
 		}
-		repaint ();
+
+	}
+
+	private void init ()
+	{
+		setLayout (new GridBagLayout ());
 		addMouseListener (this);
-		addFocusListener (new FocusAdapter () {
-			@Override
-			public void focusLost (FocusEvent e)
-			{
-				super.focusLost (e);
-				System.out.println (e.getSource ());
-				hidePopoup ();
-			}
-		});
+		repaint ();
 	}
 
 	public int getFirstDayOfMonth ()
@@ -136,7 +135,7 @@ public class CalendarGrid extends JPanel implements MouseListener
 		return month;
 	}
 
-	public JWindow getPopup ()
+	public JFrame getPopup ()
 	{
 		return popup;
 	}
@@ -183,22 +182,52 @@ public class CalendarGrid extends JPanel implements MouseListener
 	public void mouseReleased (MouseEvent e)
 	{}
 
-	public void showPopup (Vector<Task> tasks, Point location)
+	public void showPopup (final Day day, Point location)
 	{
 		hidePopoup ();
-		popup = new JWindow ();
+		popup = new JFrame ();
+		popup.setFocusable (true);
 		popup.setAlwaysOnTop (true);
 		popup.setLocation (location);
-		for (int i = 0; i < tasks.size (); i++)
+		if (day == null)
 		{
-			popup.add (new JLabel (tasks.get (i).getTask ()));
+			System.out.println ("Day is Null!");
+			return;
 		}
+		if (day.getTasks () != null)
+		{
+			final JTextArea taskArea = new JTextArea ();
+			for (int i = 0; i < day.getTasks ().size (); i++)
+			{
+				taskArea.append (day.getTasks ().get (i).getTask () + "\n");
+				System.out.println (day.getTasks ().get (i).getTask ());
+			}
+			taskArea.setFocusable (true);
+			taskArea.addFocusListener (new FocusAdapter () {
+				@Override
+				public void focusLost (FocusEvent e)
+				{
+					super.focusLost (e);
+					String[] text = taskArea.getText ().split ("\n");
+					for (int index = 0; index < text.length; index++)
+					{
+						day.tasks.removeAllElements ();
+						day.tasks.add (new Task (text[index]));
+					}
+				}
+			});
+			popup.add (taskArea);
+			System.out.println (day);
+		}
+		else
+			System.out.println ("Null tasks!");
 		popup.setVisible (true);
 		popup.pack ();
+		popup.setDefaultCloseOperation (JFrame.DISPOSE_ON_CLOSE);
 	}
 }
 
-class Day extends JButton implements ActionListener, MouseInputListener
+class Day extends JButton implements MouseInputListener, FocusListener
 {
 	public static final int	NONE	= 0, OVER = 1, DOWN = 2;
 
@@ -210,21 +239,23 @@ class Day extends JButton implements ActionListener, MouseInputListener
 	{
 		this.dayOfWeek = dayOfWeek;
 		this.date = date;
-		addActionListener (this);
 		addMouseListener (this);
+		addFocusListener (this);
 		setPreferredSize (new Dimension (64, 64));
 	}
 
 	@Override
-	public void actionPerformed (ActionEvent e)
+	public void focusLost (FocusEvent e)
 	{
-		// show task bubble/window thing here
-		getParent ().showPopup (tasks,
-				MouseInfo.getPointerInfo ().getLocation ());
-		System.out.println (e.getSource ());
-		if (! (e.getSource () instanceof CalendarGrid && e.getSource () instanceof Day))
-			getParent ().hidePopoup ();
-		repaint ();
+		if (e.getOppositeComponent () instanceof JFrame
+				|| e.getOppositeComponent () instanceof JTextArea)
+			return;
+		getParent ().hidePopoup ();
+	}
+
+	public Vector<Task> getTasks ()
+	{
+		return tasks;
 	}
 
 	public int getDate ()
@@ -334,6 +365,15 @@ class Day extends JButton implements ActionListener, MouseInputListener
 		g.drawChars (String.format ("%2d", date).toCharArray (), 0, 2, 15, 17);
 	}
 
+	@Override
+	public void focusGained (FocusEvent e)
+	{
+		// don't need to call hide because it is run first thing in show
+		getParent ().showPopup (this,
+				MouseInfo.getPointerInfo ().getLocation ());
+		repaint ();
+		getParent ().repaint ();
+	}
 }
 
 class Task
