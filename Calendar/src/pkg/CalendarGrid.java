@@ -8,6 +8,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -38,7 +40,7 @@ public class CalendarGrid extends JPanel implements MouseListener
 	// width x height in squares
 	private Day[][]				days			= new Day[7][6];
 	private int					first, month, year;
-	private JFrame				popup			= new JFrame ();
+	private JFrame2				popup			= new JFrame2 ("Tasks");
 
 	public CalendarGrid (int month, int year)
 	{
@@ -64,6 +66,9 @@ public class CalendarGrid extends JPanel implements MouseListener
 			try
 			{
 				timeTravel.set (Calendar.MONTH, Integer
+						.valueOf (new BufferedReader (new InputStreamReader (
+								System.in)).readLine ()));
+				timeTravel.set (Calendar.YEAR, Integer
 						.valueOf (new BufferedReader (new InputStreamReader (
 								System.in)).readLine ()));
 			} catch (NumberFormatException e)
@@ -171,8 +176,7 @@ public class CalendarGrid extends JPanel implements MouseListener
 	public void mousePressed (MouseEvent e)
 	{
 		if (popup != null)
-			if (! (popup.contains (e.getPoint ()) && this.contains (e
-					.getPoint ())))
+			if (! (popup.contains (e.getPoint ())))
 			{
 				hidePopoup ();
 			}
@@ -185,7 +189,11 @@ public class CalendarGrid extends JPanel implements MouseListener
 	public void showPopup (final Day day, Point location)
 	{
 		hidePopoup ();
-		popup = new JFrame ();
+		if (! (this.hasFocus () || getComponentAt (MouseInfo.getPointerInfo ()
+				.getLocation ().x, MouseInfo.getPointerInfo ().getLocation ().y) instanceof Day) || getComponentAt (MouseInfo.getPointerInfo ()
+						.getLocation ().x, MouseInfo.getPointerInfo ().getLocation ().y) == null)
+			return;
+		popup = new JFrame2 ("Tasks");
 		popup.setFocusable (true);
 		popup.setAlwaysOnTop (true);
 		popup.setLocation (location);
@@ -211,8 +219,14 @@ public class CalendarGrid extends JPanel implements MouseListener
 					String[] text = taskArea.getText ().split ("\n");
 					for (int index = 0; index < text.length; index++)
 					{
-						day.tasks.removeAllElements ();
-						day.tasks.add (new Task (text[index]));
+						if (day.getTasks ().size () <= index)
+						{
+							day.getTasks ().add (new Task (text[index]));
+						}
+						else
+						{
+							day.getTasks ().set (index, new Task (text[index]));
+						}
 					}
 				}
 			});
@@ -227,7 +241,8 @@ public class CalendarGrid extends JPanel implements MouseListener
 	}
 }
 
-class Day extends JButton implements MouseInputListener, FocusListener
+class Day extends JButton implements MouseInputListener, FocusListener,
+		ActionListener
 {
 	public static final int	NONE	= 0, OVER = 1, DOWN = 2;
 
@@ -241,13 +256,14 @@ class Day extends JButton implements MouseInputListener, FocusListener
 		this.date = date;
 		addMouseListener (this);
 		addFocusListener (this);
+		addActionListener (this);
 		setPreferredSize (new Dimension (64, 64));
 	}
 
 	@Override
 	public void focusLost (FocusEvent e)
 	{
-		if (e.getOppositeComponent () instanceof JFrame
+		if (e.getOppositeComponent () instanceof JFrame2
 				|| e.getOppositeComponent () instanceof JTextArea)
 			return;
 		getParent ().hidePopoup ();
@@ -367,8 +383,11 @@ class Day extends JButton implements MouseInputListener, FocusListener
 
 	@Override
 	public void focusGained (FocusEvent e)
-	{
-		// don't need to call hide because it is run first thing in show
+	{}
+
+	@Override
+	public void actionPerformed (ActionEvent e)
+	{ // don't need to call hide because it is run first thing in show
 		getParent ().showPopup (this,
 				MouseInfo.getPointerInfo ().getLocation ());
 		repaint ();
@@ -434,5 +453,14 @@ class Task
 	public void setTask (String s)
 	{
 		task = s;
+	}
+}
+
+class JFrame2 extends JFrame
+{
+
+	public JFrame2 (String string)
+	{
+		super (string);
 	}
 }
