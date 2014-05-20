@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<syncparticipants>
+<participant displayName="Git (Sasquatch-T-shirt-Shooter)" id="org.eclipse.egit.ui.modelCompareParticipant" secondary_id="1381097751876">
+<data forceFetch="false" root="false">
+<org.eclipse.team.ui.MODEL_PARTICIPANT_SETTINGS org.eclipse.team.ui.MODEL_PARTICIPANT_DESCRIPTION="Sasquatch-T-shirt-Shooter" startupAction="none">&#x0A;<org.eclipse.team.ui.MODEL_PARTICIPANT_REFRESH_SCHEDULE org.eclipse.team.ui.CTX_REFRESHSCHEDULE_ENABLED="false" org.eclipse.team.ui.CTX_REFRESHSCHEDULE_INTERVAL="3600" org.eclipse.team.ui.CTX_REFRESHSCHEDULE_RUNONCE="false"/>
+<org.eclipse.team.ui.MODEL_PARTICIPANT_MAPPINGS modelProviderId="org.eclipse.core.resources.modelProvider">&#x0A;<mappings>&#x0A;<resources resourcePath="/Sasquatch-T-shirt-Shooter" resourceType="4"/>
+</mappings>
+</org.eclipse.team.ui.MODEL_PARTICIPANT_MAPPINGS>
+</org.eclipse.team.ui.MODEL_PARTICIPANT_SETTINGS>
+<gitSynchronizeData container="/home/mark/workspace_c/Sasquatch-T-shirt-Shooter" dstRev="refs/heads/master" inludeLocal="true" srcRev="HEAD"/>
+</data>
+</participant>
+</syncparticipants>

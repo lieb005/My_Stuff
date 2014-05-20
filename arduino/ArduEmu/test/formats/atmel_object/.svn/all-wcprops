@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svnroot/adruemu/!svn/ver/59/test/formats/atmel_object
+END
+avr1.asm
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/adruemu/!svn/ver/59/test/formats/atmel_object/avr1.asm
+END
+new_avr.apr
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/adruemu/!svn/ver/22/test/formats/atmel_object/new_avr.apr
+END
+avr1.obj
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/adruemu/!svn/ver/22/test/formats/atmel_object/avr1.obj
+END

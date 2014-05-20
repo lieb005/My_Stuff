@@ -1,0 +1,1258 @@
+GAS LISTING /tmp/ccLd1gL6.s 			page 1
+
+
+   1               		.file	"usb.c"
+   2               	__SP_L__ = 0x3d
+   3               	__SREG__ = 0x3f
+   4               	__tmp_reg__ = 0
+   5               	__zero_reg__ = 1
+   6               		.stabs	"/home/mark/workspace_c/vusbtiny/",100,0,2,.Ltext0
+   7               		.stabs	"usbtiny/usb.c",100,0,2,.Ltext0
+   8               		.text
+   9               	.Ltext0:
+  10               		.stabs	"gcc2_compiled.",60,0,0,0
+  11               		.stabs	"int:t(0,1)=r(0,1);-32768;32767;",128,0,0,0
+  12               		.stabs	"char:t(0,2)=@s8;r(0,2);0;255;",128,0,0,0
+  13               		.stabs	"long int:t(0,3)=@s32;r(0,3);020000000000;017777777777;",128,0,0,0
+  14               		.stabs	"unsigned int:t(0,4)=r(0,4);0;0177777;",128,0,0,0
+  15               		.stabs	"long unsigned int:t(0,5)=@s32;r(0,5);0;037777777777;",128,0,0,0
+  16               		.stabs	"long long int:t(0,6)=@s64;r(0,6);01000000000000000000000;0777777777777777777777;",128,0,0,
+  17               		.stabs	"long long unsigned int:t(0,7)=@s64;r(0,7);0;01777777777777777777777;",128,0,0,0
+  18               		.stabs	"short int:t(0,8)=r(0,8);-32768;32767;",128,0,0,0
+  19               		.stabs	"short unsigned int:t(0,9)=r(0,9);0;0177777;",128,0,0,0
+  20               		.stabs	"signed char:t(0,10)=@s8;r(0,10);-128;127;",128,0,0,0
+  21               		.stabs	"unsigned char:t(0,11)=@s8;r(0,11);0;255;",128,0,0,0
+  22               		.stabs	"float:t(0,12)=r(0,1);4;0;",128,0,0,0
+  23               		.stabs	"double:t(0,13)=r(0,1);4;0;",128,0,0,0
+  24               		.stabs	"long double:t(0,14)=r(0,1);4;0;",128,0,0,0
+  25               		.stabs	"short _Fract:t(0,15)=r(0,1);1;0;",128,0,0,0
+  26               		.stabs	"_Fract:t(0,16)=r(0,1);2;0;",128,0,0,0
+  27               		.stabs	"long _Fract:t(0,17)=r(0,1);4;0;",128,0,0,0
+  28               		.stabs	"long long _Fract:t(0,18)=r(0,1);8;0;",128,0,0,0
+  29               		.stabs	"unsigned short _Fract:t(0,19)=r(0,1);1;0;",128,0,0,0
+  30               		.stabs	"unsigned _Fract:t(0,20)=r(0,1);2;0;",128,0,0,0
+  31               		.stabs	"unsigned long _Fract:t(0,21)=r(0,1);4;0;",128,0,0,0
+  32               		.stabs	"unsigned long long _Fract:t(0,22)=r(0,1);8;0;",128,0,0,0
+  33               		.stabs	"_Sat short _Fract:t(0,23)=r(0,1);1;0;",128,0,0,0
+  34               		.stabs	"_Sat _Fract:t(0,24)=r(0,1);2;0;",128,0,0,0
+  35               		.stabs	"_Sat long _Fract:t(0,25)=r(0,1);4;0;",128,0,0,0
+  36               		.stabs	"_Sat long long _Fract:t(0,26)=r(0,1);8;0;",128,0,0,0
+  37               		.stabs	"_Sat unsigned short _Fract:t(0,27)=r(0,1);1;0;",128,0,0,0
+  38               		.stabs	"_Sat unsigned _Fract:t(0,28)=r(0,1);2;0;",128,0,0,0
+  39               		.stabs	"_Sat unsigned long _Fract:t(0,29)=r(0,1);4;0;",128,0,0,0
+  40               		.stabs	"_Sat unsigned long long _Fract:t(0,30)=r(0,1);8;0;",128,0,0,0
+  41               		.stabs	"short _Accum:t(0,31)=r(0,1);2;0;",128,0,0,0
+  42               		.stabs	"_Accum:t(0,32)=r(0,1);4;0;",128,0,0,0
+  43               		.stabs	"long _Accum:t(0,33)=r(0,1);8;0;",128,0,0,0
+  44               		.stabs	"long long _Accum:t(0,34)=r(0,1);8;0;",128,0,0,0
+  45               		.stabs	"unsigned short _Accum:t(0,35)=r(0,1);2;0;",128,0,0,0
+  46               		.stabs	"unsigned _Accum:t(0,36)=r(0,1);4;0;",128,0,0,0
+  47               		.stabs	"unsigned long _Accum:t(0,37)=r(0,1);8;0;",128,0,0,0
+  48               		.stabs	"unsigned long long _Accum:t(0,38)=r(0,1);8;0;",128,0,0,0
+  49               		.stabs	"_Sat short _Accum:t(0,39)=r(0,1);2;0;",128,0,0,0
+  50               		.stabs	"_Sat _Accum:t(0,40)=r(0,1);4;0;",128,0,0,0
+  51               		.stabs	"_Sat long _Accum:t(0,41)=r(0,1);8;0;",128,0,0,0
+  52               		.stabs	"_Sat long long _Accum:t(0,42)=r(0,1);8;0;",128,0,0,0
+  53               		.stabs	"_Sat unsigned short _Accum:t(0,43)=r(0,1);2;0;",128,0,0,0
+  54               		.stabs	"_Sat unsigned _Accum:t(0,44)=r(0,1);4;0;",128,0,0,0
+  55               		.stabs	"_Sat unsigned long _Accum:t(0,45)=r(0,1);8;0;",128,0,0,0
+  56               		.stabs	"_Sat unsigned long long _Accum:t(0,46)=r(0,1);8;0;",128,0,0,0
+  57               		.stabs	"void:t(0,47)=(0,47)",128,0,0,0
+GAS LISTING /tmp/ccLd1gL6.s 			page 2
+
+
+  58               		.stabs	"/usr/avr/include/avr/pgmspace.h",130,0,0,0
+  59               		.stabs	"/usr/avr/include/inttypes.h",130,0,0,0
+  60               		.stabs	"/usr/lib/gcc/avr/4.8.0/include/stdint.h",130,0,0,0
+  61               		.stabs	"/usr/avr/include/stdint.h",130,0,0,0
+  62               		.stabs	"int8_t:t(4,1)=(0,10)",128,0,121,0
+  63               		.stabs	"uint8_t:t(4,2)=(0,11)",128,0,122,0
+  64               		.stabs	"int16_t:t(4,3)=(0,1)",128,0,123,0
+  65               		.stabs	"uint16_t:t(4,4)=(0,4)",128,0,124,0
+  66               		.stabs	"int32_t:t(4,5)=(0,3)",128,0,125,0
+  67               		.stabs	"uint32_t:t(4,6)=(0,5)",128,0,126,0
+  68               		.stabs	"int64_t:t(4,7)=(0,6)",128,0,128,0
+  69               		.stabs	"uint64_t:t(4,8)=(0,7)",128,0,129,0
+  70               		.stabs	"intptr_t:t(4,9)=(4,3)",128,0,142,0
+  71               		.stabs	"uintptr_t:t(4,10)=(4,4)",128,0,147,0
+  72               		.stabs	"int_least8_t:t(4,11)=(4,1)",128,0,159,0
+  73               		.stabs	"uint_least8_t:t(4,12)=(4,2)",128,0,164,0
+  74               		.stabs	"int_least16_t:t(4,13)=(4,3)",128,0,169,0
+  75               		.stabs	"uint_least16_t:t(4,14)=(4,4)",128,0,174,0
+  76               		.stabs	"int_least32_t:t(4,15)=(4,5)",128,0,179,0
+  77               		.stabs	"uint_least32_t:t(4,16)=(4,6)",128,0,184,0
+  78               		.stabs	"int_least64_t:t(4,17)=(4,7)",128,0,192,0
+  79               		.stabs	"uint_least64_t:t(4,18)=(4,8)",128,0,199,0
+  80               		.stabs	"int_fast8_t:t(4,19)=(4,1)",128,0,213,0
+  81               		.stabs	"uint_fast8_t:t(4,20)=(4,2)",128,0,218,0
+  82               		.stabs	"int_fast16_t:t(4,21)=(4,3)",128,0,223,0
+  83               		.stabs	"uint_fast16_t:t(4,22)=(4,4)",128,0,228,0
+  84               		.stabs	"int_fast32_t:t(4,23)=(4,5)",128,0,233,0
+  85               		.stabs	"uint_fast32_t:t(4,24)=(4,6)",128,0,238,0
+  86               		.stabs	"int_fast64_t:t(4,25)=(4,7)",128,0,246,0
+  87               		.stabs	"uint_fast64_t:t(4,26)=(4,8)",128,0,253,0
+  88               		.stabs	"intmax_t:t(4,27)=(4,7)",128,0,273,0
+  89               		.stabs	"uintmax_t:t(4,28)=(4,8)",128,0,278,0
+  90               		.stabn	162,0,0,0
+  91               		.stabn	162,0,0,0
+  92               		.stabs	"int_farptr_t:t(2,1)=(4,5)",128,0,77,0
+  93               		.stabs	"uint_farptr_t:t(2,2)=(4,6)",128,0,81,0
+  94               		.stabn	162,0,0,0
+  95               		.stabs	"/usr/lib/gcc/avr/4.8.0/include/stddef.h",130,0,0,0
+  96               		.stabs	"size_t:t(5,1)=(0,4)",128,0,212,0
+  97               		.stabn	162,0,0,0
+  98               		.stabs	"/usr/avr/include/avr/io.h",130,0,0,0
+  99               		.stabs	"/usr/avr/include/avr/fuse.h",130,0,0,0
+ 100               		.stabs	"__fuse_t:t(7,1)=(7,2)=s3low:(0,11),0,8;high:(0,11),8,8;extended:(0,11),16,8;;",128,0,244,0
+ 101               		.stabn	162,0,0,0
+ 102               		.stabn	162,0,0,0
+ 103               		.stabn	162,0,0,0
+ 104               		.stabs	"usbtiny/usb.h",130,0,0,0
+ 105               		.stabs	"byte_t:t(8,1)=(0,11)",128,0,13,0
+ 106               		.stabs	"uint_t:t(8,2)=(0,4)",128,0,14,0
+ 107               		.stabn	162,0,0,0
+ 108               		.stabs	" :T(0,48)=@s8;eDESCRIPTOR_TYPE_DEVICE:1,DESCRIPTOR_TYPE_CONFIGURATION:2,DESCRIPTOR_TYPE_ST
+ 109               		.stabs	" :T(0,49)=@s8;eTX_STATE_IDLE:0,TX_STATE_RAM:1,TX_STATE_ROM:2,TX_STATE_CALLBACK:3,;",128,0,
+ 110               		.stabs	"usb_init:F(0,47)",36,0,373,usb_init
+ 111               	.global	usb_init
+ 112               		.type	usb_init, @function
+ 113               	usb_init:
+ 114               		.stabd	46,0,0
+GAS LISTING /tmp/ccLd1gL6.s 			page 3
+
+
+   1:usbtiny/usb.c **** // ======================================================================
+   2:usbtiny/usb.c **** // USB driver
+   3:usbtiny/usb.c **** //
+   4:usbtiny/usb.c **** // Entry points:
+   5:usbtiny/usb.c **** // 	usb_init()	- enable the USB interrupt
+   6:usbtiny/usb.c **** // 	usb_poll()	- poll for incoming packets and process them
+   7:usbtiny/usb.c **** //
+   8:usbtiny/usb.c **** // This code communicates with the interrupt handler through a number of
+   9:usbtiny/usb.c **** // global variables, including two input buffers and one output buffer.
+  10:usbtiny/usb.c **** // Packets are queued for transmission by copying them into the output
+  11:usbtiny/usb.c **** // buffer. The interrupt handler will transmit such a packet on the
+  12:usbtiny/usb.c **** // reception of an IN packet.
+  13:usbtiny/usb.c **** //
+  14:usbtiny/usb.c **** // Standard SETUP packets are handled here. Non-standard SETUP packets
+  15:usbtiny/usb.c **** // are forwarded to the application code by calling usb_setup(). The
+  16:usbtiny/usb.c **** // macros USBTINY_CALLBACK_IN and USBTINY_CALLBACK_OUT control whether
+  17:usbtiny/usb.c **** // the callback functions usb_in() and usb_out() will be called for IN
+  18:usbtiny/usb.c **** // and OUT transfers.
+  19:usbtiny/usb.c **** //
+  20:usbtiny/usb.c **** // Maximum stack usage (gcc 4.1.0 & 4.3.4) of usb_poll(): 5 bytes plus
+  21:usbtiny/usb.c **** // possible additional stack usage in usb_setup(), usb_in() or usb_out().
+  22:usbtiny/usb.c **** //
+  23:usbtiny/usb.c **** // Copyright 2006-2010 Dick Streefland
+  24:usbtiny/usb.c **** //
+  25:usbtiny/usb.c **** // This is free software, licensed under the terms of the GNU General
+  26:usbtiny/usb.c **** // Public License as published by the Free Software Foundation.
+  27:usbtiny/usb.c **** // ======================================================================
+  28:usbtiny/usb.c **** 
+  29:usbtiny/usb.c **** #include <avr/pgmspace.h>
+  30:usbtiny/usb.c **** #include <avr/interrupt.h>
+  31:usbtiny/usb.c **** #include "def.h"
+  32:usbtiny/usb.c **** #include "usb.h"
+  33:usbtiny/usb.c **** 
+  34:usbtiny/usb.c **** #define	LE(word)			(word) & 0xff, (word) >> 8
+  35:usbtiny/usb.c **** 
+  36:usbtiny/usb.c **** // ----------------------------------------------------------------------
+  37:usbtiny/usb.c **** // USB constants
+  38:usbtiny/usb.c **** // ----------------------------------------------------------------------
+  39:usbtiny/usb.c **** 
+  40:usbtiny/usb.c **** enum
+  41:usbtiny/usb.c **** {
+  42:usbtiny/usb.c **** 	DESCRIPTOR_TYPE_DEVICE = 1,
+  43:usbtiny/usb.c **** 	DESCRIPTOR_TYPE_CONFIGURATION,
+  44:usbtiny/usb.c **** 	DESCRIPTOR_TYPE_STRING,
+  45:usbtiny/usb.c **** 	DESCRIPTOR_TYPE_INTERFACE,
+  46:usbtiny/usb.c **** 	DESCRIPTOR_TYPE_ENDPOINT,
+  47:usbtiny/usb.c **** };
+  48:usbtiny/usb.c **** 
+  49:usbtiny/usb.c **** // ----------------------------------------------------------------------
+  50:usbtiny/usb.c **** // Interrupt handler interface
+  51:usbtiny/usb.c **** // ----------------------------------------------------------------------
+  52:usbtiny/usb.c **** 
+  53:usbtiny/usb.c **** byte_t	usb_rx_buf[2*USB_BUFSIZE];	// two input buffers
+  54:usbtiny/usb.c **** byte_t	usb_rx_off;			// buffer offset: 0 or USB_BUFSIZE
+  55:usbtiny/usb.c **** byte_t	usb_rx_len;			// buffer size, 0 means empty
+  56:usbtiny/usb.c **** byte_t	usb_rx_token;			// PID of token packet: SETUP or OUT
+  57:usbtiny/usb.c **** 
+GAS LISTING /tmp/ccLd1gL6.s 			page 4
+
+
+  58:usbtiny/usb.c **** byte_t	usb_tx_buf[USB_BUFSIZE];	// output buffer
+  59:usbtiny/usb.c **** byte_t	usb_tx_len;			// output buffer size, 0 means empty
+  60:usbtiny/usb.c **** 
+  61:usbtiny/usb.c **** byte_t	usb_address;			// assigned device address
+  62:usbtiny/usb.c **** byte_t	usb_new_address;		// new device address
+  63:usbtiny/usb.c **** 
+  64:usbtiny/usb.c **** // ----------------------------------------------------------------------
+  65:usbtiny/usb.c **** // Local data
+  66:usbtiny/usb.c **** // ----------------------------------------------------------------------
+  67:usbtiny/usb.c **** 
+  68:usbtiny/usb.c **** enum
+  69:usbtiny/usb.c **** {
+  70:usbtiny/usb.c **** 	TX_STATE_IDLE = 0,		// transmitter idle
+  71:usbtiny/usb.c **** 	TX_STATE_RAM,			// usb_tx_data is a RAM address
+  72:usbtiny/usb.c **** 	TX_STATE_ROM,			// usb_tx_data is a ROM address
+  73:usbtiny/usb.c **** 	TX_STATE_CALLBACK,		// call usb_in() to obtain transmit data
+  74:usbtiny/usb.c **** };
+  75:usbtiny/usb.c **** 
+  76:usbtiny/usb.c **** static	byte_t	usb_tx_state;		// TX_STATE_*, see enum above
+  77:usbtiny/usb.c **** static	byte_t	usb_tx_total;		// total transmit size
+  78:usbtiny/usb.c **** static	byte_t*	usb_tx_data;		// pointer to data to transmit
+  79:usbtiny/usb.c **** 
+  80:usbtiny/usb.c **** #if	defined USBTINY_VENDOR_NAME
+  81:usbtiny/usb.c **** struct
+  82:usbtiny/usb.c **** {
+  83:usbtiny/usb.c **** 	byte_t	length;
+  84:usbtiny/usb.c **** 	byte_t	type;
+  85:usbtiny/usb.c **** 	int	string[sizeof(USBTINY_VENDOR_NAME)-1];
+  86:usbtiny/usb.c **** }	const string_vendor PROGMEM =
+  87:usbtiny/usb.c **** {
+  88:usbtiny/usb.c **** 	2 * sizeof(USBTINY_VENDOR_NAME),
+  89:usbtiny/usb.c **** 	DESCRIPTOR_TYPE_STRING,
+  90:usbtiny/usb.c **** 	{ CAT2(L, USBTINY_VENDOR_NAME) }
+  91:usbtiny/usb.c **** };
+  92:usbtiny/usb.c **** #  define	VENDOR_NAME_ID	1
+  93:usbtiny/usb.c **** #else
+  94:usbtiny/usb.c **** #  define	VENDOR_NAME_ID	0
+  95:usbtiny/usb.c **** #endif
+  96:usbtiny/usb.c **** 
+  97:usbtiny/usb.c **** #if	defined USBTINY_DEVICE_NAME
+  98:usbtiny/usb.c **** struct
+  99:usbtiny/usb.c **** {
+ 100:usbtiny/usb.c **** 	byte_t	length;
+ 101:usbtiny/usb.c **** 	byte_t	type;
+ 102:usbtiny/usb.c **** 	int	string[sizeof(USBTINY_DEVICE_NAME)-1];
+ 103:usbtiny/usb.c **** }	const string_device PROGMEM =
+ 104:usbtiny/usb.c **** {
+ 105:usbtiny/usb.c **** 	2 * sizeof(USBTINY_DEVICE_NAME),
+ 106:usbtiny/usb.c **** 	DESCRIPTOR_TYPE_STRING,
+ 107:usbtiny/usb.c **** 	{ CAT2(L, USBTINY_DEVICE_NAME) }
+ 108:usbtiny/usb.c **** };
+ 109:usbtiny/usb.c **** #  define	DEVICE_NAME_ID	2
+ 110:usbtiny/usb.c **** #else
+ 111:usbtiny/usb.c **** #  define	DEVICE_NAME_ID	0
+ 112:usbtiny/usb.c **** #endif
+ 113:usbtiny/usb.c **** 
+ 114:usbtiny/usb.c **** #if	defined USBTINY_SERIAL
+GAS LISTING /tmp/ccLd1gL6.s 			page 5
+
+
+ 115:usbtiny/usb.c **** struct
+ 116:usbtiny/usb.c **** {
+ 117:usbtiny/usb.c **** 	byte_t	length;
+ 118:usbtiny/usb.c **** 	byte_t	type;
+ 119:usbtiny/usb.c **** 	int	string[sizeof(USBTINY_SERIAL)-1];
+ 120:usbtiny/usb.c **** }	const string_serial PROGMEM =
+ 121:usbtiny/usb.c **** {
+ 122:usbtiny/usb.c **** 	2 * sizeof(USBTINY_SERIAL),
+ 123:usbtiny/usb.c **** 	DESCRIPTOR_TYPE_STRING,
+ 124:usbtiny/usb.c **** 	{ CAT2(L, USBTINY_SERIAL) }
+ 125:usbtiny/usb.c **** };
+ 126:usbtiny/usb.c **** #  define	SERIAL_ID	3
+ 127:usbtiny/usb.c **** #else
+ 128:usbtiny/usb.c **** #  define	SERIAL_ID	0
+ 129:usbtiny/usb.c **** #endif
+ 130:usbtiny/usb.c **** 
+ 131:usbtiny/usb.c **** #if	VENDOR_NAME_ID || DEVICE_NAME_ID || SERIAL_ID
+ 132:usbtiny/usb.c **** static const byte_t	string_langid [] PROGMEM =
+ 133:usbtiny/usb.c **** {
+ 134:usbtiny/usb.c **** 	4,				// bLength
+ 135:usbtiny/usb.c **** 	DESCRIPTOR_TYPE_STRING,		// bDescriptorType (string)
+ 136:usbtiny/usb.c **** 	LE(0x0409),			// wLANGID[0] (American English)
+ 137:usbtiny/usb.c **** };
+ 138:usbtiny/usb.c **** #endif
+ 139:usbtiny/usb.c **** 
+ 140:usbtiny/usb.c **** // Device Descriptor
+ 141:usbtiny/usb.c **** static	const byte_t	descr_device [18] PROGMEM =
+ 142:usbtiny/usb.c **** {
+ 143:usbtiny/usb.c **** 	18,				// bLength
+ 144:usbtiny/usb.c **** 	DESCRIPTOR_TYPE_DEVICE,		// bDescriptorType
+ 145:usbtiny/usb.c **** 	LE(0x0101),			// bcdUSB
+ 146:usbtiny/usb.c **** 	USBTINY_DEVICE_CLASS,		// bDeviceClass
+ 147:usbtiny/usb.c **** 	USBTINY_DEVICE_SUBCLASS,	// bDeviceSubClass
+ 148:usbtiny/usb.c **** 	USBTINY_DEVICE_PROTOCOL,	// bDeviceProtocol
+ 149:usbtiny/usb.c **** 	8,				// bMaxPacketSize0
+ 150:usbtiny/usb.c **** 	LE(USBTINY_VENDOR_ID),		// idVendor
+ 151:usbtiny/usb.c **** 	LE(USBTINY_DEVICE_ID),		// idProduct
+ 152:usbtiny/usb.c **** 	LE(USBTINY_DEVICE_VERSION),	// bcdDevice
+ 153:usbtiny/usb.c **** 	VENDOR_NAME_ID,			// iManufacturer
+ 154:usbtiny/usb.c **** 	DEVICE_NAME_ID,			// iProduct
+ 155:usbtiny/usb.c **** 	SERIAL_ID,			// iSerialNumber
+ 156:usbtiny/usb.c **** 	1,				// bNumConfigurations
+ 157:usbtiny/usb.c **** };
+ 158:usbtiny/usb.c **** 
+ 159:usbtiny/usb.c **** // Configuration Descriptor
+ 160:usbtiny/usb.c **** static	const byte_t	descr_config [] PROGMEM =
+ 161:usbtiny/usb.c **** {
+ 162:usbtiny/usb.c **** 	9,				// bLength
+ 163:usbtiny/usb.c **** 	DESCRIPTOR_TYPE_CONFIGURATION,	// bDescriptorType
+ 164:usbtiny/usb.c **** 	LE(9+9+7*USBTINY_ENDPOINT),	// wTotalLength
+ 165:usbtiny/usb.c **** 	1,				// bNumInterfaces
+ 166:usbtiny/usb.c **** 	1,				// bConfigurationValue
+ 167:usbtiny/usb.c **** 	0,				// iConfiguration
+ 168:usbtiny/usb.c **** 	(USBTINY_MAX_POWER ? 0x80 : 0xc0), // bmAttributes
+ 169:usbtiny/usb.c **** 	(USBTINY_MAX_POWER + 1) / 2,	// MaxPower
+ 170:usbtiny/usb.c **** 
+ 171:usbtiny/usb.c **** 	// Standard Interface Descriptor
+GAS LISTING /tmp/ccLd1gL6.s 			page 6
+
+
+ 172:usbtiny/usb.c **** 	9,				// bLength
+ 173:usbtiny/usb.c **** 	DESCRIPTOR_TYPE_INTERFACE,	// bDescriptorType
+ 174:usbtiny/usb.c **** 	0,				// bInterfaceNumber
+ 175:usbtiny/usb.c **** 	0,				// bAlternateSetting
+ 176:usbtiny/usb.c **** 	USBTINY_ENDPOINT,		// bNumEndpoints
+ 177:usbtiny/usb.c **** 	USBTINY_INTERFACE_CLASS,	// bInterfaceClass
+ 178:usbtiny/usb.c **** 	USBTINY_INTERFACE_SUBCLASS,	// bInterfaceSubClass
+ 179:usbtiny/usb.c **** 	USBTINY_INTERFACE_PROTOCOL,	// bInterfaceProtocol
+ 180:usbtiny/usb.c **** 	0,				// iInterface
+ 181:usbtiny/usb.c **** 
+ 182:usbtiny/usb.c **** #if	USBTINY_ENDPOINT
+ 183:usbtiny/usb.c **** 	// Additional Endpoint
+ 184:usbtiny/usb.c **** 	7,				// bLength
+ 185:usbtiny/usb.c **** 	DESCRIPTOR_TYPE_ENDPOINT,	// bDescriptorType
+ 186:usbtiny/usb.c **** 	USBTINY_ENDPOINT_ADDRESS,	// bEndpointAddress
+ 187:usbtiny/usb.c **** 	USBTINY_ENDPOINT_TYPE,		// bmAttributes
+ 188:usbtiny/usb.c **** 	LE(8),				// wMaxPacketSize
+ 189:usbtiny/usb.c **** 	USBTINY_ENDPOINT_INTERVAL,	// bInterval
+ 190:usbtiny/usb.c **** #endif
+ 191:usbtiny/usb.c **** };
+ 192:usbtiny/usb.c **** 
+ 193:usbtiny/usb.c **** // ----------------------------------------------------------------------
+ 194:usbtiny/usb.c **** // Inspect an incoming packet.
+ 195:usbtiny/usb.c **** // ----------------------------------------------------------------------
+ 196:usbtiny/usb.c **** static	void	usb_receive ( byte_t* data, byte_t rx_len )
+ 197:usbtiny/usb.c **** {
+ 198:usbtiny/usb.c **** 	byte_t	len;
+ 199:usbtiny/usb.c **** 	byte_t	type;
+ 200:usbtiny/usb.c **** 	byte_t	limit;
+ 201:usbtiny/usb.c **** 
+ 202:usbtiny/usb.c **** 	usb_tx_state = TX_STATE_RAM;
+ 203:usbtiny/usb.c **** 	len = 0;
+ 204:usbtiny/usb.c **** 	if	( usb_rx_token == USB_PID_SETUP )
+ 205:usbtiny/usb.c **** 	{
+ 206:usbtiny/usb.c **** 		limit = data[6];
+ 207:usbtiny/usb.c **** 		if	( data[7] )
+ 208:usbtiny/usb.c **** 		{
+ 209:usbtiny/usb.c **** 			limit = 255;
+ 210:usbtiny/usb.c **** 		}
+ 211:usbtiny/usb.c **** 		type = data[0] & 0x60;
+ 212:usbtiny/usb.c **** 		if	( type == 0x00 )
+ 213:usbtiny/usb.c **** 		{	// Standard request
+ 214:usbtiny/usb.c **** 			if	( data[1] == 0 )	// GET_STATUS
+ 215:usbtiny/usb.c **** 			{
+ 216:usbtiny/usb.c **** 				len = 2;
+ 217:usbtiny/usb.c **** #if	USBTINY_MAX_POWER == 0
+ 218:usbtiny/usb.c **** 				data[0] = (data[0] == 0x80);
+ 219:usbtiny/usb.c **** #else
+ 220:usbtiny/usb.c **** 				data[0] = 0;
+ 221:usbtiny/usb.c **** #endif
+ 222:usbtiny/usb.c **** 				data[1] = 0;
+ 223:usbtiny/usb.c **** 			}
+ 224:usbtiny/usb.c **** 			else if	( data[1] == 5 )	// SET_ADDRESS
+ 225:usbtiny/usb.c **** 			{
+ 226:usbtiny/usb.c **** 				usb_new_address = data[2];
+ 227:usbtiny/usb.c **** #ifdef	USBTINY_USB_OK_LED
+ 228:usbtiny/usb.c **** 				SET(USBTINY_USB_OK_LED);// LED on
+GAS LISTING /tmp/ccLd1gL6.s 			page 7
+
+
+ 229:usbtiny/usb.c **** #endif
+ 230:usbtiny/usb.c **** 			}
+ 231:usbtiny/usb.c **** 			else if	( data[1] == 6 )	// GET_DESCRIPTOR
+ 232:usbtiny/usb.c **** 			{
+ 233:usbtiny/usb.c **** 				usb_tx_state = TX_STATE_ROM;
+ 234:usbtiny/usb.c **** 				if	( data[3] == 1 )
+ 235:usbtiny/usb.c **** 				{	// DEVICE
+ 236:usbtiny/usb.c **** 					data = (byte_t*) &descr_device;
+ 237:usbtiny/usb.c **** 					len = sizeof(descr_device);
+ 238:usbtiny/usb.c **** 				}
+ 239:usbtiny/usb.c **** 				else if	( data[3] == 2 )
+ 240:usbtiny/usb.c **** 				{	// CONFIGURATION
+ 241:usbtiny/usb.c **** 					data = (byte_t*) &descr_config;
+ 242:usbtiny/usb.c **** 					len = sizeof(descr_config);
+ 243:usbtiny/usb.c **** 				}
+ 244:usbtiny/usb.c **** #if	VENDOR_NAME_ID || DEVICE_NAME_ID || SERIAL_ID
+ 245:usbtiny/usb.c **** 				else if	( data[3] == 3 )
+ 246:usbtiny/usb.c **** 				{	// STRING
+ 247:usbtiny/usb.c **** 					if	( data[2] == 0 )
+ 248:usbtiny/usb.c **** 					{
+ 249:usbtiny/usb.c **** 						data = (byte_t*) &string_langid;
+ 250:usbtiny/usb.c **** 						len = sizeof(string_langid);
+ 251:usbtiny/usb.c **** 					}
+ 252:usbtiny/usb.c **** #if	VENDOR_NAME_ID
+ 253:usbtiny/usb.c **** 					else if	( data[2] == VENDOR_NAME_ID )
+ 254:usbtiny/usb.c **** 					{
+ 255:usbtiny/usb.c **** 						data = (byte_t*) &string_vendor;
+ 256:usbtiny/usb.c **** 						len = sizeof(string_vendor);
+ 257:usbtiny/usb.c **** 					}
+ 258:usbtiny/usb.c **** #endif
+ 259:usbtiny/usb.c **** #if	DEVICE_NAME_ID
+ 260:usbtiny/usb.c **** 					else if ( data[2] == DEVICE_NAME_ID )
+ 261:usbtiny/usb.c **** 					{
+ 262:usbtiny/usb.c **** 						data = (byte_t*) &string_device;
+ 263:usbtiny/usb.c **** 						len = sizeof(string_device);
+ 264:usbtiny/usb.c **** 					}
+ 265:usbtiny/usb.c **** #endif
+ 266:usbtiny/usb.c **** #if	SERIAL_ID
+ 267:usbtiny/usb.c **** 					else if ( data[2] == SERIAL_ID )
+ 268:usbtiny/usb.c **** 					{
+ 269:usbtiny/usb.c **** 						data = (byte_t*) &string_serial;
+ 270:usbtiny/usb.c **** 						len = sizeof(string_serial);
+ 271:usbtiny/usb.c **** 					}
+ 272:usbtiny/usb.c **** #endif
+ 273:usbtiny/usb.c **** 				}
+ 274:usbtiny/usb.c **** #endif
+ 275:usbtiny/usb.c **** 			}
+ 276:usbtiny/usb.c **** 			else if	( data[1] == 8 )	// GET_CONFIGURATION
+ 277:usbtiny/usb.c **** 			{
+ 278:usbtiny/usb.c **** 				data[0] = 1;		// return bConfigurationValue
+ 279:usbtiny/usb.c **** 				len = 1;
+ 280:usbtiny/usb.c **** 			}
+ 281:usbtiny/usb.c **** 			else if	( data[1] == 10 )	// GET_INTERFACE
+ 282:usbtiny/usb.c **** 			{
+ 283:usbtiny/usb.c **** 				data[0] = 0;
+ 284:usbtiny/usb.c **** 				len = 1;
+ 285:usbtiny/usb.c **** 			}
+GAS LISTING /tmp/ccLd1gL6.s 			page 8
+
+
+ 286:usbtiny/usb.c **** 		}
+ 287:usbtiny/usb.c **** 		else
+ 288:usbtiny/usb.c **** 		{	// Class or Vendor request
+ 289:usbtiny/usb.c **** 			len = usb_setup( data );
+ 290:usbtiny/usb.c **** #if	USBTINY_CALLBACK_IN
+ 291:usbtiny/usb.c **** 			if	( len == 0xff )
+ 292:usbtiny/usb.c **** 			{
+ 293:usbtiny/usb.c **** 				usb_tx_state = TX_STATE_CALLBACK;
+ 294:usbtiny/usb.c **** 			}
+ 295:usbtiny/usb.c **** #endif
+ 296:usbtiny/usb.c **** 		}
+ 297:usbtiny/usb.c **** 		if	( len > limit )
+ 298:usbtiny/usb.c **** 		{
+ 299:usbtiny/usb.c **** 			len = limit;
+ 300:usbtiny/usb.c **** 		}
+ 301:usbtiny/usb.c **** 		usb_tx_data = data;
+ 302:usbtiny/usb.c **** 	}
+ 303:usbtiny/usb.c **** #if	USBTINY_CALLBACK_OUT
+ 304:usbtiny/usb.c **** 	else if	( rx_len > 0 )
+ 305:usbtiny/usb.c **** 	{	// usb_rx_token == USB_PID_OUT
+ 306:usbtiny/usb.c **** 		usb_out( data, rx_len );
+ 307:usbtiny/usb.c **** 	}
+ 308:usbtiny/usb.c **** #endif
+ 309:usbtiny/usb.c **** 	usb_tx_total  = len;
+ 310:usbtiny/usb.c **** 	usb_tx_buf[0] = USB_PID_DATA0;	// next data packet will be DATA1
+ 311:usbtiny/usb.c **** }
+ 312:usbtiny/usb.c **** 
+ 313:usbtiny/usb.c **** // ----------------------------------------------------------------------
+ 314:usbtiny/usb.c **** // Load the transmit buffer with the next packet.
+ 315:usbtiny/usb.c **** // ----------------------------------------------------------------------
+ 316:usbtiny/usb.c **** static	void	usb_transmit ( void )
+ 317:usbtiny/usb.c **** {
+ 318:usbtiny/usb.c **** 	byte_t	len;
+ 319:usbtiny/usb.c **** 	byte_t*	src;
+ 320:usbtiny/usb.c **** 	byte_t*	dst;
+ 321:usbtiny/usb.c **** 	byte_t	i;
+ 322:usbtiny/usb.c **** 	byte_t	b;
+ 323:usbtiny/usb.c **** 
+ 324:usbtiny/usb.c **** 	usb_tx_buf[0] ^= (USB_PID_DATA0 ^ USB_PID_DATA1);
+ 325:usbtiny/usb.c **** 	len = usb_tx_total;
+ 326:usbtiny/usb.c **** 	if	( len > 8 )
+ 327:usbtiny/usb.c **** 	{
+ 328:usbtiny/usb.c **** 		len = 8;
+ 329:usbtiny/usb.c **** 	}
+ 330:usbtiny/usb.c **** 	dst = usb_tx_buf + 1;
+ 331:usbtiny/usb.c **** 	if	( len > 0 )
+ 332:usbtiny/usb.c **** 	{
+ 333:usbtiny/usb.c **** #if	USBTINY_CALLBACK_IN
+ 334:usbtiny/usb.c **** 		if	( usb_tx_state == TX_STATE_CALLBACK )
+ 335:usbtiny/usb.c **** 		{
+ 336:usbtiny/usb.c **** 			len = usb_in( dst, len );
+ 337:usbtiny/usb.c **** 		}
+ 338:usbtiny/usb.c **** 		else
+ 339:usbtiny/usb.c **** #endif
+ 340:usbtiny/usb.c **** 		{
+ 341:usbtiny/usb.c **** 			src = usb_tx_data;
+ 342:usbtiny/usb.c **** 			if	( usb_tx_state == TX_STATE_RAM )
+GAS LISTING /tmp/ccLd1gL6.s 			page 9
+
+
+ 343:usbtiny/usb.c **** 			{
+ 344:usbtiny/usb.c **** 				for	( i = 0; i < len; i++ )
+ 345:usbtiny/usb.c **** 				{
+ 346:usbtiny/usb.c **** 					*dst++ = *src++;
+ 347:usbtiny/usb.c **** 				}
+ 348:usbtiny/usb.c **** 			}
+ 349:usbtiny/usb.c **** 			else	// usb_tx_state == TX_STATE_ROM
+ 350:usbtiny/usb.c **** 			{
+ 351:usbtiny/usb.c **** 				for	( i = 0; i < len; i++ )
+ 352:usbtiny/usb.c **** 				{
+ 353:usbtiny/usb.c **** 					b = pgm_read_byte( src );
+ 354:usbtiny/usb.c **** 					src++;
+ 355:usbtiny/usb.c **** 					*dst++ = b;
+ 356:usbtiny/usb.c **** 				}
+ 357:usbtiny/usb.c **** 			}
+ 358:usbtiny/usb.c **** 			usb_tx_data = src;
+ 359:usbtiny/usb.c **** 		}
+ 360:usbtiny/usb.c **** 		usb_tx_total -= len;
+ 361:usbtiny/usb.c **** 	}
+ 362:usbtiny/usb.c **** 	crc( usb_tx_buf + 1, len );
+ 363:usbtiny/usb.c **** 	usb_tx_len = len + 3;
+ 364:usbtiny/usb.c **** 	if	( len < 8 )
+ 365:usbtiny/usb.c **** 	{	// this is the last packet
+ 366:usbtiny/usb.c **** 		usb_tx_state = TX_STATE_IDLE;
+ 367:usbtiny/usb.c **** 	}
+ 368:usbtiny/usb.c **** }
+ 369:usbtiny/usb.c **** 
+ 370:usbtiny/usb.c **** // ----------------------------------------------------------------------
+ 371:usbtiny/usb.c **** // Initialize the low-level USB driver.
+ 372:usbtiny/usb.c **** // ----------------------------------------------------------------------
+ 373:usbtiny/usb.c **** extern	void	usb_init ( void )
+ 374:usbtiny/usb.c **** {
+ 115               		.stabn	68,0,374,.LM0-.LFBB1
+ 116               	.LM0:
+ 117               	.LFBB1:
+ 118               	/* prologue: function */
+ 119               	/* frame size = 0 */
+ 120               	/* stack size = 0 */
+ 121               	.L__stack_usage = 0
+ 375:usbtiny/usb.c **** 	USB_INT_CONFIG |= USB_INT_CONFIG_SET;
+ 122               		.stabn	68,0,375,.LM1-.LFBB1
+ 123               	.LM1:
+ 124 0000 85B7      		in r24,0x35
+ 125 0002 8360      		ori r24,lo8(3)
+ 126 0004 85BF      		out 0x35,r24
+ 376:usbtiny/usb.c **** 	USB_INT_ENABLE |= (1 << USB_INT_ENABLE_BIT);
+ 127               		.stabn	68,0,376,.LM2-.LFBB1
+ 128               	.LM2:
+ 129 0006 8BB7      		in r24,0x3b
+ 130 0008 8064      		ori r24,lo8(64)
+ 131 000a 8BBF      		out 0x3b,r24
+ 377:usbtiny/usb.c **** #ifdef	USBTINY_USB_OK_LED
+ 378:usbtiny/usb.c **** 	OUTPUT(USBTINY_USB_OK_LED);
+ 379:usbtiny/usb.c **** #endif
+ 380:usbtiny/usb.c **** #ifdef	USBTINY_DMINUS_PULLUP
+ 381:usbtiny/usb.c **** 	SET(USBTINY_DMINUS_PULLUP);
+ 382:usbtiny/usb.c **** 	OUTPUT(USBTINY_DMINUS_PULLUP);	// enable pullup on D-
+GAS LISTING /tmp/ccLd1gL6.s 			page 10
+
+
+ 383:usbtiny/usb.c **** #endif
+ 384:usbtiny/usb.c **** 	sei();
+ 132               		.stabn	68,0,384,.LM3-.LFBB1
+ 133               	.LM3:
+ 134               	/* #APP */
+ 135               	 ;  384 "usbtiny/usb.c" 1
+ 136 000c 7894      		sei
+ 137               	 ;  0 "" 2
+ 138               	/* #NOAPP */
+ 139 000e 0895      		ret
+ 140               		.size	usb_init, .-usb_init
+ 141               	.Lscope1:
+ 142               		.stabs	"",36,0,0,.Lscope1-.LFBB1
+ 143               		.stabd	78,0,0
+ 144               		.stabs	"usb_poll:F(0,47)",36,0,393,usb_poll
+ 145               	.global	usb_poll
+ 146               		.type	usb_poll, @function
+ 147               	usb_poll:
+ 148               		.stabd	46,0,0
+ 385:usbtiny/usb.c **** }
+ 386:usbtiny/usb.c **** 
+ 387:usbtiny/usb.c **** // ----------------------------------------------------------------------
+ 388:usbtiny/usb.c **** // Poll USB driver:
+ 389:usbtiny/usb.c **** // - check for incoming USB packets
+ 390:usbtiny/usb.c **** // - refill an empty transmit buffer
+ 391:usbtiny/usb.c **** // - check for USB bus reset
+ 392:usbtiny/usb.c **** // ----------------------------------------------------------------------
+ 393:usbtiny/usb.c **** extern	void	usb_poll ( void )
+ 394:usbtiny/usb.c **** {
+ 149               		.stabn	68,0,394,.LM4-.LFBB2
+ 150               	.LM4:
+ 151               	.LFBB2:
+ 152 0010 1F93      		push r17
+ 153 0012 CF93      		push r28
+ 154 0014 DF93      		push r29
+ 155               	/* prologue: function */
+ 156               	/* frame size = 0 */
+ 157               	/* stack size = 3 */
+ 158               	.L__stack_usage = 3
+ 395:usbtiny/usb.c **** 	byte_t	i;
+ 396:usbtiny/usb.c **** 
+ 397:usbtiny/usb.c **** 	// check for incoming USB packets
+ 398:usbtiny/usb.c **** 	if	( usb_rx_len != 0 )
+ 159               		.stabn	68,0,398,.LM5-.LFBB2
+ 160               	.LM5:
+ 161 0016 6091 0000 		lds r22,usb_rx_len
+ 162 001a 6623      		tst r22
+ 163 001c 01F4      		brne .+2
+ 164 001e 00C0      		rjmp .L3
+ 399:usbtiny/usb.c **** 	{
+ 400:usbtiny/usb.c **** 		usb_receive( usb_rx_buf + USB_BUFSIZE - usb_rx_off + 1, usb_rx_len - 3 );
+ 165               		.stabn	68,0,400,.LM6-.LFBB2
+ 166               	.LM6:
+ 167 0020 8091 0000 		lds r24,usb_rx_off
+ 168 0024 CCE0      		ldi r28,lo8(12)
+ 169 0026 D0E0      		ldi r29,0
+ 170 0028 C81B      		sub r28,r24
+GAS LISTING /tmp/ccLd1gL6.s 			page 11
+
+
+ 171 002a D109      		sbc r29,__zero_reg__
+ 172 002c C050      		subi r28,lo8(-(usb_rx_buf))
+ 173 002e D040      		sbci r29,hi8(-(usb_rx_buf))
+ 174               	.LBB7:
+ 175               	.LBB8:
+ 202:usbtiny/usb.c **** 	usb_tx_state = TX_STATE_RAM;
+ 176               		.stabn	68,0,202,.LM7-.LFBB2
+ 177               	.LM7:
+ 178 0030 81E0      		ldi r24,lo8(1)
+ 179 0032 8093 0000 		sts usb_tx_state,r24
+ 204:usbtiny/usb.c **** 	if	( usb_rx_token == USB_PID_SETUP )
+ 180               		.stabn	68,0,204,.LM8-.LFBB2
+ 181               	.LM8:
+ 182 0036 8091 0000 		lds r24,usb_rx_token
+ 183 003a 8D32      		cpi r24,lo8(45)
+ 184 003c 01F0      		breq .+2
+ 185 003e 00C0      		rjmp .L4
+ 206:usbtiny/usb.c **** 		limit = data[6];
+ 186               		.stabn	68,0,206,.LM9-.LFBB2
+ 187               	.LM9:
+ 188 0040 1E81      		ldd r17,Y+6
+ 207:usbtiny/usb.c **** 		if	( data[7] )
+ 189               		.stabn	68,0,207,.LM10-.LFBB2
+ 190               	.LM10:
+ 191 0042 8F81      		ldd r24,Y+7
+ 192 0044 8111      		cpse r24,__zero_reg__
+ 209:usbtiny/usb.c **** 			limit = 255;
+ 193               		.stabn	68,0,209,.LM11-.LFBB2
+ 194               	.LM11:
+ 195 0046 1FEF      		ldi r17,lo8(-1)
+ 196               	.L5:
+ 211:usbtiny/usb.c **** 		type = data[0] & 0x60;
+ 197               		.stabn	68,0,211,.LM12-.LFBB2
+ 198               	.LM12:
+ 199 0048 8881      		ld r24,Y
+ 200 004a 8076      		andi r24,lo8(96)
+ 212:usbtiny/usb.c **** 		if	( type == 0x00 )
+ 201               		.stabn	68,0,212,.LM13-.LFBB2
+ 202               	.LM13:
+ 203 004c 01F4      		brne .L6
+ 214:usbtiny/usb.c **** 			if	( data[1] == 0 )	// GET_STATUS
+ 204               		.stabn	68,0,214,.LM14-.LFBB2
+ 205               	.LM14:
+ 206 004e 8981      		ldd r24,Y+1
+ 207 0050 8111      		cpse r24,__zero_reg__
+ 208 0052 00C0      		rjmp .L7
+ 220:usbtiny/usb.c **** 				data[0] = 0;
+ 209               		.stabn	68,0,220,.LM15-.LFBB2
+ 210               	.LM15:
+ 211 0054 1882      		st Y,__zero_reg__
+ 222:usbtiny/usb.c **** 				data[1] = 0;
+ 212               		.stabn	68,0,222,.LM16-.LFBB2
+ 213               	.LM16:
+ 214 0056 1982      		std Y+1,__zero_reg__
+ 216:usbtiny/usb.c **** 				len = 2;
+ 215               		.stabn	68,0,216,.LM17-.LFBB2
+ 216               	.LM17:
+GAS LISTING /tmp/ccLd1gL6.s 			page 12
+
+
+ 217 0058 82E0      		ldi r24,lo8(2)
+ 218 005a 00C0      		rjmp .L8
+ 219               	.L7:
+ 224:usbtiny/usb.c **** 			else if	( data[1] == 5 )	// SET_ADDRESS
+ 220               		.stabn	68,0,224,.LM18-.LFBB2
+ 221               	.LM18:
+ 222 005c 8530      		cpi r24,lo8(5)
+ 223 005e 01F4      		brne .L9
+ 226:usbtiny/usb.c **** 				usb_new_address = data[2];
+ 224               		.stabn	68,0,226,.LM19-.LFBB2
+ 225               	.LM19:
+ 226 0060 8A81      		ldd r24,Y+2
+ 227 0062 8093 0000 		sts usb_new_address,r24
+ 228 0066 00C0      		rjmp .L10
+ 229               	.L9:
+ 231:usbtiny/usb.c **** 			else if	( data[1] == 6 )	// GET_DESCRIPTOR
+ 230               		.stabn	68,0,231,.LM20-.LFBB2
+ 231               	.LM20:
+ 232 0068 8630      		cpi r24,lo8(6)
+ 233 006a 01F4      		brne .L11
+ 233:usbtiny/usb.c **** 				usb_tx_state = TX_STATE_ROM;
+ 234               		.stabn	68,0,233,.LM21-.LFBB2
+ 235               	.LM21:
+ 236 006c 82E0      		ldi r24,lo8(2)
+ 237 006e 8093 0000 		sts usb_tx_state,r24
+ 234:usbtiny/usb.c **** 				if	( data[3] == 1 )
+ 238               		.stabn	68,0,234,.LM22-.LFBB2
+ 239               	.LM22:
+ 240 0072 8B81      		ldd r24,Y+3
+ 241 0074 8130      		cpi r24,lo8(1)
+ 242 0076 01F0      		breq .L33
+ 239:usbtiny/usb.c **** 				else if	( data[3] == 2 )
+ 243               		.stabn	68,0,239,.LM23-.LFBB2
+ 244               	.LM23:
+ 245 0078 8230      		cpi r24,lo8(2)
+ 246 007a 01F0      		breq .L34
+ 245:usbtiny/usb.c **** 				else if	( data[3] == 3 )
+ 247               		.stabn	68,0,245,.LM24-.LFBB2
+ 248               	.LM24:
+ 249 007c 8330      		cpi r24,lo8(3)
+ 250 007e 01F0      		breq .+2
+ 251 0080 00C0      		rjmp .L10
+ 247:usbtiny/usb.c **** 					if	( data[2] == 0 )
+ 252               		.stabn	68,0,247,.LM25-.LFBB2
+ 253               	.LM25:
+ 254 0082 8A81      		ldd r24,Y+2
+ 255 0084 8823      		tst r24
+ 256 0086 01F0      		breq .L35
+ 260:usbtiny/usb.c **** 					else if ( data[2] == DEVICE_NAME_ID )
+ 257               		.stabn	68,0,260,.LM26-.LFBB2
+ 258               	.LM26:
+ 259 0088 8230      		cpi r24,lo8(2)
+ 260 008a 01F0      		breq .+2
+ 261 008c 00C0      		rjmp .L10
+ 263:usbtiny/usb.c **** 						len = sizeof(string_device);
+ 262               		.stabn	68,0,263,.LM27-.LFBB2
+ 263               	.LM27:
+GAS LISTING /tmp/ccLd1gL6.s 			page 13
+
+
+ 264 008e 86E1      		ldi r24,lo8(22)
+ 262:usbtiny/usb.c **** 						data = (byte_t*) &string_device;
+ 265               		.stabn	68,0,262,.LM28-.LFBB2
+ 266               	.LM28:
+ 267 0090 C0E0      		ldi r28,lo8(string_device)
+ 268 0092 D0E0      		ldi r29,hi8(string_device)
+ 269 0094 00C0      		rjmp .L8
+ 270               	.L11:
+ 276:usbtiny/usb.c **** 			else if	( data[1] == 8 )	// GET_CONFIGURATION
+ 271               		.stabn	68,0,276,.LM29-.LFBB2
+ 272               	.LM29:
+ 273 0096 8830      		cpi r24,lo8(8)
+ 274 0098 01F4      		brne .L13
+ 278:usbtiny/usb.c **** 				data[0] = 1;		// return bConfigurationValue
+ 275               		.stabn	68,0,278,.LM30-.LFBB2
+ 276               	.LM30:
+ 277 009a 81E0      		ldi r24,lo8(1)
+ 278 009c 8883      		st Y,r24
+ 279 009e 00C0      		rjmp .L8
+ 280               	.L13:
+ 281:usbtiny/usb.c **** 			else if	( data[1] == 10 )	// GET_INTERFACE
+ 281               		.stabn	68,0,281,.LM31-.LFBB2
+ 282               	.LM31:
+ 283 00a0 8A30      		cpi r24,lo8(10)
+ 284 00a2 01F0      		breq .+2
+ 285 00a4 00C0      		rjmp .L10
+ 283:usbtiny/usb.c **** 				data[0] = 0;
+ 286               		.stabn	68,0,283,.LM32-.LFBB2
+ 287               	.LM32:
+ 288 00a6 1882      		st Y,__zero_reg__
+ 284:usbtiny/usb.c **** 				len = 1;
+ 289               		.stabn	68,0,284,.LM33-.LFBB2
+ 290               	.LM33:
+ 291 00a8 81E0      		ldi r24,lo8(1)
+ 292 00aa 00C0      		rjmp .L8
+ 293               	.L6:
+ 289:usbtiny/usb.c **** 			len = usb_setup( data );
+ 294               		.stabn	68,0,289,.LM34-.LFBB2
+ 295               	.LM34:
+ 296 00ac CE01      		movw r24,r28
+ 297 00ae 00D0      		rcall usb_setup
+ 291:usbtiny/usb.c **** 			if	( len == 0xff )
+ 298               		.stabn	68,0,291,.LM35-.LFBB2
+ 299               	.LM35:
+ 300 00b0 8F3F      		cpi r24,lo8(-1)
+ 301 00b2 01F4      		brne .L8
+ 293:usbtiny/usb.c **** 				usb_tx_state = TX_STATE_CALLBACK;
+ 302               		.stabn	68,0,293,.LM36-.LFBB2
+ 303               	.LM36:
+ 304 00b4 93E0      		ldi r25,lo8(3)
+ 305 00b6 9093 0000 		sts usb_tx_state,r25
+ 306 00ba 00C0      		rjmp .L8
+ 307               	.L33:
+ 237:usbtiny/usb.c **** 					len = sizeof(descr_device);
+ 308               		.stabn	68,0,237,.LM37-.LFBB2
+ 309               	.LM37:
+ 310 00bc 82E1      		ldi r24,lo8(18)
+GAS LISTING /tmp/ccLd1gL6.s 			page 14
+
+
+ 236:usbtiny/usb.c **** 					data = (byte_t*) &descr_device;
+ 311               		.stabn	68,0,236,.LM38-.LFBB2
+ 312               	.LM38:
+ 313 00be C0E0      		ldi r28,lo8(descr_device)
+ 314 00c0 D0E0      		ldi r29,hi8(descr_device)
+ 315 00c2 00C0      		rjmp .L8
+ 316               	.L34:
+ 242:usbtiny/usb.c **** 					len = sizeof(descr_config);
+ 317               		.stabn	68,0,242,.LM39-.LFBB2
+ 318               	.LM39:
+ 319 00c4 82E1      		ldi r24,lo8(18)
+ 241:usbtiny/usb.c **** 					data = (byte_t*) &descr_config;
+ 320               		.stabn	68,0,241,.LM40-.LFBB2
+ 321               	.LM40:
+ 322 00c6 C0E0      		ldi r28,lo8(descr_config)
+ 323 00c8 D0E0      		ldi r29,hi8(descr_config)
+ 324 00ca 00C0      		rjmp .L8
+ 325               	.L35:
+ 250:usbtiny/usb.c **** 						len = sizeof(string_langid);
+ 326               		.stabn	68,0,250,.LM41-.LFBB2
+ 327               	.LM41:
+ 328 00cc 84E0      		ldi r24,lo8(4)
+ 249:usbtiny/usb.c **** 						data = (byte_t*) &string_langid;
+ 329               		.stabn	68,0,249,.LM42-.LFBB2
+ 330               	.LM42:
+ 331 00ce C0E0      		ldi r28,lo8(string_langid)
+ 332 00d0 D0E0      		ldi r29,hi8(string_langid)
+ 333               	.L8:
+ 297:usbtiny/usb.c **** 		if	( len > limit )
+ 334               		.stabn	68,0,297,.LM43-.LFBB2
+ 335               	.LM43:
+ 336 00d2 1817      		cp r17,r24
+ 337 00d4 00F0      		brlo .L14
+ 338               	.L30:
+ 279:usbtiny/usb.c **** 				len = 1;
+ 339               		.stabn	68,0,279,.LM44-.LFBB2
+ 340               	.LM44:
+ 341 00d6 182F      		mov r17,r24
+ 342               	.L14:
+ 301:usbtiny/usb.c **** 		usb_tx_data = data;
+ 343               		.stabn	68,0,301,.LM45-.LFBB2
+ 344               	.LM45:
+ 345 00d8 D093 0000 		sts usb_tx_data+1,r29
+ 346 00dc C093 0000 		sts usb_tx_data,r28
+ 347 00e0 00C0      		rjmp .L15
+ 348               	.L4:
+ 349               	.LBE8:
+ 350               	.LBE7:
+ 351               		.stabn	68,0,400,.LM46-.LFBB2
+ 352               	.LM46:
+ 353 00e2 6350      		subi r22,lo8(-(-3))
+ 354               	.LBB11:
+ 355               	.LBB9:
+ 304:usbtiny/usb.c **** 	else if	( rx_len > 0 )
+ 356               		.stabn	68,0,304,.LM47-.LFBB2
+ 357               	.LM47:
+ 358 00e4 01F0      		breq .L37
+GAS LISTING /tmp/ccLd1gL6.s 			page 15
+
+
+ 306:usbtiny/usb.c **** 		usb_out( data, rx_len );
+ 359               		.stabn	68,0,306,.LM48-.LFBB2
+ 360               	.LM48:
+ 361 00e6 CE01      		movw r24,r28
+ 362 00e8 00D0      		rcall usb_out
+ 363               	.L37:
+ 203:usbtiny/usb.c **** 	len = 0;
+ 364               		.stabn	68,0,203,.LM49-.LFBB2
+ 365               	.LM49:
+ 366 00ea 10E0      		ldi r17,0
+ 367               	.L15:
+ 309:usbtiny/usb.c **** 	usb_tx_total  = len;
+ 368               		.stabn	68,0,309,.LM50-.LFBB2
+ 369               	.LM50:
+ 370 00ec 1093 0000 		sts usb_tx_total,r17
+ 310:usbtiny/usb.c **** 	usb_tx_buf[0] = USB_PID_DATA0;	// next data packet will be DATA1
+ 371               		.stabn	68,0,310,.LM51-.LFBB2
+ 372               	.LM51:
+ 373 00f0 83EC      		ldi r24,lo8(-61)
+ 374 00f2 8093 0000 		sts usb_tx_buf,r24
+ 375               	.LBE9:
+ 376               	.LBE11:
+ 401:usbtiny/usb.c **** 		usb_tx_len = 0;	// abort pending transmission
+ 377               		.stabn	68,0,401,.LM52-.LFBB2
+ 378               	.LM52:
+ 379 00f6 1092 0000 		sts usb_tx_len,__zero_reg__
+ 402:usbtiny/usb.c **** 		usb_rx_len = 0;	// accept next packet
+ 380               		.stabn	68,0,402,.LM53-.LFBB2
+ 381               	.LM53:
+ 382 00fa 1092 0000 		sts usb_rx_len,__zero_reg__
+ 383               	.L3:
+ 403:usbtiny/usb.c **** 	}
+ 404:usbtiny/usb.c **** 	// refill an empty transmit buffer, when the transmitter is active
+ 405:usbtiny/usb.c **** 	if	( usb_tx_len == 0 && usb_tx_state != TX_STATE_IDLE )
+ 384               		.stabn	68,0,405,.LM54-.LFBB2
+ 385               	.LM54:
+ 386 00fe 8091 0000 		lds r24,usb_tx_len
+ 387 0102 8111      		cpse r24,__zero_reg__
+ 388 0104 00C0      		rjmp .L17
+ 389               		.stabn	68,0,405,.LM55-.LFBB2
+ 390               	.LM55:
+ 391 0106 8091 0000 		lds r24,usb_tx_state
+ 392 010a 8823      		tst r24
+ 393 010c 01F4      		brne .+2
+ 394 010e 00C0      		rjmp .L17
+ 395               	.LBB12:
+ 396               	.LBB13:
+ 324:usbtiny/usb.c **** 	usb_tx_buf[0] ^= (USB_PID_DATA0 ^ USB_PID_DATA1);
+ 397               		.stabn	68,0,324,.LM56-.LFBB2
+ 398               	.LM56:
+ 399 0110 9091 0000 		lds r25,usb_tx_buf
+ 400 0114 28E8      		ldi r18,lo8(-120)
+ 401 0116 9227      		eor r25,r18
+ 402 0118 9093 0000 		sts usb_tx_buf,r25
+ 325:usbtiny/usb.c **** 	len = usb_tx_total;
+ 403               		.stabn	68,0,325,.LM57-.LFBB2
+ 404               	.LM57:
+GAS LISTING /tmp/ccLd1gL6.s 			page 16
+
+
+ 405 011c 1091 0000 		lds r17,usb_tx_total
+ 326:usbtiny/usb.c **** 	if	( len > 8 )
+ 406               		.stabn	68,0,326,.LM58-.LFBB2
+ 407               	.LM58:
+ 408 0120 1930      		cpi r17,lo8(9)
+ 409 0122 00F4      		brsh .L38
+ 331:usbtiny/usb.c **** 	if	( len > 0 )
+ 410               		.stabn	68,0,331,.LM59-.LFBB2
+ 411               	.LM59:
+ 412 0124 1123      		tst r17
+ 413 0126 01F0      		breq .L20
+ 414 0128 00C0      		rjmp .L19
+ 415               	.L38:
+ 328:usbtiny/usb.c **** 		len = 8;
+ 416               		.stabn	68,0,328,.LM60-.LFBB2
+ 417               	.LM60:
+ 418 012a 18E0      		ldi r17,lo8(8)
+ 419               	.L19:
+ 334:usbtiny/usb.c **** 		if	( usb_tx_state == TX_STATE_CALLBACK )
+ 420               		.stabn	68,0,334,.LM61-.LFBB2
+ 421               	.LM61:
+ 422 012c 8330      		cpi r24,lo8(3)
+ 423 012e 01F4      		brne .L21
+ 336:usbtiny/usb.c **** 			len = usb_in( dst, len );
+ 424               		.stabn	68,0,336,.LM62-.LFBB2
+ 425               	.LM62:
+ 426 0130 612F      		mov r22,r17
+ 427 0132 80E0      		ldi r24,lo8(usb_tx_buf+1)
+ 428 0134 90E0      		ldi r25,hi8(usb_tx_buf+1)
+ 429 0136 00D0      		rcall usb_in
+ 430 0138 182F      		mov r17,r24
+ 431 013a 00C0      		rjmp .L22
+ 432               	.L21:
+ 341:usbtiny/usb.c **** 			src = usb_tx_data;
+ 433               		.stabn	68,0,341,.LM63-.LFBB2
+ 434               	.LM63:
+ 435 013c E091 0000 		lds r30,usb_tx_data
+ 436 0140 F091 0000 		lds r31,usb_tx_data+1
+ 342:usbtiny/usb.c **** 			if	( usb_tx_state == TX_STATE_RAM )
+ 437               		.stabn	68,0,342,.LM64-.LFBB2
+ 438               	.LM64:
+ 439 0144 8130      		cpi r24,lo8(1)
+ 440 0146 01F4      		brne .L23
+ 441 0148 DF01      		movw r26,r30
+ 442 014a 40E0      		ldi r20,lo8(usb_tx_buf+1)
+ 443 014c 50E0      		ldi r21,hi8(usb_tx_buf+1)
+ 444 014e EA01      		movw r28,r20
+ 445               	.L25:
+ 446 0150 9D01      		movw r18,r26
+ 447 0152 2F5F      		subi r18,-1
+ 448 0154 3F4F      		sbci r19,-1
+ 449 0156 F901      		movw r30,r18
+ 346:usbtiny/usb.c **** 					*dst++ = *src++;
+ 450               		.stabn	68,0,346,.LM65-.LFBB2
+ 451               	.LM65:
+ 452 0158 8C91      		ld r24,X
+ 453 015a 8993      		st Y+,r24
+GAS LISTING /tmp/ccLd1gL6.s 			page 17
+
+
+ 454 015c 8C2F      		mov r24,r28
+ 455 015e 841B      		sub r24,r20
+ 344:usbtiny/usb.c **** 				for	( i = 0; i < len; i++ )
+ 456               		.stabn	68,0,344,.LM66-.LFBB2
+ 457               	.LM66:
+ 458 0160 8117      		cp r24,r17
+ 459 0162 00F4      		brsh .L24
+ 460 0164 D901      		movw r26,r18
+ 461 0166 00C0      		rjmp .L25
+ 462               	.L23:
+ 463 0168 20E0      		ldi r18,lo8(usb_tx_buf+1)
+ 464 016a 30E0      		ldi r19,hi8(usb_tx_buf+1)
+ 342:usbtiny/usb.c **** 			if	( usb_tx_state == TX_STATE_RAM )
+ 465               		.stabn	68,0,342,.LM67-.LFBB2
+ 466               	.LM67:
+ 467 016c D901      		movw r26,r18
+ 468               	.L26:
+ 469               	.LBB14:
+ 353:usbtiny/usb.c **** 					b = pgm_read_byte( src );
+ 470               		.stabn	68,0,353,.LM68-.LFBB2
+ 471               	.LM68:
+ 472               	/* #APP */
+ 473               	 ;  353 "usbtiny/usb.c" 1
+ 474 016e 8491      		lpm r24, Z
+ 475               		
+ 476               	 ;  0 "" 2
+ 477               	/* #NOAPP */
+ 478               	.LBE14:
+ 355:usbtiny/usb.c **** 					*dst++ = b;
+ 479               		.stabn	68,0,355,.LM69-.LFBB2
+ 480               	.LM69:
+ 481 0170 8D93      		st X+,r24
+ 482 0172 3196      		adiw r30,1
+ 483 0174 8A2F      		mov r24,r26
+ 484 0176 821B      		sub r24,r18
+ 351:usbtiny/usb.c **** 				for	( i = 0; i < len; i++ )
+ 485               		.stabn	68,0,351,.LM70-.LFBB2
+ 486               	.LM70:
+ 487 0178 8117      		cp r24,r17
+ 488 017a 00F0      		brlo .L26
+ 489               	.L24:
+ 358:usbtiny/usb.c **** 			usb_tx_data = src;
+ 490               		.stabn	68,0,358,.LM71-.LFBB2
+ 491               	.LM71:
+ 492 017c F093 0000 		sts usb_tx_data+1,r31
+ 493 0180 E093 0000 		sts usb_tx_data,r30
+ 494               	.L22:
+ 360:usbtiny/usb.c **** 		usb_tx_total -= len;
+ 495               		.stabn	68,0,360,.LM72-.LFBB2
+ 496               	.LM72:
+ 497 0184 8091 0000 		lds r24,usb_tx_total
+ 498 0188 811B      		sub r24,r17
+ 499 018a 8093 0000 		sts usb_tx_total,r24
+ 500               	.L20:
+ 362:usbtiny/usb.c **** 	crc( usb_tx_buf + 1, len );
+ 501               		.stabn	68,0,362,.LM73-.LFBB2
+ 502               	.LM73:
+GAS LISTING /tmp/ccLd1gL6.s 			page 18
+
+
+ 503 018e 612F      		mov r22,r17
+ 504 0190 80E0      		ldi r24,lo8(usb_tx_buf+1)
+ 505 0192 90E0      		ldi r25,hi8(usb_tx_buf+1)
+ 506 0194 00D0      		rcall crc
+ 363:usbtiny/usb.c **** 	usb_tx_len = len + 3;
+ 507               		.stabn	68,0,363,.LM74-.LFBB2
+ 508               	.LM74:
+ 509 0196 83E0      		ldi r24,lo8(3)
+ 510 0198 810F      		add r24,r17
+ 511 019a 8093 0000 		sts usb_tx_len,r24
+ 364:usbtiny/usb.c **** 	if	( len < 8 )
+ 512               		.stabn	68,0,364,.LM75-.LFBB2
+ 513               	.LM75:
+ 514 019e 1830      		cpi r17,lo8(8)
+ 515 01a0 00F4      		brsh .L17
+ 366:usbtiny/usb.c **** 		usb_tx_state = TX_STATE_IDLE;
+ 516               		.stabn	68,0,366,.LM76-.LFBB2
+ 517               	.LM76:
+ 518 01a2 1092 0000 		sts usb_tx_state,__zero_reg__
+ 519               	.L17:
+ 342:usbtiny/usb.c **** 			if	( usb_tx_state == TX_STATE_RAM )
+ 520               		.stabn	68,0,342,.LM77-.LFBB2
+ 521               	.LM77:
+ 522 01a6 8AE0      		ldi r24,lo8(10)
+ 523               	.L27:
+ 524               	.LBE13:
+ 525               	.LBE12:
+ 406:usbtiny/usb.c **** 	{
+ 407:usbtiny/usb.c **** 		usb_transmit();
+ 408:usbtiny/usb.c **** 	}
+ 409:usbtiny/usb.c **** 	// check for USB bus reset
+ 410:usbtiny/usb.c **** 	for	( i = 10; i > 0 && ! (USB_IN & USB_MASK_DMINUS); i-- )
+ 526               		.stabn	68,0,410,.LM78-.LFBB2
+ 527               	.LM78:
+ 528 01a8 B499      		sbic 0x16,4
+ 529 01aa 00C0      		rjmp .L2
+ 530 01ac 8150      		subi r24,lo8(-(-1))
+ 531               		.stabn	68,0,410,.LM79-.LFBB2
+ 532               	.LM79:
+ 533 01ae 01F4      		brne .L27
+ 411:usbtiny/usb.c **** 	{
+ 412:usbtiny/usb.c **** 	}
+ 413:usbtiny/usb.c **** 	if	( i == 0 )
+ 414:usbtiny/usb.c **** 	{	// SE0 for more than 2.5uS is a reset
+ 415:usbtiny/usb.c **** 		usb_new_address = 0;
+ 534               		.stabn	68,0,415,.LM80-.LFBB2
+ 535               	.LM80:
+ 536 01b0 1092 0000 		sts usb_new_address,__zero_reg__
+ 416:usbtiny/usb.c **** 		usb_address = 0;
+ 537               		.stabn	68,0,416,.LM81-.LFBB2
+ 538               	.LM81:
+ 539 01b4 1092 0000 		sts usb_address,__zero_reg__
+ 540 01b8 00C0      		rjmp .L2
+ 541               	.L10:
+ 542               	.LBB15:
+ 543               	.LBB10:
+ 279:usbtiny/usb.c **** 				len = 1;
+GAS LISTING /tmp/ccLd1gL6.s 			page 19
+
+
+ 544               		.stabn	68,0,279,.LM82-.LFBB2
+ 545               	.LM82:
+ 546 01ba 80E0      		ldi r24,0
+ 547 01bc 00C0      		rjmp .L30
+ 548               	.L2:
+ 549               	/* epilogue start */
+ 550               	.LBE10:
+ 551               	.LBE15:
+ 417:usbtiny/usb.c **** #ifdef	USBTINY_USB_OK_LED
+ 418:usbtiny/usb.c **** 		CLR(USBTINY_USB_OK_LED);	// LED off
+ 419:usbtiny/usb.c **** #endif
+ 420:usbtiny/usb.c **** 	}
+ 421:usbtiny/usb.c **** }
+ 552               		.stabn	68,0,421,.LM83-.LFBB2
+ 553               	.LM83:
+ 554 01be DF91      		pop r29
+ 555 01c0 CF91      		pop r28
+ 556 01c2 1F91      		pop r17
+ 557 01c4 0895      		ret
+ 558               		.size	usb_poll, .-usb_poll
+ 559               		.stabs	"data:r(0,50)=*(8,1)",64,0,393,28
+ 560               		.stabn	192,0,0,.LBB7-.LFBB2
+ 561               		.stabn	224,0,0,.LBE7-.LFBB2
+ 562               		.stabs	"data:r(0,50)",64,0,393,28
+ 563               		.stabn	192,0,0,.LBB11-.LFBB2
+ 564               		.stabn	224,0,0,.LBE11-.LFBB2
+ 565               		.stabs	"len:r(8,1)",64,0,318,17
+ 566               		.stabs	"src:r(0,50)",64,0,319,30
+ 567               		.stabn	192,0,0,.LBB13-.LFBB2
+ 568               		.stabn	224,0,0,.LBE13-.LFBB2
+ 569               		.stabs	"data:r(0,50)",64,0,393,28
+ 570               		.stabn	192,0,0,.LBB15-.LFBB2
+ 571               		.stabn	224,0,0,.LBE15-.LFBB2
+ 572               	.Lscope2:
+ 573               		.stabs	"",36,0,0,.Lscope2-.LFBB2
+ 574               		.stabd	78,0,0
+ 575               		.section	.progmem.data,"a",@progbits
+ 576               		.type	descr_config, @object
+ 577               		.size	descr_config, 18
+ 578               	descr_config:
+ 579 0000 09        		.byte	9
+ 580 0001 02        		.byte	2
+ 581 0002 12        		.byte	18
+ 582 0003 00        		.byte	0
+ 583 0004 01        		.byte	1
+ 584 0005 01        		.byte	1
+ 585 0006 00        		.byte	0
+ 586 0007 80        		.byte	-128
+ 587 0008 32        		.byte	50
+ 588 0009 09        		.byte	9
+ 589 000a 04        		.byte	4
+ 590 000b 00        		.byte	0
+ 591 000c 00        		.byte	0
+ 592 000d 00        		.byte	0
+ 593 000e FF        		.byte	-1
+ 594 000f 00        		.byte	0
+ 595 0010 00        		.byte	0
+GAS LISTING /tmp/ccLd1gL6.s 			page 20
+
+
+ 596 0011 00        		.byte	0
+ 597               		.type	descr_device, @object
+ 598               		.size	descr_device, 18
+ 599               	descr_device:
+ 600 0012 12        		.byte	18
+ 601 0013 01        		.byte	1
+ 602 0014 01        		.byte	1
+ 603 0015 01        		.byte	1
+ 604 0016 FF        		.byte	-1
+ 605 0017 00        		.byte	0
+ 606 0018 00        		.byte	0
+ 607 0019 08        		.byte	8
+ 608 001a 81        		.byte	-127
+ 609 001b 17        		.byte	23
+ 610 001c 9F        		.byte	-97
+ 611 001d 0C        		.byte	12
+ 612 001e 06        		.byte	6
+ 613 001f 01        		.byte	1
+ 614 0020 00        		.byte	0
+ 615 0021 02        		.byte	2
+ 616 0022 00        		.byte	0
+ 617 0023 01        		.byte	1
+ 618               		.type	string_langid, @object
+ 619               		.size	string_langid, 4
+ 620               	string_langid:
+ 621 0024 04        		.byte	4
+ 622 0025 03        		.byte	3
+ 623 0026 09        		.byte	9
+ 624 0027 04        		.byte	4
+ 625               	.global	string_device
+ 626               		.type	string_device, @object
+ 627               		.size	string_device, 22
+ 628               	string_device:
+ 629 0028 16        		.byte	22
+ 630 0029 03        		.byte	3
+ 631 002a 5500      		.string	"U"
+ 632 002c 5300      		.string	"S"
+ 633 002e 4200      		.string	"B"
+ 634 0030 7400      		.string	"t"
+ 635 0032 6900      		.string	"i"
+ 636 0034 6E00      		.string	"n"
+ 637 0036 7900      		.string	"y"
+ 638 0038 4900      		.string	"I"
+ 639 003a 5300      		.string	"S"
+ 640 003c 5000      		.string	"P"
+ 641               		.local	usb_tx_data
+ 642               		.comm	usb_tx_data,2,1
+ 643               		.local	usb_tx_total
+ 644               		.comm	usb_tx_total,1,1
+ 645               		.local	usb_tx_state
+ 646               		.comm	usb_tx_state,1,1
+ 647               		.comm	usb_new_address,1,1
+ 648               		.comm	usb_address,1,1
+ 649               		.comm	usb_tx_len,1,1
+ 650               		.comm	usb_tx_buf,11,1
+ 651               		.comm	usb_rx_token,1,1
+ 652               		.comm	usb_rx_len,1,1
+GAS LISTING /tmp/ccLd1gL6.s 			page 21
+
+
+ 653               		.comm	usb_rx_off,1,1
+ 654               		.comm	usb_rx_buf,22,1
+ 655               		.stabs	"usb_tx_state:S(8,1)",40,0,76,usb_tx_state
+ 656               		.stabs	"usb_tx_total:S(8,1)",40,0,77,usb_tx_total
+ 657               		.stabs	"usb_tx_data:S(0,50)",40,0,78,usb_tx_data
+ 658               		.stabs	"string_langid:S(0,51)=ar(0,52)=r(0,52);0;0177777;;0;3;(0,53)=k(8,1)",38,0,132,string_langi
+ 659               		.stabs	"descr_device:S(0,54)=ar(0,52);0;17;(0,53)",38,0,141,descr_device
+ 660               		.stabs	"descr_config:S(0,54)",38,0,160,descr_config
+ 661               		.stabs	"usb_rx_buf:G(0,55)=ar(0,52);0;21;(8,1)",32,0,53,0
+ 662               		.stabs	"usb_rx_off:G(8,1)",32,0,54,0
+ 663               		.stabs	"usb_rx_len:G(8,1)",32,0,55,0
+ 664               		.stabs	"usb_rx_token:G(8,1)",32,0,56,0
+ 665               		.stabs	"usb_tx_buf:G(0,56)=ar(0,52);0;10;(8,1)",32,0,58,0
+ 666               		.stabs	"usb_tx_len:G(8,1)",32,0,59,0
+ 667               		.stabs	"usb_address:G(8,1)",32,0,61,0
+ 668               		.stabs	"usb_new_address:G(8,1)",32,0,62,0
+ 669               		.stabs	"string_device:G(0,57)=k(0,58)=s22length:(8,1),0,8;type:(8,1),8,8;string:(0,59)=ar(0,52);0;
+ 670               		.text
+ 671               		.stabs	"",100,0,0,.Letext0
+ 672               	.Letext0:
+ 673               		.ident	"GCC: (GNU) 4.8.0"
+ 674               	.global __do_clear_bss
+GAS LISTING /tmp/ccLd1gL6.s 			page 22
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 usb.c
+     /tmp/ccLd1gL6.s:2      *ABS*:000000000000003d __SP_L__
+     /tmp/ccLd1gL6.s:3      *ABS*:000000000000003f __SREG__
+     /tmp/ccLd1gL6.s:4      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccLd1gL6.s:5      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccLd1gL6.s:113    .text:0000000000000000 usb_init
+     /tmp/ccLd1gL6.s:147    .text:0000000000000010 usb_poll
+                            *COM*:0000000000000001 usb_rx_len
+                            *COM*:0000000000000001 usb_rx_off
+                            *COM*:0000000000000016 usb_rx_buf
+     /tmp/ccLd1gL6.s:644    .bss:0000000000000003 usb_tx_state
+                            *COM*:0000000000000001 usb_rx_token
+                            *COM*:0000000000000001 usb_new_address
+     /tmp/ccLd1gL6.s:628    .progmem.data:0000000000000028 string_device
+     /tmp/ccLd1gL6.s:599    .progmem.data:0000000000000012 descr_device
+     /tmp/ccLd1gL6.s:578    .progmem.data:0000000000000000 descr_config
+     /tmp/ccLd1gL6.s:620    .progmem.data:0000000000000024 string_langid
+                             .bss:0000000000000000 usb_tx_data
+     /tmp/ccLd1gL6.s:642    .bss:0000000000000002 usb_tx_total
+                            *COM*:000000000000000b usb_tx_buf
+                            *COM*:0000000000000001 usb_tx_len
+                            *COM*:0000000000000001 usb_address
+
+UNDEFINED SYMBOLS
+usb_setup
+usb_out
+usb_in
+crc
+__do_clear_bss

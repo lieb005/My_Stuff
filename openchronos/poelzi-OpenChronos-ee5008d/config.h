@@ -1,0 +1,58 @@
+// !!!! DO NOT EDIT !!!, use: make config
+
+#ifndef _CONFIG_H_
+#define _CONFIG_H_
+
+#define CONFIG_FREQUENCY 902
+#define OPTION_TIME_DISPLAY 0
+#define CONFIG_METRIC_ONLY
+#define FIXEDPOINT
+#ifndef THIS_DEVICE_ADDRESS
+#define THIS_DEVICE_ADDRESS {0xed,0xc0,0xbb,0x25}
+#endif // THIS_DEVICE_ADDRESS
+// USE_LCD_CHARGE_PUMP is not set
+#define USE_WATCHDOG
+#define CONFIG_AUTOSYNC
+// DEBUG is not set
+#define CONFIG_DAY_OF_WEEK
+#define CONFIG_TEST
+#define CONFIG_EGGTIMER
+// CONFIG_PHASE_CLOCK is not set
+#define CONFIG_ALTITUDE
+#define CONFIG_ALTITUDE_UNIT_METERS
+// CONFIG_ALTITUDE_UNIT_FEET is not set
+// CONFIG_ALTITUDE_SKYDIVING is not set
+// CONFIG_ALTITUDE_NO_FILTER is not set
+// CONFIG_VARIO is not set
+// CONFIG_ALTI_ACCUMULATOR is not set
+// CONFIG_PROUT is not set
+// CONFIG_SIDEREAL is not set
+#define CONFIG_DST 1
+// CONFIG_INFOMEM is not set
+#define CONFIG_ACCEL
+// CONFIG_STRENGTH is not set
+#define CONFIG_ALARM
+#define CONFIG_BATTERY
+#define CONFIG_CLOCK
+#define CONFIG_DATE
+#define CONFIG_RFBSL
+#define CONFIG_STOP_WATCH
+#define CONFIG_TEMP
+// CONFIG_USEPPT is not set
+#define ECO_DISPLAY
+#define CONFIG_ALWAYS_ECO
+// CONFIG_USE_SYNC_TOSET_TIME is not set
+#define CONFIG_USE_DISCRET_RFBSL
+// CONFIG_USE_GPS is not set
+// CONFIG_CW_TIME is not set
+// CONFIG_NOTES is not set
+// CONFIG_NOTES_PREVIOUS is not set
+#define CONFIG_SCHEDULE
+// CONFIG_SCHOOLALARM is not set
+// CONFIG_CALENDAR is not set
+// CONFIG_EGGWATCH is not set
+// CONFIG_METRONOME is not set
+// CONFIG_BACKLIGHT_TOGGLE is not set
+// CONFIG_PEDOMETER is not set
+
+#endif // _CONFIG_H_

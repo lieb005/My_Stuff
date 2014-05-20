@@ -1,0 +1,189 @@
+/*
+ * bin_utils.c
+ *
+ *  Created on: 22-Feb-2009
+ *      Author: Samuel Truscott
+ *      Author: Richard Slaughter
+ */
+
+#include <bin_utils.h>
+
+UINT32 read_int( const INT8** buffer )
+{
+	UINT32 ret =
+		((*buffer)[0] << 24) +
+		((*buffer)[1] << 16) +
+		((*buffer)[2] << 8) +
+		((*buffer)[3] & 0xFF);
+
+	(*buffer) += 4;
+	return ret;
+}
+
+UINT32 read_3( const INT8** buffer )
+{
+	UINT32 ret =
+		((*buffer)[0] << 16) +
+		((*buffer)[1] << 8) +
+		((*buffer)[2] & 0xFF);
+
+	*buffer += 3;
+	return ret;
+}
+
+UINT16 read_short( const INT8** buffer )
+{
+	UINT32 ret =
+		((*buffer)[0] << 8) +
+		((*buffer)[1] & 0xFF);
+
+	*buffer += 2;
+	return ret;
+}
+
+UINT8 read_byte( const INT8** buffer)
+{
+	UINT8 ret = (*buffer)[0];
+	*buffer += 1;
+	return ret;
+}
+
+UINT8 read_hex_nibble ( const INT8 hex )
+{
+	INT8 ret = 0;
+
+	/* switch statement isn't pretty but its quick */
+	switch ( hex )
+	{
+		case '0':
+			ret = 0;
+			break;
+		case '1':
+			ret = 1;
+			break;
+		case '2':
+			ret = 2;
+			break;
+		case '3':
+			ret = 3;
+			break;
+		case '4':
+			ret = 4;
+			break;
+		case '5':
+			ret = 5;
+			break;
+		case '6':
+			ret = 6;
+			break;
+		case '7':
+			ret = 7;
+			break;
+		case '8':
+			ret = 8;
+			break;
+		case '9':
+			ret = 9;
+			break;
+		case 'A':
+		case 'a':
+			ret = 10;
+			break;
+		case 'B':
+		case 'b':
+			ret = 11;
+			break;
+		case 'C':
+		case 'c':
+			ret = 12;
+			break;
+		case 'D':
+		case 'd':
+			ret = 13;
+			break;
+		case 'E':
+		case 'e':
+			ret = 14;
+			break;
+		case 'F':
+		case 'f':
+			ret = 15;
+			break;
+		default:
+			break;
+	}
+
+	return ret;
+}
+
+UINT8 read_hex_byte ( const INT8** buffer)
+{
+	const INT8* data = *buffer;
+	UINT8 result;
+	result = (read_hex_nibble(data[0]) << 4)
+		| (read_hex_nibble(data[1]));
+
+	(*buffer) += 2;
+
+	return result;
+}
+
+UINT16 read_hex_short ( const INT8** buffer )
+{
+	const INT8* data = *buffer;
+
+	UINT16 result;
+	result = (read_hex_nibble(data[0]) << 12)
+		| (read_hex_nibble(data[1]) << 8)
+		| (read_hex_nibble(data[2]) << 4)
+		| read_hex_nibble(data[3]);
+
+	(*buffer) += 4;
+
+	return result;
+}
+
+UINT32 read_hex_int ( const INT8** buffer )
+{
+	UINT32 result;
+	const INT8* data = *buffer;
+	result = (read_hex_nibble(data[0]) << 28)
+		| (read_hex_nibble(data[1]) << 24)
+		| (read_hex_nibble(data[2]) << 20)
+		| (read_hex_nibble(data[3]) << 16)
+		| (read_hex_nibble(data[4]) << 12)
+		| (read_hex_nibble(data[5]) << 8)
+		| (read_hex_nibble(data[6]) << 4)
+		| (read_hex_nibble(data[7]));
+
+	(*buffer) += 8;
+
+	return result;
+}
+
+UINT8 get_checksum( const INT8* in_data, UINT16 data_size)
+{
+	UINT8 current_byte;
+	UINT32 check_sum = 0;
+
+	/* based on the read read a number of bytes */
+	for ( current_byte = 0 ;
+			current_byte < data_size;
+			current_byte++)
+	{
+		INT8 x = read_hex_byte ( &in_data );
+		//we only care about the least significant byte
+		check_sum = (check_sum + x) % 256;
+	}
+
+	check_sum = 0x100 - check_sum;
+
+	return check_sum;
+}
+
+void swap_endianess_short( INT16* data )
+{
+	INT16 d = data[0];
+	data[0] = data[1];
+	data[1] = d;
+}

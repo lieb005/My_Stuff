@@ -1,0 +1,1669 @@
+diff --git a/bluerobin/bm.h b/bluerobin/bm.h
+index 56505ea..b1697cb 100644
+--- a/bluerobin/bm.h
++++ b/bluerobin/bm.h
+@@ -210,9 +210,7 @@
+ 	#define _CPU_EDGE_HIGH_LOW_1_ TRUE
+ 	//#define _CPU_64BIT_INT_       long long
+ 
+-//  #endif
+-
+-
++#elif defined(HOST_TESTS)
+ #else
+   #error "Unknown Compiler, the file bm.h has to be expanded !"
+ #endif
+diff --git a/driver/vti_ps.c b/driver/vti_ps.c
+index 94595f5..5c3311d 100644
+--- a/driver/vti_ps.c
++++ b/driver/vti_ps.c
+@@ -65,19 +65,6 @@ void twi_delay(void);
+ // *************************************************************************************************
+ // Global Variable section
+ 
+-#ifndef FIXEDPOINT
+-// VTI pressure (hPa) to altitude (m) conversion tables
+-const s16 h0[17] = { -153, 0, 111, 540, 989, 1457, 1949, 2466, 3012, 3591, 4206, 4865, 5574, 6344, 7185, 8117, 9164 };
+-const u16 p0[17] = { 1031, 1013, 1000, 950, 900, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400, 350, 300 };
+-float p[17];
+-#else
+-// Storage for pressure to altitude conversions
+-static s16 pLast; // Last measured pressure in 4Pa units
+-static s16 pRef; // Reference pressure at sea level in 4Pa units
+-static s16 hLast; // Last altitude estimate in normalized units b/H0/2^15
+-#endif
+-
+-
+ // Global flag for proper pressure sensor operation
+ u8 ps_ok;
+ 
+@@ -414,7 +401,7 @@ u32 ps_get_pa(void)
+ // @fn          ps_get_temp
+ // @brief       Read out temperature.
+ // @param       none
+-// @return      u16		13-bit temperature value in xx.x°K format
++// @return      u16		13-bit temperature value in xx.xÂ°K format
+ // *************************************************************************************************
+ #ifndef NO_ALTI
+ u16 ps_get_temp(void)
+@@ -440,291 +427,10 @@ u16 ps_get_temp(void)
+ 
+ 	temp = data / 2;
+ 	
+-	// Convert from °C to °K
++	// Convert from Â°C to Â°K
+ 	if (is_negative)	kelvin = 2732 - temp;
+ 	else				kelvin = temp + 2732;
+ 	
+ 	return (kelvin);
+ }
+ #endif
+-// *************************************************************************************************
+-// @fn          init_pressure_table
+-// @brief       Init pressure table with constants
+-// @param       u32		p 		Pressure (Pa)
+-// @return      u16				Altitude (m)
+-// *************************************************************************************************
+-void init_pressure_table(void)
+-{
+-#ifndef FIXEDPOINT
+-	u8 i;
+-
+-	for (i=0; i<17; i++) p[i] = p0[i];
+-#else
+-	pLast = 101325/4; // Last measured pressure in 4Pa units
+-	pRef = 101325/4; // Reference pressure at sea level in 4Pa units
+-	hLast = 0;
+-#endif
+-}
+-
+-#ifdef FIXEDPOINT
+-// *************************************************************************************************
+-// @fn          conv_altitude_to_fraction
+-// @brief       Relative pressure deviation from reference pressure for given altitude estimate.
+-// @param       s16 hh Altitude estimate (in normalised units).
+-// @return      Calculated relative pressure deviation for this altitude
+-// *************************************************************************************************
+-s16 conv_altitude_to_fraction(s16 hh)
+-{
+-	/*
+-	The fixed part of the function of altitude can be broken into tabulated ranges
+-	and/or interpolated according to a Taylor series expansion
+-		 (1 - f) = (1 – h/H0)^b
+-		         = 1 - h*b/H0 + h^2*b*(b–1)/2/H0^2 – h^3*b8(b–1)*(b-2)/6/H0^3 + …
+-	At low altitudes h/H0 << 1, so this series tends to converge rapidly and is
+-	well-suited for fixed point implementation. With one or two additional terms
+-	the series converges accurately over the range of interest so there is no need
+-	for table interpolation. For the proposed fixed point implementation we rewrite
+-	this expression a bit into
+-		hh = b*h/H0
+-		(1 - f) = (1 – h/H0)^b
+-		        = 1 - hh*(1 – hh*(b–1)/2/b*(1 – hh*(b–2)/3/b*(...
+-	We stick to integer multiply and shift operations. Signed s16 values can contain
+-	values +/–2^15 and unsigned u16 values 0..2^16. In C multiplication amounts to
+-	expanding to s32, integer multiply and scaling back by a proper shift operation.
+-
+-	Given the above equations the natural unit of hh as the first order correction is
+-	H0/b = 8434.48m. If we accept this as a maximum +/– range we can store s16 hh in
+-	units of (H0/b)/2^15 = 0,26m which keeps the resolution at less than a foot.
+-	 */
+-	s16 f, hf;
+-	// f  = hh*(b – 4)/5/b, correction relevant above 3.5km:
+-	// (Could be omitted, but it is relatively little work.)
+-	f = mult_scale16(hh, 3132);
+-	// f  = hh*(b – 3)/4/b*(1 - f), correction relevant above 1.3km:
+-	hf = mult_scale16(hh, 7032);
+-	f = hf - mult_scale15(hf,f);
+-	// f = hh*(b – 2)/3/b*(1 - f), correction relevant above 300m:
+-	hf = mult_scale16(hh, 13533);
+-	f = hf - mult_scale15(hf,f);
+-	// f = hh*(b – 1)/2/b*(1 - f), correction relevant above 30m:
+-	hf = mult_scale16(hh, 26533);
+-	f = hf - mult_scale15(hf,f);
+-	// f = hh*(1 - f), the linear part:
+-	f = hh - mult_scale15(hh,f);
+-	return f;
+-}
+-
+-#endif // FIXEDPOINT
+-
+-
+-// *************************************************************************************************
+-// @fn          update_pressure_table
+-// @brief       Calculate pressure table for reference altitude.
+-//				Implemented straight from VTI reference code.
+-// @param       s16		href	Reference height
+-//				u32		p_meas	Pressure (Pa)
+-//				u16		t_meas	Temperature (10*°K)
+-// @return     	none
+-// *************************************************************************************************
+-#ifndef NO_ALTI
+-void update_pressure_table(s16 href, u32 p_meas, u16 t_meas)
+-{
+-#ifndef FIXEDPOINT
+-	const float Invt00 = 0.003470415;
+-	const float coefp  = 0.00006;
+-	volatile float p_fact; 
+-	volatile float p_noll;
+-	volatile float hnoll;
+-	volatile float h_low = 0;
+-	volatile float t0;
+-	u8 i;
+-	
+-	// Typecast arguments
+-	volatile float fl_href 		= href;
+-	volatile float fl_p_meas 	= (float)p_meas/100;	// Convert from Pa to hPa
+-	volatile float fl_t_meas	= (float)t_meas/10;		// Convert from 10°K to 1°K
+-
+-	t0 = fl_t_meas + (0.0065*fl_href);
+-	
+-	hnoll  = fl_href/(t0*Invt00);
+-	
+-	for (i=0; i<=15; i++)
+-	{
+-		if (h0[i] > hnoll) break;
+-		h_low = h0[i];	
+-	}
+-	
+-	p_noll = (float)(hnoll - h_low)*(1 - (hnoll - (float)h0[i])* coefp)*((float)p0[i] - (float)p0[i-1])/((float)h0[i] - h_low) + (float)p0[i-1];
+-
+-	// Calculate multiplicator
+-	p_fact = fl_p_meas/p_noll;
+-	
+-	// Apply correction factor to pressure table
+-	for (i=0; i<=16; i++)
+-	{
+-		p[i] = p0[i]*p_fact;	
+-	}
+-#else
+-	// Note: a user-provided sea-level reference pressure in mbar as used by pilots
+-	// would be straightforward: href = 0; p_meas = (s32)mbar*100;
+-	// The altitude reading will be iteratively updated.
+-
+-	// Convert to 4Pa units:
+-	pLast = (s16)((p_meas+2) >> 2);
+-	// Convert reference altitude to normalized units:
+-	if (sys.flag.use_metric_units) { // user_altitude in m
+-		hLast = 4*href - mult_scale16(href, 7536);
+-	} else { // user_altitude in ft
+-		hLast = href + mult_scale16(href,12068);
+-	}
+-	s32 f = (s32)0x8000 - conv_altitude_to_fraction(hLast);
+-	// pRef = p_meas*2^15/f:
+-	pRef = ((((s32)pLast << 16) + f) >> 1) / f;
+-	// The long division is acceptable because it happens rarely.
+-	// The term + f) is for proper rounding.
+-	// The <<16 and >>1 operations correct for the 15bit scale of f.
+-#endif
+-}
+-#endif
+-#ifndef NO_ALTI
+-#ifndef FIXEDPOINT
+-// *************************************************************************************************
+-// @fn          conv_pa_to_meter
+-// @brief       Convert pressure (Pa) to altitude (m) using a conversion table
+-//				Implemented straight from VTI reference code.
+-// @param       u32		p_meas	Pressure (Pa)
+-//				u16		t_meas	Temperature (10*°K)
+-// @return      s16				Altitude (m)
+-// *************************************************************************************************
+-s16 conv_pa_to_meter(u32 p_meas, u16 t_meas)
+-{
+-	const float coef2  = 0.0007;
+-	const float Invt00 = 0.003470415;
+-	volatile float hnoll;
+-	volatile float t0;
+-	volatile float p_low;
+-	volatile float fl_h;
+-	volatile s16 h;
+-	u8 i;
+-
+-	// Typecast arguments
+-	volatile float fl_p_meas = (float)p_meas/100;	// Convert from Pa to hPa
+-	volatile float fl_t_meas = (float)t_meas/10;		// Convert from 10°K to 1°K
+-	
+-	for (i=0; i<=16; i++)
+-	{
+-		if (p[i] < fl_p_meas) break;
+-		p_low = p[i];
+-	}
+-		
+-	if (i==0) 
+-	{
+-		hnoll = (float)(fl_p_meas - p[0])/(p[1] - p[0])*((float)(h0[1] - h0[0]));
+-	}
+-	else if (i<15) 
+-	{
+-		hnoll = (float)(fl_p_meas - p_low)*(1 - (fl_p_meas - p[i])* coef2)/(p[i] - p_low)*((float)(h0[i] - h0[i-1])) + h0[i-1];
+-	}
+-	else if (i==15)
+-	{
+-		hnoll = (float)(fl_p_meas - p_low)/(p[i] - p_low)*((float)(h0[i] - h0[i-1])) + h0[i-1];
+-	}
+-	else // i==16
+-	{
+-		hnoll = (float)(fl_p_meas - p[16])/(p[16] - p[15])*((float)(h0[16] - h0[15])) + h0[16];
+-	}
+-	
+-	// Compensate temperature error
+-	t0 = fl_t_meas/(1 - hnoll*Invt00*0.0065);
+-	fl_h = Invt00*t0*hnoll;
+-	h = (u16)fl_h;
+-	
+-	return (h);
+-}
+-#else
+-// *************************************************************************************************
+-// @fn          conv_pressure_to_altitude
+-// @brief       Calculates altitude from current pressure, and
+-//				stored reference pressure at sea level and previous altitude estimate.
+-//				Temperature info is ignored.
+-// @param       u32		p_meas	Pressure (Pa)
+-// @param		u16		t_meas	Temperature (10*°K) Ignored !!!
+-// @return      Estimated altitude in user-selected unit (m or ft)
+-//              (internally filtered, slightly sluggish).
+-// *************************************************************************************************
+-s16 conv_pa_to_altitude(u32 p_meas, u16 t_meas)
+-{
+-	/*
+-	Assumption: fixed, linear T(h)
+-	T = T0 – dTdh*h
+-	with
+-	T0 = 288.15K (15C)
+-	dTdh = 6.5mK/m
+-
+-	Basic differential equation:
+-		dh = -(R/G)*T(H)*dp/p
+-	Solution:
+-		H = H0*(1 – (p/pRef)^a)
+-	with
+-		H0 = T0/dTdh = 44330.77m
+-		pRef = adjustable reference pressure at sea level (h=0).
+-		a = dTdH*R/G = 0.190263
+-		R = 287.052m^2/s^2/K
+-		G = 9.80665 (at medium latitude)
+-
+-	We assume T0 and the temperature profile to be fixed; the temperature reading
+-	of the watch is not very useful since it is strongly influenced by body heat,
+-	clothing, shelter, etc.
+-
+-	Straight evaluation of h(p) requires an unattractive long division p/pRef
+-	with pRef the adjustable reference pressure, and the Taylor expansion does
+-	not converge very quickly.
+-
+-	Evaluation of p(h) requires a more attractive multiplication by the
+-	user-adjustable reference pressure pRef:
+-		f =(1 – h/H0)^b
+-		p = pRef*f
+-	with
+-		b = 1/a = G/(dTdH*R) = 5.255896
+-	In a very crude linear iteration the h value can be updated by
+-		delta_h = –delta_p / dpdh
+-	The slope dpdh varies by about a factor two over the range of interest,
+-	but we can pick a fixed value on the safe side and accept that the updates
+-	are a bit more damped at higher altitudes.
+-
+-	The sensor provides 19bit absolute pressure in units of 0.25Pa, but that is more
+-	resolution than we can easily handle in the multiplications. We store measured
+-	pressure p, reference pressure pRef and calculated pressure as u16 in units of 4Pa.
+-
+-	In the units chosen for p (4Pa) and for hLast (see function conv_altitude_to_fraction),
+-	the slope dpdh is about -0.75 at sea level down to -0.375 at high altitudes. To avoid
+-	overshoot and instabilities we assume a bigger value and accept a minor amount of
+-	extra filtering delay at higher altitudes. The factor 1/0.75 is approximated by 1.
+-	*/
+-	// Scale to 4Pa units:
+-	s16 p = (s16)((p_meas+2) >> 2);
+-	// Predictor to speed up response to pressure changes:
+-//	hLast -= p - pLast; // Factor of about 1/0.75 would be better.
+-	// Store current pressure for next predictor:
+-	pLast = p;
+-	// Calculate pressure ratio based on guessed altitude (serious DSP work):
+-	s16 f = conv_altitude_to_fraction(hLast);
+-	// Calculate pressure expected for guessed height
+-	u16 pCalculated = pRef - mult_scale15(pRef,f);
+-	// This calculation is correct within about 7Pa.
+-	// We still have to reverse the solution with a linearly improved guess:
+-	hLast -= p - pCalculated;
+-	// Iteration gain factor of about 1/0.75 would result in faster convergence,
+-	// but even the big initial jump when the altimeter is switched on converges
+-	// in some 5 or 6 steps to about 1m accuracy.
+-
+-	if (sys.flag.use_metric_units) {
+-		// Altitude in meters (correct within about 0.7m):
+-		return mult_scale16(hLast, 16869);
+-	} else {
+-		// Altitude in feet (correct within 1.5ft):
+-		return mult_scale15(hLast, 27672);
+-	}
+-}
+-#endif // FIXEDPOINT
+-#endif
+\ No newline at end of file
+diff --git a/driver/vti_ps.h b/driver/vti_ps.h
+index 1d3cb26..84a31f1 100644
+--- a/driver/vti_ps.h
++++ b/driver/vti_ps.h
+@@ -48,14 +48,6 @@ extern void ps_stop(void);
+ extern u32 ps_get_pa(void);
+ extern u16 ps_get_temp(void);
+ 
+-extern void init_pressure_table(void);
+-extern void update_pressure_table(s16 href, u32 p_meas, u16 t_meas);
+-#ifndef FIXEDPOINT
+-extern s16 conv_pa_to_meter(u32 p_meas, u16 t_meas);
+-#else
+-extern s16 conv_pa_to_altitude(u32 p_meas, u16 t_meas);
+-#endif
+-
+ // *************************************************************************************************
+ // Defines section
+ 
+diff --git a/ezchronos.c b/ezchronos.c
+index 842a330..0451393 100644
+--- a/ezchronos.c
++++ b/ezchronos.c
+@@ -204,7 +204,6 @@ int main(void)
+  	}	
+ }
+ 
+-
+ // *************************************************************************************************
+ // @fn          init_application
+ // @brief       Initialize the microcontroller.
+diff --git a/include/project.h b/include/project.h
+index cc6fbc0..d4243c3 100644
+--- a/include/project.h
++++ b/include/project.h
+@@ -55,28 +55,18 @@
+ 
+ // *************************************************************************************************
+ // Include section
+-//pfs
+-#include <intrinsics.h>
+ #include "../bluerobin/bm.h"
+ 
++#ifndef HOST_TESTS
++#include <intrinsics.h>
+ #include <cc430x613x.h>
+-//pfs #include <bm.h>
++#endif
+ 
+ #include "config.h"
+ 
+ // *************************************************************************************************
+ // Defines section
+ 
+-// moved to config.h
+-// Comment this to not use the LCD charge pump
+-//#define USE_LCD_CHARGE_PUMP
+-
+-// Comment this define to build the application without watchdog support
+-//#define USE_WATCHDOG
+-
+-// end of move
+-
+-
+ // Use/not use filter when measuring physical values
+ #define FILTER_OFF						(0u)
+ #define FILTER_ON						(1u)
+diff --git a/logic/altitude.c b/logic/altitude.c
+index e5311e1..fbc42b2 100644
+--- a/logic/altitude.c
++++ b/logic/altitude.c
+@@ -47,6 +47,7 @@
+ 
+ // driver
+ #include "altitude.h"
++#include "altitude_math.h"
+ //#ifdef CONFIG_ALTI_ACCUMULATOR
+ //#include "alt_accu.h"
+ //#endif
+@@ -116,9 +117,6 @@ void reset_altitude_measurement(void)
+ 	// Pressure sensor ok?
+ 	if (ps_ok)
+ 	{
+-		// Initialise pressure table
+-		init_pressure_table();
+-		
+ 		// Do single conversion
+ 		start_altitude_measurement();
+ 		stop_altitude_measurement();	
+diff --git a/logic/altitude_.c b/logic/altitude_.c
+deleted file mode 100644
+index 27057e8..0000000
+--- a/logic/altitude_.c
++++ /dev/null
+@@ -1,873 +0,0 @@
+-// *************************************************************************************************
+-//
+-//	Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/ 
+-//	Copyright (C) 2011 Frank Van Hooft
+-//	 
+-//	 
+-//	  Redistribution and use in source and binary forms, with or without 
+-//	  modification, are permitted provided that the following conditions 
+-//	  are met:
+-//	
+-//	    Redistributions of source code must retain the above copyright 
+-//	    notice, this list of conditions and the following disclaimer.
+-//	 
+-//	    Redistributions in binary form must reproduce the above copyright
+-//	    notice, this list of conditions and the following disclaimer in the 
+-//	    documentation and/or other materials provided with the   
+-//	    distribution.
+-//	 
+-//	    Neither the name of Texas Instruments Incorporated nor the names of
+-//	    its contributors may be used to endorse or promote products derived
+-//	    from this software without specific prior written permission.
+-//	
+-//	  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
+-//	  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+-//	  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+-//	  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+-//	  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+-//	  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
+-//	  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+-//	  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+-//	  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
+-//	  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+-//	  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-//
+-// *************************************************************************************************
+-// Altitude measurement functions.
+-// *************************************************************************************************
+-
+-
+-// *************************************************************************************************
+-// Include section
+-
+-// system
+-#include "project.h"
+-
+-#ifdef FEATURE_ALTITUDE
+-
+-// driver
+-#include "altitude.h"
+-//#ifdef CONFIG_ALTI_ACCUMULATOR
+-//#include "alt_accu.h"
+-//#endif
+-#include "display.h"
+-#include "vti_ps.h"
+-#include "ports.h"
+-#include "timer.h"
+-
+-// logic
+-#include "user.h"
+-#ifdef CONFIG_VARIO
+-# include "vario.h"
+-#endif
+-
+-
+-// *************************************************************************************************
+-// Prototypes section
+-
+-
+-// *************************************************************************************************
+-// Defines section
+-
+-
+-// *************************************************************************************************
+-// Global Variable section
+-struct alt sAlt;
+-
+-#ifdef CONFIG_ALTI_ACCUMULATOR
+-
+-#define	ALT_ACCUM_DIR_THRESHOLD  5 // change in meters needed to switch direction up <-> down
+-
+-// The following used by the altitude accumulation function
+-u8  alt_accum_enable;		// 1 means the altitude accumulator is enabled, zero means disabled
+-s32 alt_accum_startpoint;	// altitude in metres that user "zeroed" the accumulator at
+-s32 alt_accum__accumtotal;	// total accumulated upwards vertical in metres
+-s32 alt_accum_lastpeakdip;	// altitude in metres of last "inflection point", either a peak or a dip
+-u8  alt_accum_direction;	// 1 means we're currently going up (last peakdip was a dip), 0 means we're going down
+-s32 alt_accum_prevalt;		// previous altitude - altitude the last time we read the altimeter 
+-s32 alt_accum_max;		// maximum altitude encountered
+-u8  alt_accum_displaycode;	// what to display
+-#endif
+-
+-// *************************************************************************************************
+-// Extern section
+-
+-// Global flag for pressure sensor initialisation status
+-extern u8 ps_ok;
+-
+-
+-// *************************************************************************************************
+-// @fn          reset_altitude_measurement
+-// @brief       Reset altitude measurement.
+-// @param       none
+-// @return      none
+-// *************************************************************************************************
+-void reset_altitude_measurement(void)
+-{
+-	// Menu item is not visible
+-	sAlt.state 		= MENU_ITEM_NOT_VISIBLE;
+-
+-	// Clear timeout counter
+-	sAlt.timeout	= 0;
+-	
+-	// Set default altitude value
+-	sAlt.altitude		= 0;
+-	
+-	// Pressure sensor ok?
+-	if (ps_ok)
+-	{
+-		// Initialise pressure table
+-		init_pressure_table();
+-		
+-		// Do single conversion
+-		start_altitude_measurement();
+-		stop_altitude_measurement();	
+-
+-		// Apply calibration offset and recalculate pressure table
+-		if (sAlt.altitude_offset != 0)
+-		{
+-			sAlt.altitude += sAlt.altitude_offset;
+-			update_pressure_table(sAlt.altitude, sAlt.pressure, sAlt.temperature);
+-		}
+-	}
+-}
+-
+-#ifndef CONFIG_METRIC_ONLY
+-// *************************************************************************************************
+-// @fn          conv_m_to_ft
+-// @brief       Convert meters to feet
+-// @param       u16 m		Meters
+-// @return      u16		Feet
+-// *************************************************************************************************
+-s16 convert_m_to_ft(s16 m)
+-{
+-	return (((s32)328*m)/100);
+-}
+-
+-
+-// *************************************************************************************************
+-// @fn          conv_ft_to_m
+-// @brief       Convert feet to meters
+-// @param       u16 ft		Feet
+-// @return      u16		Meters
+-// *************************************************************************************************
+-s16 convert_ft_to_m(s16 ft)
+-{
+-	return (((s32)ft*61)/200);
+-}
+-
+-#endif
+-
+-// *************************************************************************************************
+-// @fn          is_altitude_measurement
+-// @brief       Altitude measurement check
+-// @param       none
+-// @return      u8		1=Measurement ongoing, 0=measurement off
+-// *************************************************************************************************
+-u8 is_altitude_measurement(void)
+-{
+-	return ((sAlt.state == MENU_ITEM_VISIBLE) && (sAlt.timeout > 0));
+-}
+-
+-
+-// *************************************************************************************************
+-// @fn          start_altitude_measurement
+-// @brief       Start altitude measurement
+-// @param       none
+-// @return      none
+-// *************************************************************************************************
+-void start_altitude_measurement(void)
+-{
+-	// Show warning if pressure sensor was not initialised properly
+-	if (!ps_ok) 
+-	{
+-		display_chars(LCD_SEG_L1_2_0, (u8*)"ERR", SEG_ON);
+-		return;
+-	}
+-
+-	// Start altitude measurement if timeout has elapsed
+-	if (sAlt.timeout == 0)
+-	{
+-		// Enable DRDY IRQ on rising edge
+-		PS_INT_IFG &= ~PS_INT_PIN;
+-		PS_INT_IE |= PS_INT_PIN;
+-
+-		// Start pressure sensor
+-		ps_start(); 
+-
+-		// Set timeout counter only if sensor status was OK
+-		sAlt.timeout = ALTITUDE_MEASUREMENT_TIMEOUT;
+-
+-		// Get updated altitude
+-		while((PS_INT_IN & PS_INT_PIN) == 0); 
+-		do_altitude_measurement(FILTER_OFF);
+-	}
+-}
+-
+-
+-// *************************************************************************************************
+-// @fn          stop_altitude_measurement
+-// @brief       Stop altitude measurement
+-// @param       none
+-// @return      none
+-// *************************************************************************************************
+-void stop_altitude_measurement(void)
+-{
+-	// Return if pressure sensor was not initialised properly
+-	if (!ps_ok) return;
+-	
+-	// Stop pressure sensor
+-	ps_stop();
+-	
+-	// Disable DRDY IRQ
+-	PS_INT_IE  &= ~PS_INT_PIN;
+-	PS_INT_IFG &= ~PS_INT_PIN;
+-	
+-	// Clear timeout counter
+-	sAlt.timeout = 0;
+-}
+-
+-
+-
+-// *************************************************************************************************
+-// @fn          do_altitude_measurement
+-// @brief       Perform single altitude measurement
+-// @param       none
+-// @return      none
+-// *************************************************************************************************
+-void do_altitude_measurement(u8 filter)
+-{
+-	volatile u32 pressure;
+-
+-	// If sensor is not ready, skip data read	
+-	if ((PS_INT_IN & PS_INT_PIN) == 0) return;
+-		
+-	// Get temperature (format is *10?K) from sensor
+-	sAlt.temperature = ps_get_temp();
+-
+-	// Get pressure (format is 1Pa) from sensor
+-	pressure = ps_get_pa();	
+-		
+-	// Store measured pressure value
+-	if (filter == FILTER_OFF) //sAlt.pressure == 0) 
+-	{
+-		sAlt.pressure = pressure;
+-	}
+-	else
+-	{
+-		// Filter current pressure
+-#ifdef FIXEDPOINT
+-        pressure = (u32)(((pressure * 2) + (sAlt.pressure * 8))/10);
+-#else
+-		pressure = (u32)((pressure * 0.2) + (sAlt.pressure * 0.8));
+-#endif
+-		// Store average pressure
+-		sAlt.pressure = pressure;
+-	}
+-
+-	// Convert pressure (Pa) and temperature (?K) to altitude (m).
+-#ifdef FIXEDPOINT
+-	sAlt.altitude = conv_pa_to_altitude(sAlt.pressure, sAlt.temperature);
+-#else
+-    sAlt.altitude = conv_pa_to_meter(sAlt.pressure, sAlt.temperature);
+-#endif
+-
+-#ifdef CONFIG_VARIO
+-   // Stash a copy to the vario after filtering. If doing so before, there
+-   // is just too much unnecessary fluctuation, up to +/- 7Pa seen.
+-   vario_p_write( pressure );
+-#endif
+-}
+-
+-
+-// *************************************************************************************************
+-// @fn          sx_altitude
+-// @brief       Altitude direct function. Sx restarts altitude measurement.
+-// @param       u8 line	LINE1, LINE2
+-// @return      none
+-// *************************************************************************************************
+-void sx_altitude(u8 line)
+-{
+-	// Function can be empty
+-	
+-	// Restarting of altitude measurement will be done by subsequent full display update 
+-}
+-
+-
+-// *************************************************************************************************
+-// @fn          mx_altitude
+-// @brief       Mx button handler to set the altitude offset. 
+-// @param       u8 line		LINE1
+-// @return      none
+-// *************************************************************************************************
+-void mx_altitude(u8 line)
+-{
+-	s32 altitude;
+-	s32	limit_high, limit_low;
+-
+-	// Clear display
+-	clear_display_all();
+-#ifdef CONFIG_ALTI_ACCUMULATOR
+-	// Display "ALt" on top line
+-	display_chars(LCD_SEG_L1_3_0, (u8*)"ALT ", SEG_ON);
+-	clear_line(LINE2);
+-#endif
+-
+-	// Set lower and upper limits for offset correction
+-#ifdef CONFIG_METRIC_ONLY
+-	display_symbol(LCD_UNIT_L1_M, SEG_ON);
+-
+-	// Convert global variable to local variable
+-	altitude  = sAlt.altitude; 
+-
+-	// Limits for set_value function
+-	limit_low = -100;
+-	limit_high = 9000;
+-#else
+-	if (sys.flag.use_metric_units)
+-	{
+-		// Display "m" symbol
+-		display_symbol(LCD_UNIT_L1_M, SEG_ON);
+-
+-		// Convert global variable to local variable
+-		altitude  = sAlt.altitude; 
+-
+-		// Limits for set_value function
+-		limit_low = -100;
+-		limit_high = 9000;
+-	}
+-	else // English units
+-	{
+-		// Display "ft" symbol
+-		display_symbol(LCD_UNIT_L1_FT, SEG_ON);
+-		
+-		// Convert altitude in meters to feet
+-		altitude = sAlt.altitude;
+-
+- 		// Convert from meters to feet
+-		altitude = convert_m_to_ft(altitude);		
+-
+-		// Limits for set_value function
+-		limit_low = -500;
+-#ifdef CONFIG_ALTI_ACCUMULATOR
+-		limit_high = 33000;
+-#else
+-		limit_high = 9999;
+-#endif
+-	}
+-#endif
+-	// Loop values until all are set or user breaks	set
+-	while(1) 
+-	{
+-		// Idle timeout: exit without saving 
+-		if (sys.flag.idle_timeout) break;
+-
+-		// Button STAR (short): save, then exit 
+-		if (button.flag.star) 
+-		{
+-			// When using English units, convert ft back to m before updating pressure table
+-#ifndef CONFIG_METRIC_ONLY
+-			if (!sys.flag.use_metric_units) altitude = convert_ft_to_m((s16)altitude);
+-#endif
+-
+-			// Update pressure table
+-			update_pressure_table((s16)altitude, sAlt.pressure, sAlt.temperature);
+-			
+-			// Set display update flag
+-			display.flag.line1_full_update = 1;
+-
+-			break;
+-		}
+-
+-		// Set current altitude - offset is set when leaving function
+-#ifdef CONFIG_ALTI_ACCUMULATOR
+-		// use 2nd line as it displays larger numbers
+-		set_value(&altitude, 5, 4, limit_low, limit_high, SETVALUE_DISPLAY_VALUE + SETVALUE_FAST_MODE + SETVALUE_DISPLAY_ARROWS, LCD_SEG_L2_4_0, display_value1);
+-#else
+-		set_value(&altitude, 4, 3, limit_low, limit_high, SETVALUE_DISPLAY_VALUE + SETVALUE_FAST_MODE + SETVALUE_DISPLAY_ARROWS, LCD_SEG_L1_3_0, display_value1);
+-#endif
+-	}		
+-	
+-	// Clear button flags
+-	button.all_flags = 0;
+-}
+-
+-
+-// *************************************************************************************************
+-// @fn          display_altitude
+-// @brief       Display routine. Supports display in meters and feet. 
+-// @param       u8 line			LINE1
+-//				u8 update		DISPLAY_LINE_UPDATE_FULL, DISPLAY_LINE_UPDATE_PARTIAL, DISPLAY_LINE_CLEAR
+-// @return      none
+-// *************************************************************************************************
+-#ifdef CONFIG_ALTITUDE
+-void display_altitude(u8 line, u8 update)
+-{
+-	u8 * str;
+-#ifndef CONFIG_METRIC_ONLY
+-	s16 ft;
+-#endif
+-	
+-	// redraw whole screen
+-	if (update == DISPLAY_LINE_UPDATE_FULL)	
+-	{
+-		// Enable pressure measurement
+-		sAlt.state = MENU_ITEM_VISIBLE;
+-
+-		// Start measurement
+-		start_altitude_measurement();
+-#ifdef CONFIG_ALTI_ACCUMULATOR
+-		display_chars(LCD_SEG_L1_3_0, (u8*)"ALT ", SEG_ON);
+-#endif
+-#ifdef CONFIG_METRIC_ONLY
+-			display_symbol(LCD_UNIT_L1_M, SEG_ON);
+-#else		
+-		if (sys.flag.use_metric_units)
+-		{
+-			// Display "m" symbol
+-			display_symbol(LCD_UNIT_L1_M, SEG_ON);
+-		}
+-		else
+-		{
+-			// Display "ft" symbol
+-			display_symbol(LCD_UNIT_L1_FT, SEG_ON);
+-		}
+-#endif		
+-		// Display altitude
+-		display_altitude(LINE1, DISPLAY_LINE_UPDATE_PARTIAL);
+-	}
+-	else if (update == DISPLAY_LINE_UPDATE_PARTIAL)
+-	{
+-		// Update display only while measurement is active
+-		if (sAlt.timeout > 0)
+-		{
+-#ifndef CONFIG_METRIC_ONLY
+-			if (sys.flag.use_metric_units)
+-			{
+-#endif
+-				// Display altitude in xxxx m format, allow 3 leading blank digits
+-				if (sAlt.altitude >= 0)
+-				{
+-#ifdef CONFIG_ALTI_ACCUMULATOR
+-					str = itoa(sAlt.altitude, 5, 4);
+-#else
+-					str = itoa(sAlt.altitude, 4, 3);
+-#endif
+-					display_symbol(LCD_SYMB_ARROW_UP, SEG_ON);
+-					display_symbol(LCD_SYMB_ARROW_DOWN, SEG_OFF);
+-				}
+-				else
+-				{
+-#ifdef CONFIG_ALTI_ACCUMULATOR
+-					str = itoa(sAlt.altitude*(-1), 4, 3);
+-#else
+-					str = itoa(sAlt.altitude*(-1), 5, 4);
+-#endif
+-					display_symbol(LCD_SYMB_ARROW_UP, SEG_OFF);
+-					display_symbol(LCD_SYMB_ARROW_DOWN, SEG_ON);
+-				}
+-#ifndef CONFIG_METRIC_ONLY
+-			}
+-			else
+-			{
+-				// Convert from meters to feet
+-				ft = convert_m_to_ft(sAlt.altitude);
+-#ifndef CONFIG_ALTI_ACCUMULATOR
+-				// Limit to 9999ft (3047m)
+-				if (ft > 9999) ft = 9999;
+-#endif
+-				// Display altitude in xxxx ft format, allow 3 leading blank digits
+-				if (ft >= 0)
+-				{
+-#ifdef CONFIG_ALTI_ACCUMULATOR
+-					str = itoa(ft, 4, 3);
+-#else
+-					str = itoa(ft, 5, 4);
+-#endif
+-					display_symbol(LCD_SYMB_ARROW_UP, SEG_ON);
+-					display_symbol(LCD_SYMB_ARROW_DOWN, SEG_OFF);
+-				}
+-				else
+-				{
+-#ifdef CONFIG_ALTI_ACCUMULATOR
+-					str = itoa(ft*(-1), 4, 3);
+-#else
+-					str = itoa(ft*(-1), 5, 4);
+-#endif
+-					display_symbol(LCD_SYMB_ARROW_UP, SEG_OFF);
+-					display_symbol(LCD_SYMB_ARROW_DOWN, SEG_ON);
+-				}				
+-			}
+-#endif
+-#ifdef CONFIG_ALTI_ACCUMULATOR
+-			// display altitude on bottom line (5 digits)
+-			clear_line(LINE2);
+-			display_chars(LCD_SEG_L2_4_0, str, SEG_ON);
+-#else
+-			display_chars(LCD_SEG_L1_3_0, str, SEG_ON);
+-#endif
+-		}
+-	}
+-	else if (update == DISPLAY_LINE_CLEAR)
+-	{
+-		// Disable pressure measurement
+-		sAlt.state = MENU_ITEM_NOT_VISIBLE;
+-
+-		// Stop measurement
+-		stop_altitude_measurement();
+-		
+-		// Clean up function-specific segments before leaving function
+-#ifdef CONFIG_ALTI_ACCUMULATOR
+-		// clear off the altitude display from the second line
+-		clear_line(LINE2);
+-		// should really try to get the date displayed here again too
+-#endif
+-		display_symbol(LCD_UNIT_L1_M, SEG_OFF);
+-		display_symbol(LCD_UNIT_L1_FT, SEG_OFF);
+-		display_symbol(LCD_SYMB_ARROW_UP, SEG_OFF);
+-		display_symbol(LCD_SYMB_ARROW_DOWN, SEG_OFF);
+-	}
+-}
+-
+-#ifdef CONFIG_ALTI_ACCUMULATOR
+-// *************************************************************************************************
+-// @fn          altitude_accumulator_periodic
+-// @brief       Is called periodically, reads altitude and accumulates upwards vertical
+-// @param       none
+-// @return      none
+-//
+-// This function is called once a minute. It reads the current altitude, then uses that to accumulate
+-// upwards altitude only (it does not measure or accumulate downwards altitude - only altitude gains.
+-// It functions as follows. Current direction (either up or down) is given in alt_accum_direction.
+-//
+-// If we're currently going up, then alt_accum_lastpeakdip contains the altitude of the last dip (valley)
+-// we encountered and we're rising up above that. If the current altimeter value is greater than the
+-// previous altimeter reading alt_accum_prevalt, then update alt_accum_prevalt with the current altitude
+-// and we're done. If however we've dropped below the previous value, then if we've exceeded our
+-// "direction change threshold" ALT_ACCUM_DIR_THRESHOLD, then it appears we've peaked and have started
+-// heading downhill. So add (alt_accum_prevalt - alt_accum_lastpeakdip) to alt_accum__accumtotal to
+-// collect that recently-finished uphill into our accumulated uphill total. Then reverse course:
+-// set alt_accum_lastpeakdip equal to alt_accum_prevalt so that lastpeakdip contains the altitude of the
+-// top of that recently-crossed hill (it's now a peak altitude rather than a dip (valley) altitude),
+-// change the alt_accum_direction flag to downhill, and as usual set the alt_accum_prevalt to our current
+-// altitude.
+-//
+-// On the other hand, if our current altitude is only slightly less than the previous altitude, then
+-// do nothing - not even update our "previous" altitude. When we're going uphill, only 2 things matter to
+-// us: either we've gone uphill some more, or we've gone downhill enough to trigger the change-or-direction
+-// threshold.
+-//
+-// If we're going downhill (direction flag alt_accum_direction says downhill), there's little to do except
+-// keep updating alt_accum_prevalt with the current altitude if we've dropped lower, and watch for a
+-// change of direction to an uphill. Much the same as the uphill case, but we don't accumulate downhills
+-// once the change of direction occurs.
+-//
+-// In addition, independently of all this, we also update alt_accum_max with the highest altitude
+-// we've found.
+-//
+-// All measurements are recorded & stored in metres.
+-//
+-// Yes it's a bit convoluted. That's OK. The basic thing to understand is that a "simple" accumulator
+-// simply adds altitude every time we take an altimeter reading. However every reading has an error, so
+-// adding a bunch of readings results in a lot of error. For that reason we have this more complicated
+-// system whereby we look for peaks and dips, and only add to the accumulator when we find the next peak.
+-// In that way we obtain the best accumulator accuracy possible. It does make for a more complicated
+-// system though.
+-//
+-// *************************************************************************************************
+-void altitude_accumulator_periodic (void)
+-{
+-	s32 currentalt;					// our current altitude
+-
+-	// First a quick sanity check. If we're not supposed to be running, something's wrong, so just exit
+-	if (alt_accum_enable==0) return;
+-
+-	// First thing we need to know is our current altitude. Take 4 measurements & average them.
+-	start_altitude_measurement();
+-	stop_altitude_measurement();
+-	currentalt = sAlt.altitude;			// first reading
+-
+-	// Now it's comparisions time. First we'll quickly update the maximum altitude tracker
+-	if (currentalt > alt_accum_max)
+-		alt_accum_max = currentalt;		// update max altitude if we're at a new high
+-
+-	// Now our convoluted altitude accumulator, looking for peaks and valleys, etc.
+-	if (alt_accum_direction) {
+-		// Execute here if we're supposedly going upwards
+-		if (currentalt >= alt_accum_prevalt) {
+-			// Execute here if we're still going upwards - current alt is greater than previous alt
+-			alt_accum_prevalt = currentalt;	// just update our "previous" value for next time
+-			return;								// and that's it - we're done
+-		}
+-		else {
+-			// Execute here if our current altitude is below our previous - have we crested the hill and
+-			// started to descend? If we've exceeded the threshold altitude drop we need to deal with that.
+-			if ((alt_accum_prevalt - currentalt) >= ALT_ACCUM_DIR_THRESHOLD) {
+-				// Execute here if we've descended enough off the hillcrest to exceed the threshold - we've just
+-				// gone through a change of direction, so we need to accumulate the previously gained altitude,
+-				// then set things up for going downhill now.
+-				alt_accum__accumtotal += alt_accum_prevalt - alt_accum_lastpeakdip;	// accumulate the vertical from that last hill climb
+-				alt_accum_lastpeakdip = alt_accum_prevalt;				// peakdip is now a peak elevation
+-				alt_accum_direction = 0;						// indicate we're tracking downhill now
+-				return;
+-			}
+-			else	// we've dropped a little, but not enough to trigger any action yet
+-				return;
+-		}
+-	}
+-	else {
+-		// Execute here if we're supposedly going downwards
+-		if (currentalt <= alt_accum_prevalt) {
+-			// Execute here if we're still going downwards - current alt is less than previous alt
+-			alt_accum_prevalt = currentalt;		// just update our "previous" value for next time
+-			return;					// and that's it - we're done
+-		}
+-		else {
+-			// Execute here if our current altitude is above our previous - have we bottomed the valley and
+-			// started to ascend? If we've exceeded the threshold altitude increase we need to deal with that.
+-			if ((currentalt - alt_accum_prevalt) >= ALT_ACCUM_DIR_THRESHOLD) {
+-				// Execute here if we've ascended enough above the valley floor to exceed the threshold - we've just
+-				// gone through a change of direction, so we need to set things up for going uphill now.
+-				alt_accum_lastpeakdip = alt_accum_prevalt;	// peakdip is now a dip (valley) elevation
+-				alt_accum_direction = 1;			// indicate we're tracking uphill now
+-				return;
+-			}
+-			else	// we've ascended a little, but not enough to trigger any action yet
+-				return;
+-		}
+-	}
+-}
+-
+-
+-// *************************************************************************************************
+-// @fn          altitude_accumulator_start
+-// @brief       Initialises the altitude accumulator function
+-// @param       none
+-// @return      none
+-// *************************************************************************************************
+-void altitude_accumulator_start (void)
+-{
+-	s32 temp;
+-
+-	alt_accum__accumtotal = 0;		// So far total upwards vertical accumulation is zero
+-	alt_accum_direction = 1;		// start off by assuming we're heading uphill
+-
+-	// Now let's get 4 altitude readings, then average them, to obtain our current altitude
+-	start_altitude_measurement();
+-	stop_altitude_measurement();
+-	temp = sAlt.altitude;				// first reading
+-	/* start_altitude_measurement();
+-	   stop_altitude_measurement();
+-	   temp += sAlt.altitude;			// second reading
+-	   start_altitude_measurement();
+-	   stop_altitude_measurement();
+-	   temp += sAlt.altitude;			// third reading
+-	   start_altitude_measurement();
+-	   stop_altitude_measurement();
+-	   temp += sAlt.altitude;			// fourth reading
+-	   temp = temp >> 2;				// divide result by 4 = our current altitude */
+-
+-	alt_accum_startpoint = temp;		// the altitude the user zeroed the accumulator at
+-	alt_accum_lastpeakdip = temp;		// altitude of the last dip (in this case, as we assume we're going uphill)
+-	alt_accum_prevalt = temp;		// previous altitude value
+-	alt_accum_max = temp;			// maximum altitude we've encountered so far
+-}
+-
+-
+-
+-// *************************************************************************************************
+-// @fn          display_selection_altaccum
+-// @brief       Display altitude accumulator ON or OFF
+-// @param       u8 segments			where to display, usually LCD_SEG_L2_4_0
+-//				u32 index			0 = OFF, 1 = ON
+-//				u8 digits			Not used
+-//				u8 blanks			Not used
+-// @return      none
+-// *************************************************************************************************
+-void display_selection_altaccum (u8 segments, u32 index, u8 digits, u8 blanks)
+-{
+-	if (index) {
+-		clear_line(LINE2);
+-		display_chars(segments, (u8*)" ON  ", SEG_ON_BLINK_ON);		// display "ON" on bottom line
+-	}
+-	else {
+-		clear_line(LINE2);
+-		display_chars(segments, (u8*)" OFF ", SEG_ON_BLINK_ON);		// display "OFF" on bottom line
+-	}
+-}
+-
+-
+-
+-
+-// *************************************************************************************************
+-// @fn          sx_alt_accumulator
+-// @brief       Altitude accumulator direct function. Called when "up" button is pressed.
+-// @param       u8 line	LINE1, LINE2
+-// @return      none
+-//
+-// Simply increments alt_accum_displaycode so that the display function display_alt_accumulator()
+-// knows what to display on the bottom line. Codes are:
+-// alt_accum_displaycode = 0:  Altitude relative to start point
+-// alt_accum_displaycode = 1:  Total accumulated upwards vertical altitude
+-// alt_accum_displaycode = 2:  Maximum altitude encountered (max height)
+-// *************************************************************************************************
+-void sx_alt_accumulator(u8 line)
+-{
+-	alt_accum_displaycode++;
+-
+-	if (alt_accum_displaycode > 2)
+-		alt_accum_displaycode = 0;
+-}
+-
+-
+-// *************************************************************************************************
+-// @fn          display_alt_accumulator
+-// @brief       Display altitude accumulator routine. Supports display in meters and feet.
+-// @param       u8 line			LINE1
+-//				u8 update		DISPLAY_LINE_UPDATE_FULL, DISPLAY_LINE_UPDATE_PARTIAL, DISPLAY_LINE_CLEAR
+-// @return      none
+-// *************************************************************************************************
+-void display_alt_accumulator (u8 line, u8 update)
+-{
+-	s32 temp;
+-	u8 * str;
+-
+-
+-	// show our altitude accumulator numbers on the second line
+-	if ( (update==DISPLAY_LINE_UPDATE_FULL) || (update==DISPLAY_LINE_UPDATE_PARTIAL) )
+-	{
+-		// Show "ALtA" on top line
+-		display_chars(LCD_SEG_L1_3_0, (u8*)"ALTA", SEG_ON);
+-
+-		// if the altitude accumulator is currently disabled, we've got nothing else to display so exit
+-		if (alt_accum_enable == 0) {
+-			clear_line(LINE2);
+-			display_chars(LCD_SEG_L2_4_0, (u8*)" OFF ", SEG_ON);	// display "OFF" on bottom line
+-			return;
+-		}
+-
+-		// Otherwise the accumulator is running, so display on the second line whatever alt_accum_displaycode
+-		// says to display, in metres or feet as appropriate.
+-		if (alt_accum_displaycode>2) alt_accum_displaycode=0;		// sanity check
+-
+-		// light up "m" or "ft" display symbol as appropriate
+-		if (sys.flag.use_metric_units)
+-			display_symbol(LCD_UNIT_L1_M, SEG_ON);			// metres symbol
+-		else
+-			display_symbol(LCD_UNIT_L1_FT, SEG_ON);			// or feet symbol
+-
+-		if (alt_accum_displaycode==0)
+-		{
+-			// Display current altitude relative to the accumulator's starting point
+-			// "DIFF" means difference between starting elevation & current elevation
+-			display_chars(LCD_SEG_L1_3_0, (u8*)"DIFF", SEG_ON);		// top line display message
+-
+-			start_altitude_measurement();
+-			stop_altitude_measurement();					// grab our current altitude
+-
+-			temp = sAlt.altitude - alt_accum_startpoint;	// difference between starting altitude & current altitude
+-			if (sys.flag.use_metric_units==0) temp = (temp*328)/100;	// convert to feet if necessary
+-
+-			clear_line(LINE2);						// clear the bottom line of the display
+-			if (temp < 0) {							// if altitude is a negative number...
+-				display_char(LCD_SEG_L2_4, '-', SEG_ON);		// display - (negative sign) character at start of second line
+-				temp = 0 - temp;					// make altitude a positive number again so we can display it
+-				if (temp>9999) temp = 9999;				// we can only display 4 digits for a negative number
+-				str = itoa(temp, 4, 3);					// 4 digits, up to 3 leading blank digits
+-				display_chars(LCD_SEG_L2_3_0, str, SEG_ON);		// display altitude difference on bottom line (4 digits)
+-				return;
+-			}
+-			else								// otherwise altitude difference is a positive number
+-			{
+-				str = itoa(temp, 5, 4);					// 5 digits, up to 4 leading blank digits
+-				display_chars(LCD_SEG_L2_4_0, str, SEG_ON);		// display altitude difference on bottom line (5 digits)
+-				return;
+-			}
+-		}
+-
+-		else if (alt_accum_displaycode==1)
+-		{
+-			// Display total accumulated elevation gain. Remember we might currently be going uphill
+-			// so we need to check for, and include, any current elevation gain
+-			display_chars(LCD_SEG_L1_3_0, (u8*)"ACCA", SEG_ON);		// top line display message
+-			clear_line(LINE2);						// clear the bottom line of the display
+-
+-			if (alt_accum__accumtotal<0) alt_accum__accumtotal = 0;	// accumulated total should never be negative!
+-			temp = alt_accum__accumtotal;				// local copy of accumulated total
+-
+-			// Now we need to add on any vertical gained recently, that hasn't yet been included in alt_accum__accumtotal
+-			// This only happens if we're currently going uphill, and we've above our last valley / dip elevation
+-			if (alt_accum_direction && (sAlt.altitude>alt_accum_lastpeakdip))	// if we're going up, and we're higher than our last dip (valley) altitude
+-				temp += sAlt.altitude - alt_accum_lastpeakdip;			// then add the vertical we've gained so far above that last dip / valley point
+-
+-			// display the result
+-			str = itoa(temp, 5, 4);					// 5 digits, up to 4 leading blank digits
+-			display_chars(LCD_SEG_L2_4_0, str, SEG_ON);		// display peak altitude on bottom line (5 digits)
+-			return;
+-		}
+-
+-		else
+-		{
+-			// Display maximum altitude found so far
+-			display_chars(LCD_SEG_L1_3_0, (u8*)"PEAK", SEG_ON);	// top line display message
+-			clear_line(LINE2);					// clear the bottom line of the display
+-
+-			temp = alt_accum_max;					// local copy of peak altitude
+-			if (temp < 0) temp = 0;					// I can't be bothered displaying a negative number! So make it zero if it is.
+-			str = itoa(temp, 5, 4);					// 5 digits, up to 4 leading blank digits
+-			display_chars(LCD_SEG_L2_4_0, str, SEG_ON);		// display peak altitude on bottom line (5 digits)
+-			return;
+-		}
+-	}
+-
+-
+-	// clear out - we're finished
+-	else if (update == DISPLAY_LINE_CLEAR)
+-	{
+-		clear_line(LINE2);			// clear off the altitude display from the second line
+-		// should really try to get the date displayed here again
+-
+-		// Clean up function-specific segments before leaving function
+-		display_symbol(LCD_UNIT_L1_M, SEG_OFF);
+-		display_symbol(LCD_UNIT_L1_FT, SEG_OFF);
+-		display_symbol(LCD_SYMB_ARROW_DOWN, SEG_OFF);
+-	}
+-}
+-
+-
+-
+-// *************************************************************************************************
+-// @fn          mx_alt_accumulator
+-// @brief       Altitude accumulator modify function. Turn accumulator function on or off.
+-// @param       u8 line	LINE1, LINE2
+-// @return      none
+-// *************************************************************************************************
+-void mx_alt_accumulator(u8 line)
+-{
+-	s32 temp_enable;				// local copy of the global altitude accumumulator enable flag
+-
+-
+-	// Show "ALtA" on top line
+-	display_chars(LCD_SEG_L1_3_0, (u8*)"ALTA", SEG_ON);
+-
+-	// Allow the user to turn the altitude accumulator function ON or OFF. This is stored in global variable
+-	// alt_accum_enable where 0 = off, 1 = on. Display "on" or "off" on the bottom line as appropriate.
+-	temp_enable = alt_accum_enable;			// local copy, to allow user to modify it
+-	set_value(&temp_enable, 1, 0, 0, 1, SETVALUE_ROLLOVER_VALUE + SETVALUE_DISPLAY_SELECTION, LCD_SEG_L2_4_0, display_selection_altaccum);	// allow user to turn on / off
+-
+-	// If the altitude accumulator has just been enabled, call its initialisation routine
+-	if ( (temp_enable==1) && (alt_accum_enable==0) )
+-		altitude_accumulator_start();
+-
+-	alt_accum_enable = temp_enable;		// global flag that the accumulator is running, or not, as the user selected
+-
+-	clear_line(LINE2);			// don't display on/off on bottom line any more
+-	button.all_flags = 0;			// clear all pushbutton flags
+-}
+-
+-
+-#endif // CONFIG_ALTI_ACCUMULATOR
+-
+-#endif // CONFIG_ALTITUDE
+-
+-#endif // FEATURE_ALTITUDE
+diff --git a/logic/altitude_.h b/logic/altitude_.h
+deleted file mode 100644
+index 197b145..0000000
+--- a/logic/altitude_.h
++++ /dev/null
+@@ -1,102 +0,0 @@
+-// *************************************************************************************************
+-//
+-//	Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/ 
+-//	 
+-//	 
+-//	  Redistribution and use in source and binary forms, with or without 
+-//	  modification, are permitted provided that the following conditions 
+-//	  are met:
+-//	
+-//	    Redistributions of source code must retain the above copyright 
+-//	    notice, this list of conditions and the following disclaimer.
+-//	 
+-//	    Redistributions in binary form must reproduce the above copyright
+-//	    notice, this list of conditions and the following disclaimer in the 
+-//	    documentation and/or other materials provided with the   
+-//	    distribution.
+-//	 
+-//	    Neither the name of Texas Instruments Incorporated nor the names of
+-//	    its contributors may be used to endorse or promote products derived
+-//	    from this software without specific prior written permission.
+-//	
+-//	  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
+-//	  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+-//	  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+-//	  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+-//	  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+-//	  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
+-//	  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+-//	  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+-//	  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
+-//	  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+-//	  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-//
+-// *************************************************************************************************
+-
+-#ifndef ALTITUDE_H_
+-#define ALTITUDE_H_
+-
+-
+-// *************************************************************************************************
+-// Include section
+-
+-
+-// *************************************************************************************************
+-// Prototypes section
+-extern void reset_altitude_measurement(void);
+-extern u8 is_altitude_measurement(void);
+-extern void start_altitude_measurement(void);
+-extern void stop_altitude_measurement(void);
+-extern void do_altitude_measurement(u8 filter);
+-#ifdef CONFIG_ALTI_ACCUMULATOR
+-extern void display_selection_altunits(u8 segments, u32 index, u8 digits, u8 blanks);
+-extern void altitude_accumulator_periodic (void);
+-#endif
+-
+-// menu functions
+-extern void sx_altitude(u8 line);
+-extern void mx_altitude(u8 line);
+-extern void display_altitude(u8 line, u8 update);
+-#ifdef CONFIG_ALTI_ACCUMULATOR
+-extern void sx_alt_accumulator(u8 line);
+-extern void mx_alt_accumulator(u8 line);
+-extern void display_alt_accumulator (u8 line, u8 update);
+-#endif
+-
+-// *************************************************************************************************
+-// Defines section
+-
+-// Stop altitude measurement after 60 minutes to save battery
+-#define ALTITUDE_MEASUREMENT_TIMEOUT	(60*60u)
+-
+-
+-// *************************************************************************************************
+-// Global Variable section
+-struct alt
+-{
+-	// MENU_ITEM_NOT_VISIBLE, MENU_ITEM_VISIBLE   
+-	menu_t	state; 
+-
+-	// Pressure (Pa)
+-	u32		pressure;
+-
+-	// Temperature (°K)
+-	u16		temperature;
+-
+-	// Altitude (m)
+-	s16		altitude;
+-	
+-	// Altitude offset stored during calibration
+-	s16		altitude_offset;
+-
+-	// Timeout
+-	u16		timeout;
+-};
+-extern struct alt sAlt;
+-
+-
+-// *************************************************************************************************
+-// Extern section
+-
+-
+-#endif /*ALTITUDE_H_*/
+diff --git a/logic/altitude_math.c b/logic/altitude_math.c
+new file mode 100644
+index 0000000..d9b2516
+--- /dev/null
++++ b/logic/altitude_math.c
+@@ -0,0 +1,165 @@
++#include "project.h"
++
++#include "altitude_math.h"
++
++static s16 pRef = 101325/4; // Reference pressure at sea level in 4Pa units
++static s16 pLast = 101325/4; // Last measured pressure in 4Pa units
++static s16 hLast = 0; // Last altitude estimate in normalized units b/H0/2^15
++
++// *************************************************************************************************
++// @fn          conv_altitude_to_fraction
++// @brief       Relative pressure deviation from reference pressure for given altitude estimate.
++// @param       s16 hh Altitude estimate (in normalised units).
++// @return      Calculated relative pressure deviation for this altitude
++// *************************************************************************************************
++s16 conv_altitude_to_fraction(s16 hh)
++{
++	/*
++	The fixed part of the function of altitude can be broken into tabulated ranges
++	and/or interpolated according to a Taylor series expansion
++		 (1 - f) = (1 - h/H0)^b
++		         = 1 - h*b/H0 + h^2*b*(b-1)/2/H0^2 - h^3*b8(b-1)*(b-2)/6/H0^3 + ...
++	At low altitudes h/H0 << 1, so this series tends to converge rapidly and is
++	well-suited for fixed point implementation. With one or two additional terms
++	the series converges accurately over the range of interest so there is no need
++	for table interpolation. For the proposed fixed point implementation we rewrite
++	this expression a bit into
++		hh = b*h/H0
++		(1 - f) = (1 - h/H0)^b
++		        = 1 - hh*(1 - hh*(b-1)/2/b*(1 - hh*(b-2)/3/b*(...
++	We stick to integer multiply and shift operations. Signed s16 values can contain
++	values +/-2^15 and unsigned u16 values 0..2^16. In C multiplication amounts to
++	expanding to s32, integer multiply and scaling back by a proper shift operation.
++
++	Given the above equations the natural unit of hh as the first order correction is
++	H0/b = 8434.48m. If we accept this as a maximum +/- range we can store s16 hh in
++	units of (H0/b)/2^15 = 0,26m which keeps the resolution at less than a foot.
++	 */
++	s16 f, hf;
++	// f  = hh*(b - 4)/5/b, correction relevant above 3.5km:
++	// (Could be omitted, but it is relatively little work.)
++	f = mult_scale16(hh, 3132);
++	// f  = hh*(b - 3)/4/b*(1 - f), correction relevant above 1.3km:
++	hf = mult_scale16(hh, 7032);
++	f = hf - mult_scale15(hf,f);
++	// f = hh*(b - 2)/3/b*(1 - f), correction relevant above 300m:
++	hf = mult_scale16(hh, 13533);
++	f = hf - mult_scale15(hf,f);
++	// f = hh*(b - 1)/2/b*(1 - f), correction relevant above 30m:
++	hf = mult_scale16(hh, 26533);
++	f = hf - mult_scale15(hf,f);
++	// f = hh*(1 - f), the linear part:
++	f = hh - mult_scale15(hh,f);
++	return f;
++}
++
++// *************************************************************************************************
++// @fn          update_pressure_table
++// @brief       Calculate pressure table for reference altitude.
++//				Implemented straight from VTI reference code.
++// @param       s16		href	Reference height
++//				u32		p_meas	Pressure (Pa)
++//				u16		t_meas	Temperature (10*Â°K)
++// @return     	none
++// *************************************************************************************************
++void update_pressure_table(s16 href, u32 p_meas, u16 t_meas)
++{
++	// Note: a user-provided sea-level reference pressure in mbar as used by pilots
++	// would be straightforward: href = 0; p_meas = (s32)mbar*100;
++	// The altitude reading will be iteratively updated.
++
++	// Convert to 4Pa units:
++	pLast = (s16)((p_meas+2) >> 2);
++	// Convert reference altitude to normalized units:
++	if (sys.flag.use_metric_units) { // user_altitude in m
++		hLast = 4*href - mult_scale16(href, 7536);
++	} else { // user_altitude in ft
++		hLast = href + mult_scale16(href,12068);
++	}
++	s32 f = (s32)0x8000 - conv_altitude_to_fraction(hLast);
++	// pRef = p_meas*2^15/f:
++	pRef = ((((s32)pLast << 16) + f) >> 1) / f;
++	// The long division is acceptable because it happens rarely.
++	// The term + f) is for proper rounding.
++	// The <<16 and >>1 operations correct for the 15bit scale of f.
++}
++
++// *************************************************************************************************
++// @fn          conv_pressure_to_altitude
++// @brief       Calculates altitude from current pressure, and
++//				stored reference pressure at sea level and previous altitude estimate.
++//				Temperature info is ignored.
++// @param       u32		p_meas	Pressure (Pa)
++// @param		u16		t_meas	Temperature (10*Â°K) Ignored !!!
++// @return      Estimated altitude in user-selected unit (m or ft)
++//              (internally filtered, slightly sluggish).
++// *************************************************************************************************
++s16 conv_pa_to_altitude(u32 p_meas, u16 t_meas)
++{
++	/*
++	Assumption: fixed, linear T(h)
++	T = T0 - dTdh*h
++	with
++	T0 = 288.15K (15C)
++	dTdh = 6.5mK/m
++
++	Basic differential equation:
++		dh = -(R/G)*T(H)*dp/p
++	Solution:
++		H = H0*(1 - (p/pRef)^a)
++	with
++		H0 = T0/dTdh = 44330.77m
++		pRef = adjustable reference pressure at sea level (h=0).
++		a = dTdH*R/G = 0.190263
++		R = 287.052m^2/s^2/K
++		G = 9.80665 (at medium latitude)
++
++	We assume T0 and the temperature profile to be fixed; the temperature reading
++	of the watch is not very useful since it is strongly influenced by body heat,
++	clothing, shelter, etc.
++
++	Straight evaluation of h(p) requires an unattractive long division p/pRef
++	with pRef the adjustable reference pressure, and the Taylor expansion does
++	not converge very quickly.
++
++	Evaluation of p(h) requires a more attractive multiplication by the
++	user-adjustable reference pressure pRef:
++		f =(1 - h/H0)^b
++		p = pRef*f
++	with
++		b = 1/a = G/(dTdH*R) = 5.255896
++	In a very crude linear iteration the h value can be updated by
++		delta_h = -delta_p / dpdh
++	The slope dpdh varies by about a factor two over the range of interest,
++	but we can pick a fixed value on the safe side and accept that the updates
++	are a bit more damped at higher altitudes.
++
++	The sensor provides 19bit absolute pressure in units of 0.25Pa, but that is more
++	resolution than we can easily handle in the multiplications. We store measured
++	pressure p, reference pressure pRef and calculated pressure as u16 in units of 4Pa.
++
++	In the units chosen for p (4Pa) and for hLast (see function conv_altitude_to_fraction),
++	the slope dpdh is about -0.75 at sea level down to -0.375 at high altitudes. To avoid
++	overshoot and instabilities we assume a bigger value and accept a minor amount of
++	extra filtering delay at higher altitudes. The factor 1/0.75 is approximated by 1.
++	*/
++	// Scale to 4Pa units:
++	s16 p = (s16)((p_meas+2) >> 2);
++	// Store current pressure for next predictor:
++	pLast = p;
++	// Calculate pressure ratio based on guessed altitude (serious DSP work):
++	s16 f = conv_altitude_to_fraction(hLast);
++	// Calculate pressure expected for guessed height
++	u16 pCalculated = pRef - mult_scale15(pRef,f);
++	// This calculation is correct within about 7Pa.
++	// Reverse the solution with a linearly improved guess:
++	hLast -= mult_scale15((p - pCalculated)<<1, 21845);
++
++	if (sys.flag.use_metric_units) {
++		// Altitude in meters (correct within about 0.7m):
++		return mult_scale16(hLast, 16869);
++	} else {
++		// Altitude in feet (correct within 1.5ft):
++		return mult_scale15(hLast, 27672);
++	}
++}
+diff --git a/logic/altitude_math.h b/logic/altitude_math.h
+new file mode 100644
+index 0000000..a1c52eb
+--- /dev/null
++++ b/logic/altitude_math.h
+@@ -0,0 +1,9 @@
++#ifndef ALTITUDE_LOGIC_H
++#define ALTITUDE_LOGIC_H
++
++#include <project.h>
++
++extern void update_pressure_table(s16 href, u32 p_meas, u16 t_meas);
++extern s16 conv_pa_to_altitude(u32 p_meas, u16 t_meas);
++
++#endif // ALTITUDE_LOGIC_H
+diff --git a/makefile b/makefile
+index 57fdd5e..6f9d150 100644
+--- a/makefile
++++ b/makefile
+@@ -5,6 +5,8 @@ CC  = msp430-gcc
+ LD  = msp430-ld
+ PYTHON := $(shell which python2 || which python)
+ 
++HOST_CC = gcc
++
+ PROJ_DIR	=.
+ BUILD_DIR = build
+ CFLAGS_PRODUCTION = -Os -Wall#-Wl,--gc-sections # -ffunction-sections # -fdata-sections  -fno-inline-functions# -O optimizes
+@@ -16,11 +18,11 @@ CFLAGS_DEBUG= -g -Os # -g enables debugging symbol table, -O0 for NO optimizatio
+ CC_CMACH	= -mmcu=cc430f6137
+ CC_DMACH	= -D__MSP430_6137__ -DMRFI_CC430 -D__CC430F6137__ #-DCC__MSPGCC didn't need mspgcc defines __GNUC__
+ CC_DOPT		= -DELIMINATE_BLUEROBIN
+-CC_INCLUDE = -I$(PROJ_DIR)/ -I$(PROJ_DIR)/include/ -I$(PROJ_DIR)/gcc/ -I$(PROJ_DIR)/driver/ -I$(PROJ_DIR)/logic/ -I$(PROJ_DIR)/bluerobin/ -I$(PROJ_DIR)/simpliciti/ -I$(PROJ_DIR)/simpliciti/Components/bsp -I$(PROJ_DIR)/simpliciti/Components/bsp/drivers -I$(PROJ_DIR)/simpliciti/Components/bsp/boards/CC430EM -I$(PROJ_DIR)/simpliciti/Components/mrfi -I$(PROJ_DIR)/simpliciti/Components/nwk -I$(PROJ_DIR)/simpliciti/Components/nwk_applications
++CC_INCLUDE = -I$(PROJ_DIR)/ -I$(PROJ_DIR)/include/ -I$(PROJ_DIR)/driver/ -I$(PROJ_DIR)/logic/ -I$(PROJ_DIR)/bluerobin/ -I$(PROJ_DIR)/simpliciti/ -I$(PROJ_DIR)/simpliciti/Components/bsp -I$(PROJ_DIR)/simpliciti/Components/bsp/drivers -I$(PROJ_DIR)/simpliciti/Components/bsp/boards/CC430EM -I$(PROJ_DIR)/simpliciti/Components/mrfi -I$(PROJ_DIR)/simpliciti/Components/nwk -I$(PROJ_DIR)/simpliciti/Components/nwk_applications
+ 
+ CC_COPT		=  $(CC_CMACH) $(CC_DMACH) $(CC_DOPT)  $(CC_INCLUDE) 
+ 
+-LOGIC_SOURCE = logic/acceleration.c logic/alarm.c logic/altitude.c logic/battery.c  logic/clock.c logic/date.c logic/menu.c logic/rfbsl.c logic/rfsimpliciti.c logic/stopwatch.c logic/temperature.c logic/test.c logic/user.c logic/phase_clock.c logic/eggtimer.c logic/prout.c logic/vario.c logic/sidereal.c logic/strength.c \
++LOGIC_SOURCE = logic/acceleration.c logic/alarm.c logic/altitude.c logic/altitude_math.c logic/battery.c  logic/clock.c logic/date.c logic/menu.c logic/rfbsl.c logic/rfsimpliciti.c logic/stopwatch.c logic/temperature.c logic/test.c logic/user.c logic/phase_clock.c logic/eggtimer.c logic/prout.c logic/vario.c logic/sidereal.c logic/strength.c \
+ 				logic/sequence.c logic/gps.c logic/dst.c logic/otp.c
+ 
+ LOGIC_O = $(addsuffix .o,$(basename $(LOGIC_SOURCE)))
+@@ -35,9 +37,9 @@ SIMPLICICTI_SOURCE = $(SIMPLICICTI_SOURCE_ODD) simpliciti/Components/bsp/bsp.c s
+ 
+ SIMPLICICTI_O = $(addsuffix .o,$(basename $(SIMPLICICTI_SOURCE)))
+ 
+-MAIN_SOURCE = ezchronos.c  gcc/intrinsics.c 
++MAIN_SOURCE = ezchronos.c
+ 
+-MAIN_O = ezchronos.o gcc/intrinsics.o 
++MAIN_O = ezchronos.o
+ 
+ ALL_O = $(LOGIC_O) $(DRIVER_O) $(SIMPLICICTI_O) $(MAIN_O)
+ 
+@@ -56,6 +58,13 @@ ifeq (debug,$(findstring debug,$(MAKECMDGOALS)))
+ USE_CFLAGS = $(CFLAGS_DEBUG)
+ endif
+ 
++HOST_CC_OPT = -DHOST_TESTS  $(CC_INCLUDE)
++HOST_SOURCE = logic/altitude_math.c driver/dsp.c sys.c
++HOST_O = $(addsuffix .host.o,$(basename $(HOST_SOURCE)))
++HOST_TESTS_SOURCE = $(wildcard logic/*_test.c)
++HOST_TESTS_O = $(addsuffix .host.o,$(basename $(HOST_TESTS_SOURCE)))
++HOST_TESTS = $(basename $(HOST_TESTS_SOURCE))
++
+ main: build config.h even_in_range $(ALL_O) $(EXTRA_O) build
+ 	@echo $(findstring debug,$(MAKEFLAGS))
+ 	@echo "Compiling $@ for $(CPU)..."
+@@ -79,6 +88,11 @@ $(ALL_S): %.s: %.o config.h include/project.h
+ 	msp430-objdump -D $< > $@
+ #             $(CC) -c $(CFLAGS) $< -o $@
+ 
++$(HOST_O) $(HOST_TESTS_O): %.host.o: %.c config.h include/project.h
++	$(HOST_CC) $(HOST_CC_OPT) $(CONFIG_FLAGS) -c $< -o $@
++
++$(HOST_TESTS): %: %.host.o $(HOST_O)
++	$(HOST_CC) $< $(HOST_O) -lm -o $@
+ 
+ debug:	build even_in_range $(ALL_O)
+ 	@echo "Compiling $@ for $(CPU) in debug"

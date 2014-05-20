@@ -1,0 +1,11 @@
+16:03:04 **** Incremental Build of configuration Debug for project T-shirt Shooter Sasquatch ****
+make all 
+Building target: T-shirt Shooter Sasquatch.elf
+Invoking: AVR C++ Linker
+avr-g++ -Wl,-Map,T-shirt Shooter Sasquatch.map,--cref -mmcu=atmega2560 -o "T-shirt Shooter Sasquatch.elf"   
+avr-g++: error: Shooter: No such file or directory
+avr-g++: error: Sasquatch.map,--cref: No such file or directory
+make: *** [T-shirt Shooter Sasquatch.elf] Fehler 1
+
+16:03:04 Build Finished (took 84ms)
+

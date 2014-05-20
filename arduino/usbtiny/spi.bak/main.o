@@ -1,0 +1,763 @@
+	.file	"main.c"
+__SP_L__ = 0x3d
+__SREG__ = 0x3f
+__tmp_reg__ = 0
+__zero_reg__ = 1
+	.stabs	"/home/mark/workspace_c/usbtiny-1.6/spi/",100,0,2,.Ltext0
+	.stabs	"main.c",100,0,2,.Ltext0
+	.text
+.Ltext0:
+	.stabs	"gcc2_compiled.",60,0,0,0
+	.stabs	"int:t(0,1)=r(0,1);-32768;32767;",128,0,0,0
+	.stabs	"char:t(0,2)=r(0,2);0;127;",128,0,0,0
+	.stabs	"long int:t(0,3)=@s32;r(0,3);020000000000;017777777777;",128,0,0,0
+	.stabs	"unsigned int:t(0,4)=r(0,4);0;0177777;",128,0,0,0
+	.stabs	"long unsigned int:t(0,5)=@s32;r(0,5);0;037777777777;",128,0,0,0
+	.stabs	"long long int:t(0,6)=@s64;r(0,6);01000000000000000000000;0777777777777777777777;",128,0,0,0
+	.stabs	"long long unsigned int:t(0,7)=@s64;r(0,7);0;01777777777777777777777;",128,0,0,0
+	.stabs	"short int:t(0,8)=r(0,8);-32768;32767;",128,0,0,0
+	.stabs	"short unsigned int:t(0,9)=r(0,9);0;0177777;",128,0,0,0
+	.stabs	"signed char:t(0,10)=@s8;r(0,10);-128;127;",128,0,0,0
+	.stabs	"unsigned char:t(0,11)=@s8;r(0,11);0;255;",128,0,0,0
+	.stabs	"float:t(0,12)=r(0,1);4;0;",128,0,0,0
+	.stabs	"double:t(0,13)=r(0,1);4;0;",128,0,0,0
+	.stabs	"long double:t(0,14)=r(0,1);4;0;",128,0,0,0
+	.stabs	"short _Fract:t(0,15)=r(0,1);1;0;",128,0,0,0
+	.stabs	"_Fract:t(0,16)=r(0,1);2;0;",128,0,0,0
+	.stabs	"long _Fract:t(0,17)=r(0,1);4;0;",128,0,0,0
+	.stabs	"long long _Fract:t(0,18)=r(0,1);8;0;",128,0,0,0
+	.stabs	"unsigned short _Fract:t(0,19)=r(0,1);1;0;",128,0,0,0
+	.stabs	"unsigned _Fract:t(0,20)=r(0,1);2;0;",128,0,0,0
+	.stabs	"unsigned long _Fract:t(0,21)=r(0,1);4;0;",128,0,0,0
+	.stabs	"unsigned long long _Fract:t(0,22)=r(0,1);8;0;",128,0,0,0
+	.stabs	"_Sat short _Fract:t(0,23)=r(0,1);1;0;",128,0,0,0
+	.stabs	"_Sat _Fract:t(0,24)=r(0,1);2;0;",128,0,0,0
+	.stabs	"_Sat long _Fract:t(0,25)=r(0,1);4;0;",128,0,0,0
+	.stabs	"_Sat long long _Fract:t(0,26)=r(0,1);8;0;",128,0,0,0
+	.stabs	"_Sat unsigned short _Fract:t(0,27)=r(0,1);1;0;",128,0,0,0
+	.stabs	"_Sat unsigned _Fract:t(0,28)=r(0,1);2;0;",128,0,0,0
+	.stabs	"_Sat unsigned long _Fract:t(0,29)=r(0,1);4;0;",128,0,0,0
+	.stabs	"_Sat unsigned long long _Fract:t(0,30)=r(0,1);8;0;",128,0,0,0
+	.stabs	"short _Accum:t(0,31)=r(0,1);2;0;",128,0,0,0
+	.stabs	"_Accum:t(0,32)=r(0,1);4;0;",128,0,0,0
+	.stabs	"long _Accum:t(0,33)=r(0,1);8;0;",128,0,0,0
+	.stabs	"long long _Accum:t(0,34)=r(0,1);8;0;",128,0,0,0
+	.stabs	"unsigned short _Accum:t(0,35)=r(0,1);2;0;",128,0,0,0
+	.stabs	"unsigned _Accum:t(0,36)=r(0,1);4;0;",128,0,0,0
+	.stabs	"unsigned long _Accum:t(0,37)=r(0,1);8;0;",128,0,0,0
+	.stabs	"unsigned long long _Accum:t(0,38)=r(0,1);8;0;",128,0,0,0
+	.stabs	"_Sat short _Accum:t(0,39)=r(0,1);2;0;",128,0,0,0
+	.stabs	"_Sat _Accum:t(0,40)=r(0,1);4;0;",128,0,0,0
+	.stabs	"_Sat long _Accum:t(0,41)=r(0,1);8;0;",128,0,0,0
+	.stabs	"_Sat long long _Accum:t(0,42)=r(0,1);8;0;",128,0,0,0
+	.stabs	"_Sat unsigned short _Accum:t(0,43)=r(0,1);2;0;",128,0,0,0
+	.stabs	"_Sat unsigned _Accum:t(0,44)=r(0,1);4;0;",128,0,0,0
+	.stabs	"_Sat unsigned long _Accum:t(0,45)=r(0,1);8;0;",128,0,0,0
+	.stabs	"_Sat unsigned long long _Accum:t(0,46)=r(0,1);8;0;",128,0,0,0
+	.stabs	"void:t(0,47)=(0,47)",128,0,0,0
+	.stabs	"/usr/avr/include/avr/io.h",130,0,0,0
+	.stabs	"/usr/avr/include/avr/sfr_defs.h",130,0,0,0
+	.stabs	"/usr/avr/include/inttypes.h",130,0,0,0
+	.stabs	"/usr/lib/gcc/avr/4.8.0/include/stdint.h",130,0,0,0
+	.stabs	"/usr/avr/include/stdint.h",130,0,0,0
+	.stabs	"int8_t:t(5,1)=(0,10)",128,0,121,0
+	.stabs	"uint8_t:t(5,2)=(0,11)",128,0,122,0
+	.stabs	"int16_t:t(5,3)=(0,1)",128,0,123,0
+	.stabs	"uint16_t:t(5,4)=(0,4)",128,0,124,0
+	.stabs	"int32_t:t(5,5)=(0,3)",128,0,125,0
+	.stabs	"uint32_t:t(5,6)=(0,5)",128,0,126,0
+	.stabs	"int64_t:t(5,7)=(0,6)",128,0,128,0
+	.stabs	"uint64_t:t(5,8)=(0,7)",128,0,129,0
+	.stabs	"intptr_t:t(5,9)=(5,3)",128,0,142,0
+	.stabs	"uintptr_t:t(5,10)=(5,4)",128,0,147,0
+	.stabs	"int_least8_t:t(5,11)=(5,1)",128,0,159,0
+	.stabs	"uint_least8_t:t(5,12)=(5,2)",128,0,164,0
+	.stabs	"int_least16_t:t(5,13)=(5,3)",128,0,169,0
+	.stabs	"uint_least16_t:t(5,14)=(5,4)",128,0,174,0
+	.stabs	"int_least32_t:t(5,15)=(5,5)",128,0,179,0
+	.stabs	"uint_least32_t:t(5,16)=(5,6)",128,0,184,0
+	.stabs	"int_least64_t:t(5,17)=(5,7)",128,0,192,0
+	.stabs	"uint_least64_t:t(5,18)=(5,8)",128,0,199,0
+	.stabs	"int_fast8_t:t(5,19)=(5,1)",128,0,213,0
+	.stabs	"uint_fast8_t:t(5,20)=(5,2)",128,0,218,0
+	.stabs	"int_fast16_t:t(5,21)=(5,3)",128,0,223,0
+	.stabs	"uint_fast16_t:t(5,22)=(5,4)",128,0,228,0
+	.stabs	"int_fast32_t:t(5,23)=(5,5)",128,0,233,0
+	.stabs	"uint_fast32_t:t(5,24)=(5,6)",128,0,238,0
+	.stabs	"int_fast64_t:t(5,25)=(5,7)",128,0,246,0
+	.stabs	"uint_fast64_t:t(5,26)=(5,8)",128,0,253,0
+	.stabs	"intmax_t:t(5,27)=(5,7)",128,0,273,0
+	.stabs	"uintmax_t:t(5,28)=(5,8)",128,0,278,0
+	.stabn	162,0,0,0
+	.stabn	162,0,0,0
+	.stabs	"int_farptr_t:t(3,1)=(5,5)",128,0,77,0
+	.stabs	"uint_farptr_t:t(3,2)=(5,6)",128,0,81,0
+	.stabn	162,0,0,0
+	.stabn	162,0,0,0
+	.stabs	"/usr/avr/include/avr/fuse.h",130,0,0,0
+	.stabs	"__fuse_t:t(6,1)=(6,2)=s3low:(0,11),0,8;high:(0,11),8,8;extended:(0,11),16,8;;",128,0,244,0
+	.stabn	162,0,0,0
+	.stabn	162,0,0,0
+	.stabs	"../usbtiny/usb.h",130,0,0,0
+	.stabs	"byte_t:t(7,1)=(0,11)",128,0,13,0
+	.stabs	"uint_t:t(7,2)=(0,4)",128,0,14,0
+	.stabn	162,0,0,0
+	.stabs	" :T(0,48)=eUSBTINY_ECHO:0,USBTINY_READ:1,USBTINY_WRITE:2,USBTINY_CLR:3,USBTINY_SET:4,USBTINY_POWERUP:5,USBTINY_POWERDOWN:6,USBTINY_SPI:7,USBTINY_POLL_BYTES:8,USBTINY_FLASH_READ:9,USBTINY_FLASH_WRITE:10,USBTINY_EEPROM_READ:11,USBTINY_EEPROM_WRITE:12,;",128,0,0,0
+	.section	.text.spi,"ax",@progbits
+	.stabs	"spi:f(0,47)",36,0,86,spi
+	.stabs	"cmd:P(0,49)=*(7,1)",64,0,86,24
+	.stabs	"res:P(0,49)",64,0,86,22
+	.type	spi, @function
+spi:
+	.stabd	46,0,0
+	.stabn	68,0,87,.LM0-.LFBB1
+.LM0:
+.LFBB1:
+	push r28
+	push r29
+/* prologue: function */
+/* frame size = 0 */
+/* stack size = 2 */
+.L__stack_usage = 2
+	movw r30,r22
+	movw r20,r24
+	subi r20,-4
+	sbci r21,-1
+.L7:
+	.stabn	68,0,95,.LM1-.LFBB1
+.LM1:
+	movw r28,r24
+	ld r26,Y+
+	movw r24,r28
+	ldi r18,lo8(8)
+	ldi r19,0
+	.stabn	68,0,97,.LM2-.LFBB1
+.LM2:
+	ldi r23,lo8(-128)
+	.stabn	68,0,96,.LM3-.LFBB1
+.LM3:
+	ldi r22,0
+.L5:
+	.stabn	68,0,99,.LM4-.LFBB1
+.LM4:
+	mov r27,r23
+	and r27,r26
+	breq .L2
+	.stabn	68,0,101,.LM5-.LFBB1
+.LM5:
+	sbi 0x18,4
+.L2:
+.LBB6:
+.LBB7:
+	.stabn	68,0,74,.LM6-.LFBB1
+.LM6:
+	lds r27,sck_period
+/* #APP */
+ ;  74 "main.c" 1
+		mov	__tmp_reg__,r27	
+0:	rjmp	1f		
+1:	nop			
+	dec	__tmp_reg__	
+	brne	0b		
+
+ ;  0 "" 2
+/* #NOAPP */
+.LBE7:
+.LBE6:
+	.stabn	68,0,104,.LM7-.LFBB1
+.LM7:
+	sbi 0x18,1
+.LBB8:
+.LBB9:
+	.stabn	68,0,74,.LM8-.LFBB1
+.LM8:
+	lds r27,sck_period
+/* #APP */
+ ;  74 "main.c" 1
+		mov	__tmp_reg__,r27	
+0:	rjmp	1f		
+1:	nop			
+	dec	__tmp_reg__	
+	brne	0b		
+
+ ;  0 "" 2
+/* #NOAPP */
+.LBE9:
+.LBE8:
+	.stabn	68,0,106,.LM9-.LFBB1
+.LM9:
+	lsl r22
+	.stabn	68,0,107,.LM10-.LFBB1
+.LM10:
+	sbic 0x16,5
+	.stabn	68,0,109,.LM11-.LFBB1
+.LM11:
+	subi r22,lo8(-(1))
+.L3:
+	.stabn	68,0,111,.LM12-.LFBB1
+.LM12:
+	cbi 0x18,4
+	.stabn	68,0,112,.LM13-.LFBB1
+.LM13:
+	cbi 0x18,1
+	.stabn	68,0,97,.LM14-.LFBB1
+.LM14:
+	lsr r23
+	subi r18,1
+	sbc r19,__zero_reg__
+	cp r18,__zero_reg__
+	cpc r19,__zero_reg__
+	brne .L5
+	.stabn	68,0,114,.LM15-.LFBB1
+.LM15:
+	st Z+,r22
+	.stabn	68,0,93,.LM16-.LFBB1
+.LM16:
+	cp r24,r20
+	cpc r25,r21
+	brne .L7
+/* epilogue start */
+	.stabn	68,0,116,.LM17-.LFBB1
+.LM17:
+	pop r29
+	pop r28
+	ret
+	.size	spi, .-spi
+	.stabs	"c:r(7,1)",64,0,89,26
+	.stabs	"r:r(7,1)",64,0,90,22
+	.stabs	"mask:r(7,1)",64,0,91,23
+	.stabn	192,0,0,.LFBB1-.LFBB1
+	.stabn	224,0,0,.Lscope1-.LFBB1
+.Lscope1:
+	.stabs	"",36,0,0,.Lscope1-.LFBB1
+	.stabd	78,0,0
+	.section	.text.spi_rw,"ax",@progbits
+	.stabs	"spi_rw:f(0,47)",36,0,121,spi_rw
+	.type	spi_rw, @function
+spi_rw:
+	.stabd	46,0,0
+	.stabn	68,0,122,.LM18-.LFBB2
+.LM18:
+.LFBB2:
+/* prologue: function */
+/* frame size = 0 */
+/* stack size = 0 */
+.L__stack_usage = 0
+	.stabn	68,0,125,.LM19-.LFBB2
+.LM19:
+	lds r24,address
+	lds r25,address+1
+	movw r18,r24
+	subi r18,-1
+	sbci r19,-1
+	sts address+1,r19
+	sts address,r18
+	.stabn	68,0,126,.LM20-.LFBB2
+.LM20:
+	lds r18,cmd0
+	sbrs r18,7
+	rjmp .L16
+	.stabn	68,0,128,.LM21-.LFBB2
+.LM21:
+	lsl r24
+	rol r25
+.L16:
+	.stabn	68,0,131,.LM22-.LFBB2
+.LM22:
+	sbrc r24,0
+	.stabn	68,0,133,.LM23-.LFBB2
+.LM23:
+	ori r18,lo8(8)
+.L19:
+	sts cmd,r18
+	.stabn	68,0,135,.LM24-.LFBB2
+.LM24:
+	movw r18,r24
+	mov r18,r19
+	clr r19
+	lsr r18
+	sts cmd+1,r18
+	.stabn	68,0,136,.LM25-.LFBB2
+.LM25:
+	lsr r25
+	ror r24
+	sts cmd+2,r24
+	.stabn	68,0,137,.LM26-.LFBB2
+.LM26:
+	ldi r22,lo8(res)
+	ldi r23,hi8(res)
+	ldi r24,lo8(cmd)
+	ldi r25,hi8(cmd)
+	rjmp spi
+	.size	spi_rw, .-spi_rw
+	.stabs	"a:r(7,2)",64,0,123,24
+	.stabn	192,0,0,.LFBB2-.LFBB2
+	.stabn	224,0,0,.Lscope2-.LFBB2
+.Lscope2:
+	.stabs	"",36,0,0,.Lscope2-.LFBB2
+	.stabd	78,0,0
+	.section	.text.usb_setup,"ax",@progbits
+	.stabs	"usb_setup:F(7,1)",36,0,143,usb_setup
+	.stabs	"data:P(0,49)",64,0,143,30
+.global	usb_setup
+	.type	usb_setup, @function
+usb_setup:
+	.stabd	46,0,0
+	.stabn	68,0,144,.LM27-.LFBB3
+.LM27:
+.LFBB3:
+/* prologue: function */
+/* frame size = 0 */
+/* stack size = 0 */
+.L__stack_usage = 0
+	movw r30,r24
+	.stabn	68,0,151,.LM28-.LFBB3
+.LM28:
+	ldd r18,Z+1
+	.stabn	68,0,152,.LM29-.LFBB3
+.LM29:
+	tst r18
+	brne .+2
+	rjmp .L35
+	.stabn	68,0,156,.LM30-.LFBB3
+.LM30:
+	ldd r26,Z+4
+	ldi r27,0
+	.stabn	68,0,157,.LM31-.LFBB3
+.LM31:
+	cpi r18,lo8(1)
+	brne .L22
+	.stabn	68,0,159,.LM32-.LFBB3
+.LM32:
+	ld r24,X
+	st Z,r24
+	.stabn	68,0,160,.LM33-.LFBB3
+.LM33:
+	ldi r24,lo8(1)
+	ret
+.L22:
+	ldd r19,Z+2
+	.stabn	68,0,162,.LM34-.LFBB3
+.LM34:
+	cpi r18,lo8(2)
+	brne .L23
+	.stabn	68,0,164,.LM35-.LFBB3
+.LM35:
+	st X,r19
+	rjmp .L37
+.L23:
+	.stabn	68,0,167,.LM36-.LFBB3
+.LM36:
+	mov r20,r19
+	andi r20,lo8(7)
+	.stabn	68,0,168,.LM37-.LFBB3
+.LM37:
+	ldi r24,lo8(1)
+	ldi r25,0
+	mov r0,r20
+	rjmp 2f
+	1:
+	lsl r24
+	2:
+	dec r0
+	brpl 1b
+	.stabn	68,0,169,.LM38-.LFBB3
+.LM38:
+	cpi r18,lo8(3)
+	brne .L24
+	.stabn	68,0,171,.LM39-.LFBB3
+.LM39:
+	com r24
+	ld r25,X
+	and r25,r24
+	rjmp .L39
+.L24:
+	.stabn	68,0,174,.LM40-.LFBB3
+.LM40:
+	cpi r18,lo8(4)
+	brne .L25
+	.stabn	68,0,176,.LM41-.LFBB3
+.LM41:
+	ld r25,X
+	or r25,r24
+.L39:
+	st X,r25
+	rjmp .L37
+.L25:
+	.stabn	68,0,181,.LM42-.LFBB3
+.LM42:
+	cpi r18,lo8(5)
+	brne .L26
+	.stabn	68,0,183,.LM43-.LFBB3
+.LM43:
+	sts sck_period,r19
+	.stabn	68,0,189,.LM44-.LFBB3
+.LM44:
+	ldi r24,lo8(-1)
+	out 0x17,r24
+	.stabn	68,0,190,.LM45-.LFBB3
+.LM45:
+	ldi r24,lo8(15)
+	out 0x18,r24
+	rjmp .L37
+.L26:
+	.stabn	68,0,193,.LM46-.LFBB3
+.LM46:
+	cpi r18,lo8(6)
+	brne .L27
+	.stabn	68,0,195,.LM47-.LFBB3
+.LM47:
+	sbi 0x18,0
+	.stabn	68,0,196,.LM48-.LFBB3
+.LM48:
+	out 0x18,__zero_reg__
+	.stabn	68,0,197,.LM49-.LFBB3
+.LM49:
+	out 0x17,__zero_reg__
+	rjmp .L37
+.L27:
+	.stabn	68,0,200,.LM50-.LFBB3
+.LM50:
+	in r24,0x18
+	tst r24
+	breq .L37
+	.stabn	68,0,204,.LM51-.LFBB3
+.LM51:
+	cpi r18,lo8(7)
+	brne .L29
+	.stabn	68,0,206,.LM52-.LFBB3
+.LM52:
+	movw r22,r30
+	movw r24,r30
+	adiw r24,2
+	rcall spi
+	.stabn	68,0,207,.LM53-.LFBB3
+.LM53:
+	ldi r24,lo8(4)
+	ret
+.L29:
+	.stabn	68,0,209,.LM54-.LFBB3
+.LM54:
+	cpi r18,lo8(8)
+	brne .L30
+	.stabn	68,0,211,.LM55-.LFBB3
+.LM55:
+	sts poll1,r19
+	.stabn	68,0,212,.LM56-.LFBB3
+.LM56:
+	ldd r24,Z+3
+	sts poll2,r24
+	rjmp .L37
+.L30:
+	.stabn	68,0,215,.LM57-.LFBB3
+.LM57:
+	ldd r24,Z+4
+	ldd r25,Z+5
+	sts address+1,r25
+	sts address,r24
+	.stabn	68,0,216,.LM58-.LFBB3
+.LM58:
+	cpi r18,lo8(9)
+	brne .L31
+	.stabn	68,0,218,.LM59-.LFBB3
+.LM59:
+	ldi r24,lo8(32)
+	rjmp .L38
+.L31:
+	.stabn	68,0,221,.LM60-.LFBB3
+.LM60:
+	cpi r18,lo8(11)
+	brne .L32
+	.stabn	68,0,223,.LM61-.LFBB3
+.LM61:
+	ldi r24,lo8(-96)
+.L38:
+	sts cmd0,r24
+	.stabn	68,0,224,.LM62-.LFBB3
+.LM62:
+	ldi r24,lo8(-1)
+	ret
+.L32:
+	.stabn	68,0,226,.LM63-.LFBB3
+.LM63:
+	ldd r24,Z+2
+	ldd r25,Z+3
+	sts timeout+1,r25
+	sts timeout,r24
+	.stabn	68,0,227,.LM64-.LFBB3
+.LM64:
+	cpi r18,lo8(10)
+	brne .L33
+	.stabn	68,0,229,.LM65-.LFBB3
+.LM65:
+	ldi r24,lo8(64)
+	rjmp .L36
+.L33:
+	.stabn	68,0,232,.LM66-.LFBB3
+.LM66:
+	cpi r18,lo8(12)
+	brne .L37
+	.stabn	68,0,234,.LM67-.LFBB3
+.LM67:
+	ldi r24,lo8(-64)
+.L36:
+	sts cmd0,r24
+.L37:
+	.stabn	68,0,235,.LM68-.LFBB3
+.LM68:
+	ldi r24,0
+	ret
+.L35:
+	.stabn	68,0,154,.LM69-.LFBB3
+.LM69:
+	ldi r24,lo8(8)
+	.stabn	68,0,238,.LM70-.LFBB3
+.LM70:
+	ret
+	.size	usb_setup, .-usb_setup
+	.stabs	"addr:r(0,49)",64,0,147,26
+	.stabs	"req:r(7,1)",64,0,148,18
+	.stabn	192,0,0,.LFBB3-.LFBB3
+	.stabn	224,0,0,.Lscope3-.LFBB3
+.Lscope3:
+	.stabs	"",36,0,0,.Lscope3-.LFBB3
+	.stabd	78,0,0
+	.section	.text.usb_in,"ax",@progbits
+	.stabs	"usb_in:F(7,1)",36,0,243,usb_in
+	.stabs	"data:P(0,49)",64,0,243,16
+	.stabs	"len:P(7,1)",64,0,243,24
+.global	usb_in
+	.type	usb_in, @function
+usb_in:
+	.stabd	46,0,0
+	.stabn	68,0,244,.LM71-.LFBB4
+.LM71:
+.LFBB4:
+	push r14
+	push r15
+	push r16
+	push r17
+	push r28
+	push r29
+	push __zero_reg__
+	in r28,__SP_L__
+	clr r29
+/* prologue: function */
+/* frame size = 1 */
+/* stack size = 7 */
+.L__stack_usage = 7
+	movw r16,r24
+	mov r24,r22
+	.stabn	68,0,247,.LM72-.LFBB4
+.LM72:
+	movw r14,r16
+.L41:
+	mov r25,r14
+	sub r25,r16
+	.stabn	68,0,247,.LM73-.LFBB4
+.LM73:
+	cp r25,r24
+	brsh .L43
+	.stabn	68,0,249,.LM74-.LFBB4
+.LM74:
+	std Y+1,r24
+	rcall spi_rw
+	.stabn	68,0,250,.LM75-.LFBB4
+.LM75:
+	lds r25,res+3
+	movw r30,r14
+	st Z+,r25
+	movw r14,r30
+	ldd r24,Y+1
+	rjmp .L41
+.L43:
+/* epilogue start */
+	.stabn	68,0,253,.LM76-.LFBB4
+.LM76:
+	pop __tmp_reg__
+	pop r29
+	pop r28
+	pop r17
+	pop r16
+	pop r15
+	pop r14
+	ret
+	.size	usb_in, .-usb_in
+.Lscope4:
+	.stabs	"",36,0,0,.Lscope4-.LFBB4
+	.stabd	78,0,0
+	.section	.text.usb_out,"ax",@progbits
+	.stabs	"usb_out:F(0,47)",36,0,258,usb_out
+	.stabs	"data:P(0,49)",64,0,258,14
+	.stabs	"len:P(7,1)",64,0,258,13
+.global	usb_out
+	.type	usb_out, @function
+usb_out:
+	.stabd	46,0,0
+	.stabn	68,0,259,.LM77-.LFBB5
+.LM77:
+.LFBB5:
+	push r12
+	push r13
+	push r14
+	push r15
+	push r16
+	push r17
+	push r28
+	push r29
+/* prologue: function */
+/* frame size = 0 */
+/* stack size = 8 */
+.L__stack_usage = 8
+	movw r14,r24
+	mov r13,r22
+	.stabn	68,0,264,.LM78-.LFBB5
+.LM78:
+	movw r28,r24
+	.stabn	68,0,268,.LM79-.LFBB5
+.LM79:
+	ldi r30,lo8(96)
+	mov r12,r30
+.L45:
+	mov r24,r28
+	sub r24,r14
+	.stabn	68,0,264,.LM80-.LFBB5
+.LM80:
+	cp r24,r13
+	brsh .L52
+	.stabn	68,0,266,.LM81-.LFBB5
+.LM81:
+	ld r24,Y+
+	sts cmd+3,r24
+	.stabn	68,0,267,.LM82-.LFBB5
+.LM82:
+	rcall spi_rw
+	.stabn	68,0,268,.LM83-.LFBB5
+.LM83:
+	lds r24,cmd
+	eor r24,r12
+	sts cmd,r24
+	.stabn	68,0,269,.LM84-.LFBB5
+.LM84:
+	ldi r16,0
+	ldi r17,0
+.L46:
+	.stabn	68,0,269,.LM85-.LFBB5
+.LM85:
+	lds r24,timeout
+	lds r25,timeout+1
+	cp r16,r24
+	cpc r17,r25
+	brsh .L45
+	.stabn	68,0,271,.LM86-.LFBB5
+.LM86:
+	ldi r22,lo8(res)
+	ldi r23,hi8(res)
+	ldi r24,lo8(cmd)
+	ldi r25,hi8(cmd)
+	rcall spi
+	.stabn	68,0,272,.LM87-.LFBB5
+.LM87:
+	lds r24,res+3
+	.stabn	68,0,273,.LM88-.LFBB5
+.LM88:
+	lds r25,cmd+3
+	cpse r24,r25
+	rjmp .L47
+	.stabn	68,0,273,.LM89-.LFBB5
+.LM89:
+	lds r25,poll1
+	cp r24,r25
+	breq .L47
+	lds r25,poll2
+	cpse r24,r25
+	rjmp .L45
+.L47:
+	.stabn	68,0,269,.LM90-.LFBB5
+.LM90:
+	lds r18,sck_period
+	ldi r19,0
+	ldi r23,5
+	1:
+	lsl r18
+	rol r19
+	dec r23
+	brne 1b
+	add r16,r18
+	adc r17,r19
+	rjmp .L46
+.L52:
+/* epilogue start */
+	.stabn	68,0,279,.LM91-.LFBB5
+.LM91:
+	pop r29
+	pop r28
+	pop r17
+	pop r16
+	pop r15
+	pop r14
+	pop r13
+	pop r12
+	ret
+	.size	usb_out, .-usb_out
+	.stabs	"usec:r(7,2)",64,0,261,16
+	.stabs	"r:r(7,1)",64,0,262,24
+	.stabn	192,0,0,.LFBB5-.LFBB5
+	.stabn	224,0,0,.Lscope5-.LFBB5
+.Lscope5:
+	.stabs	"",36,0,0,.Lscope5-.LFBB5
+	.stabd	78,0,0
+	.section	.text.startup.main,"ax",@progbits
+	.stabs	"main:F(0,1)",36,0,284,main
+.global	main
+	.type	main, @function
+main:
+	.stabd	46,0,0
+	.stabn	68,0,285,.LM92-.LFBB6
+.LM92:
+.LFBB6:
+/* prologue: function */
+/* frame size = 0 */
+/* stack size = 0 */
+.L__stack_usage = 0
+	.stabn	68,0,286,.LM93-.LFBB6
+.LM93:
+	rcall usb_init
+.L54:
+	.stabn	68,0,289,.LM94-.LFBB6
+.LM94:
+	rcall usb_poll
+	rjmp .L54
+	.size	main, .-main
+.Lscope6:
+	.stabs	"",36,0,0,.Lscope6-.LFBB6
+	.stabd	78,0,0
+	.local	res
+	.comm	res,4,1
+	.local	cmd
+	.comm	cmd,4,1
+	.local	cmd0
+	.comm	cmd0,1,1
+	.local	timeout
+	.comm	timeout,2,1
+	.local	address
+	.comm	address,2,1
+	.local	poll2
+	.comm	poll2,1,1
+	.local	poll1
+	.comm	poll1,1,1
+	.local	sck_period
+	.comm	sck_period,1,1
+	.stabs	"sck_period:S(7,1)",40,0,59,sck_period
+	.stabs	"poll1:S(7,1)",40,0,60,poll1
+	.stabs	"poll2:S(7,1)",40,0,61,poll2
+	.stabs	"address:S(7,2)",40,0,62,address
+	.stabs	"timeout:S(7,2)",40,0,63,timeout
+	.stabs	"cmd0:S(7,1)",40,0,64,cmd0
+	.stabs	"cmd:S(0,50)=ar(0,51)=r(0,51);0;0177777;;0;3;(7,1)",40,0,65,cmd
+	.stabs	"res:S(0,50)",40,0,66,res
+	.text
+	.stabs	"",100,0,0,.Letext0
+.Letext0:
+	.ident	"GCC: (GNU) 4.8.0"
+.global __do_clear_bss

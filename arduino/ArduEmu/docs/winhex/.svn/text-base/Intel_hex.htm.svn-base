@@ -1,0 +1,301 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html dir="ltr" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"><head>
+
+	
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="Content-Style-Type" content="text/css">
+		<meta name="generator" content="MediaWiki 1.15alpha">
+		<meta name="keywords" content="Intel HEX,Articles with unsourced statements since April 2008,ASCII,Absolute address,Big endian,Checksum,Code segment,EPROM,Endianness,File format,GPL">
+		<link rel="canonical" href="http://en.wikipedia.org/wiki/Intel_HEX">
+		<link rel="alternate" type="application/x-wiki" title="Edit this page" href="http://en.wikipedia.org/w/index.php?title=Intel_HEX&amp;action=edit">
+		<link rel="edit" title="Edit this page" href="http://en.wikipedia.org/w/index.php?title=Intel_HEX&amp;action=edit">
+		<link rel="apple-touch-icon" href="http://en.wikipedia.org/apple-touch-icon.png">
+		<link rel="shortcut icon" href="http://en.wikipedia.org/favicon.ico">
+		<link rel="search" type="application/opensearchdescription+xml" href="http://en.wikipedia.org/w/opensearch_desc.php" title="Wikipedia (en)">
+		<link rel="copyright" href="http://www.gnu.org/copyleft/fdl.html">
+		<link rel="alternate" type="application/rss+xml" title="Wikipedia RSS Feed" href="http://en.wikipedia.org/w/index.php?title=Special:RecentChanges&amp;feed=rss">
+		<link rel="alternate" type="application/atom+xml" title="Wikipedia Atom Feed" href="http://en.wikipedia.org/w/index.php?title=Special:RecentChanges&amp;feed=atom">
+		<title>Intel HEX - Wikipedia, the free encyclopedia</title>
+		<link rel="stylesheet" href="Intel_hex_files/shared.css" type="text/css" media="screen">
+		<link rel="stylesheet" href="Intel_hex_files/commonPrint.css" type="text/css" media="print">
+		<link rel="stylesheet" href="Intel_hex_files/main.css" type="text/css" media="screen">
+		<link rel="stylesheet" href="Intel_hex_files/main_002.css" type="text/css" media="handheld">
+		<!--[if lt IE 5.5000]><link rel="stylesheet" href="/skins-1.5/monobook/IE50Fixes.css?206xx" type="text/css" media="screen" /><![endif]-->
+		<!--[if IE 5.5000]><link rel="stylesheet" href="/skins-1.5/monobook/IE55Fixes.css?206xx" type="text/css" media="screen" /><![endif]-->
+		<!--[if IE 6]><link rel="stylesheet" href="/skins-1.5/monobook/IE60Fixes.css?206xx" type="text/css" media="screen" /><![endif]-->
+		<!--[if IE 7]><link rel="stylesheet" href="/skins-1.5/monobook/IE70Fixes.css?206xx" type="text/css" media="screen" /><![endif]-->
+		<link rel="stylesheet" href="Intel_hex_files/index_003.css" type="text/css">
+		<link rel="stylesheet" href="Intel_hex_files/index_005.css" type="text/css" media="print">
+		<link rel="stylesheet" href="Intel_hex_files/index.css" type="text/css" media="handheld">
+		<link rel="stylesheet" href="Intel_hex_files/index_004.css" type="text/css">
+		<link rel="stylesheet" href="Intel_hex_files/index_002.css" type="text/css">
+		<!--[if lt IE 7]><script type="text/javascript" src="/skins-1.5/common/IEFixes.js?206xx"></script>
+		<meta http-equiv="imagetoolbar" content="no" /><![endif]-->
+
+		<script type="text/javascript">/*<![CDATA[*/
+		var skin = "monobook";
+		var stylepath = "/skins-1.5";
+		var wgArticlePath = "/wiki/$1";
+		var wgScriptPath = "/w";
+		var wgScript = "/w/index.php";
+		var wgVariantArticlePath = false;
+		var wgActionPaths = {};
+		var wgServer = "http://en.wikipedia.org";
+		var wgCanonicalNamespace = "";
+		var wgCanonicalSpecialPageName = false;
+		var wgNamespaceNumber = 0;
+		var wgPageName = "Intel_HEX";
+		var wgTitle = "Intel HEX";
+		var wgAction = "view";
+		var wgArticleId = "3526622";
+		var wgIsArticle = true;
+		var wgUserName = null;
+		var wgUserGroups = null;
+		var wgUserLanguage = "en";
+		var wgContentLanguage = "en";
+		var wgBreakFrames = false;
+		var wgCurRevisionId = "272720448";
+		var wgVersion = "1.15alpha";
+		var wgEnableAPI = true;
+		var wgEnableWriteAPI = true;
+		var wgSeparatorTransformTable = ["", ""];
+		var wgDigitTransformTable = ["", ""];
+		var wgMWSuggestTemplate = "http://en.wikipedia.org/w/api.php?action=opensearch\x26search={searchTerms}\x26namespace={namespaces}\x26suggest";
+		var wgDBname = "enwiki";
+		var wgSearchNamespaces = [0];
+		var wgMWSuggestMessages = ["with suggestions", "no suggestions"];
+		var wgRestrictionEdit = [];
+		var wgRestrictionMove = [];
+		/*]]>*/</script>
+
+		<script type="text/javascript" src="Intel_hex_files/wikibits.js"><!-- wikibits js --></script>
+		<!-- Head Scripts -->
+		<script type="text/javascript" src="Intel_hex_files/ajax.js"></script>
+		<script type="text/javascript" src="Intel_hex_files/mwsuggest.js"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var wgNotice='';var wgNoticeLocal='';
+/*]]>*/</script>		<script type="text/javascript" src="Intel_hex_files/centralnotice.js"></script><style type="text/css">
+#centralNotice .siteNoticeSmall{display:none;}
+#centralNotice .siteNoticeSmallAnon{display:none;}
+#centralNotice .siteNoticeSmallUser{display:none;}
+#centralNotice.collapsed .siteNoticeBig{display:none;}
+#centralNotice.collapsed .siteNoticeSmall{display:block;}
+#centralNotice.collapsed .siteNoticeSmallUser{display:block;}
+#centralNotice.collapsed .siteNoticeSmallAnon{display:block;}
+#centralNotice.anonnotice .siteNoticeSmallUser{display:none !important;}
+#centralNotice.usernotice .siteNoticeSmallAnon{display:none !important;}
+</style>
+
+		<script type="text/javascript" src="Intel_hex_files/index.php"><!-- site js --></script><script type="text/javascript" src="Intel_hex_files/index_002.php"></script>
+	<style type="text/css">#bodyContent { position:relative; } 
+.topicon, #protected-icon{ position:absolute; top:-2em !important;}
+#coordinates{ position:absolute; top:1px !important; }</style></head><body class="mediawiki ltr ns-0 ns-subject page-Intel_HEX skin-monobook">
+	<div id="globalWrapper">
+		<div id="column-content">
+	<div id="content">
+		<a name="top" id="top"></a>
+		<div id="siteNotice"><script type="text/javascript">if (wgNotice != '') document.writeln(wgNotice);</script></div>		<h1 id="firstHeading" class="firstHeading"><span><span>Intel HEX</span><span style="padding: 0pt ! important; white-space: nowrap ! important; float: none ! important; text-decoration: none ! important;"> <a ondblclick="slu" slt="" title="Read 1 review" style="padding: 0pt; text-decoration: none; float: none; font-size: small; color: rgb(130, 132, 204);" href="http://www.stumbleupon.com/url/en.wikipedia.org/wiki/Intel_hex"><img ondblclick="slu" style="display: inline; vertical-align: baseline;" src="Intel_hex_files/smallstumble.png" border="0" width="13" height="13">&nbsp;<img ondblclick="slu" style="display: inline; vertical-align: baseline;" src="Intel_hex_files/star.png" border="0" width="10" height="10"><img ondblclick="slu" style="display: inline; vertical-align: baseline;" src="Intel_hex_files/star.png" border="0" width="10" height="10">&nbsp;<img ondblclick="slu" style="display: inline; vertical-align: baseline;" src="Intel_hex_files/smallbubble1.png" border="0" width="13" height="13"></a><span style="padding: 0pt; text-decoration: none; float: none; font-size: small; color: rgb(0, 0, 0);">&nbsp;·&nbsp;</span><a ondblclick="slz" slt="" title="See related pages" style="padding: 0pt; text-decoration: none; float: none; font-size: small; color: rgb(130, 132, 204);" href="http://www.stumbleupon.com/tag/embedded%20systems/">Embedded Systems</a></span></span></h1>
+		<div id="bodyContent">
+			<h3 id="siteSub">From Wikipedia, the free encyclopedia</h3>
+			<div id="contentSub">&nbsp;&nbsp;(Redirected from <a href="http://en.wikipedia.org/w/index.php?title=Intel_hex&amp;redirect=no" title="Intel hex">Intel hex</a>)</div>
+									<div id="jump-to-nav">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>			<!-- start content -->
+			<p><b>Intel HEX</b> is a <a href="http://en.wikipedia.org/wiki/File_format" title="File format">file format</a> for conveying binary information for applications like programming <a href="http://en.wikipedia.org/wiki/Microcontroller" title="Microcontroller">microcontrollers</a>, <a href="http://en.wikipedia.org/wiki/EPROM" title="EPROM">EPROMs</a>, and other kinds of chips. It is one of the oldest file formats available for this purpose, having been in use since the 1970s.<sup class="noprint Template-Fact"><span title="This claim needs references to reliable sources&nbsp;since April 2008" style="white-space: nowrap;">[<i><a href="http://en.wikipedia.org/wiki/Wikipedia:Citation_needed" title="Wikipedia:Citation needed">citation needed</a></i>]</span></sup></p>
+<p>The format is a <a href="http://en.wikipedia.org/wiki/Text_file" title="Text file">text file</a>, with each line containing <a href="http://en.wikipedia.org/wiki/Hexadecimal" title="Hexadecimal">hexadecimal</a> values encoding a sequence of data and their starting <a href="http://en.wikipedia.org/wiki/Offset_%28computer_science%29" title="Offset (computer science)">offset</a> or <a href="http://en.wikipedia.org/wiki/Absolute_address" title="Absolute address" class="mw-redirect">absolute address</a>.</p>
+<p>There are three types of Intel HEX: 8-bit, 16-bit, and 32-bit. They are distinguished by their byte order.</p>
+<p>Each line of Intel HEX file consists of six parts:</p>
+<ol>
+<li><b>Start code</b>, one character, an <a href="http://en.wikipedia.org/wiki/ASCII" title="ASCII">ASCII</a> colon ':'.</li>
+<li><b>Byte count</b>, two hex digits, a number of bytes (hex digit
+pairs) in the data field. 16 (0x10) or 32 (0x20) bytes of data are the
+usual compromise values between line length and address overhead.</li>
+<li><b>Address</b>, four hex digits, a 16-bit address of the beginning
+of the memory position for the data. Limited to 64 kilobytes, the limit
+is worked around by specifying higher bits via additional record types.
+This address is <a href="http://en.wikipedia.org/wiki/Big_endian" title="Big endian" class="mw-redirect">big endian</a>.</li>
+<li><b>Record type</b>, two hex digits, <i>00</i> to <i>05</i>, defining the type of the data field.</li>
+<li><b>Data</b>, a sequence of <i>n</i> bytes of the data themselves. 2<i>n</i> hex digits.</li>
+<li><b><a href="http://en.wikipedia.org/wiki/Checksum" title="Checksum">Checksum</a></b>, two hex digits - the <a href="http://en.wikipedia.org/wiki/Least_significant_byte" title="Least significant byte" class="mw-redirect">least significant byte</a> of the <a href="http://en.wikipedia.org/wiki/Two%27s_complement" title="Two's complement">two's complement</a>
+sum of the values of all fields except fields 1 and 6 (: and checksum
+byte). It is calculated by adding together the hex-encoded bytes (hex
+digit pairs), taking only the LSB, and either subtracting the byte from
+0x100 or inverting the byte (XORing 0xFF) and adding one (1). The
+result must then be anded again with 255 since both 0x100-0 and (0x00
+xor 0xFF)+1 equal 0x100 and so, if you are not working with 8 bits
+variables, you must suppress the overflow. If the checksum is correctly
+calculated, adding all the bytes (the Byte count, both bytes in
+Address, the Record type, each Data byte and the Checksum) together
+will always result in a value wherein the least significant byte is
+zero (0x00).</li>
+</ol>
+<p>There are six record types:</p>
+<ul>
+<li><b>00</b>, <i>data record</i>, contains data and 16-bit address. The format described above.</li>
+<li><b>01</b>, <i>End Of File record</i>, a file termination record. No
+data. Has to be the last line of the file, only one per file permitted.
+Usually ':00000001FF'. Originally the <i>End Of File record</i> could
+contain a start address for the program being loaded,
+e.g.&nbsp;:00AB2F0123 would make a jump to address AB2F. This was
+convenient when programs were loaded from punched paper tape.</li>
+<li><b>02</b>, <i>Extended Segment Address Record</i>, segment-base
+address. Used when 16 bits are not enough, identical to 80x86 real mode
+addressing. The address specified by the 02 record is multiplied by 16
+(shifted 4 bits left) and added to the subsequent 00 record addresses.
+This allows addressing of up to a megabyte of address space. The
+address field of this record has to be 0000, the byte count is 02 (the
+segment is 16-bit). The least significant hex digit of the segment
+address is always 0.</li>
+<li><b>03</b>, <i>Start Segment Address Record</i>. For 80x86
+processors, it specifies the initial content of the CS:IP registers.
+The address field is 0000, the byte count is 04, the first two bytes
+are the <a href="http://en.wikipedia.org/wiki/Code_segment" title="Code segment">CS</a> value, the latter two are the <a href="http://en.wikipedia.org/wiki/Instruction_pointer" title="Instruction pointer" class="mw-redirect">IP</a> value.</li>
+<li><b>04</b>, <i>Extended Linear Address Record</i>, allowing for
+fully 32 bit addressing. The address field is 0000, the byte count is
+02. The two data bytes represent the upper 16 bits of the 32 bit
+address, when combined with the address of the 00 type record.</li>
+<li><b>05</b>, <i>Start Linear Address Record</i>. The address field is
+0000, the byte count is 04. The 4 data bytes represent the 32-bit value
+loaded into the EIP register of the 80386 and higher CPU.</li>
+</ul>
+<p>There are various format subtypes:</p>
+<ul>
+<li><b>I8HEX</b> or <b>INTEL 8</b>, 8-bit format.</li>
+<li><b>I16HEX</b> or <b>INTEL 16</b>, 16-bit format. Allows usage of 02 records. The data field <a href="http://en.wikipedia.org/wiki/Endianness" title="Endianness">endianness</a> may be byte-swapped.</li>
+<li><b>I32HEX</b> or <b>INTEL 32</b>, 32-bit format. Allows usage of 03, 04, and 05 records. The data field endianness may be byte-swapped.</li>
+</ul>
+<p>Beware! Byte-swapped data might be more confusing. It is possible to misinterpret the byte order in case of I16HEX and I32HEX.</p>
+<p>A similar encoding, with slightly different ASCII formatting, termed <a href="http://en.wikipedia.org/wiki/SREC_%28file_format%29" title="SREC (file format)">SREC</a> is used with Motorola processors.</p>
+<p><a name="Example" id="Example"></a></p>
+<h2><span class="editsection">[<a href="http://en.wikipedia.org/w/index.php?title=Intel_HEX&amp;action=edit&amp;section=1" title="Edit section: Example">edit</a>]</span> <span class="mw-headline">Example</span></h2>
+<p><b>hi</b></p>
+<pre><span style="background-color: rgb(255, 255, 204);">:</span><span style="background-color: rgb(204, 255, 204);">10</span><span style="background-color: rgb(204, 204, 255);">0100</span><span style="background-color: rgb(255, 204, 204);">00</span><span style="background-color: rgb(204, 255, 255);">214601360121470136007EFE09D21901</span><span style="background-color: rgb(255, 204, 255);">40</span>
+<span style="background-color: rgb(255, 255, 204);">:</span><span style="background-color: rgb(204, 255, 204);">10</span><span style="background-color: rgb(204, 204, 255);">0110</span><span style="background-color: rgb(255, 204, 204);">00</span><span style="background-color: rgb(204, 255, 255);">2146017EB7C20001FF5F160021480119</span><span style="background-color: rgb(255, 204, 255);">88</span>
+<span style="background-color: rgb(255, 255, 204);">:</span><span style="background-color: rgb(204, 255, 204);">10</span><span style="background-color: rgb(204, 204, 255);">0120</span><span style="background-color: rgb(255, 204, 204);">00</span><span style="background-color: rgb(204, 255, 255);">194E79234623965778239EDA3F01B2CA</span><span style="background-color: rgb(255, 204, 255);">A7</span>
+<span style="background-color: rgb(255, 255, 204);">:</span><span style="background-color: rgb(204, 255, 204);">10</span><span style="background-color: rgb(204, 204, 255);">0130</span><span style="background-color: rgb(255, 204, 204);">00</span><span style="background-color: rgb(204, 255, 255);">3F0156702B5E712B722B732146013421</span><span style="background-color: rgb(255, 204, 255);">C7</span>
+<span style="background-color: rgb(255, 255, 204);">:</span><span style="background-color: rgb(204, 255, 204);">00</span><span style="background-color: rgb(204, 204, 255);">0000</span><span style="background-color: rgb(255, 204, 204);">01</span><span style="background-color: rgb(255, 204, 255);">FF</span>
+</pre>
+<p><span style="margin: 0px; padding-bottom: 1px; font-size: 90%; display: block;"><span style="border: medium none rgb(255, 255, 204); background-color: rgb(255, 255, 204); color: rgb(255, 255, 204);">&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Start code</span> <span style="margin: 0px; padding-bottom: 1px; font-size: 90%; display: block;"><span style="border: medium none rgb(204, 255, 204); background-color: rgb(204, 255, 204); color: rgb(204, 255, 204);">&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Byte count</span> <span style="margin: 0px; padding-bottom: 1px; font-size: 90%; display: block;"><span style="border: medium none rgb(204, 204, 255); background-color: rgb(204, 204, 255); color: rgb(204, 204, 255);">&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Address</span> <span style="margin: 0px; padding-bottom: 1px; font-size: 90%; display: block;"><span style="border: medium none rgb(255, 204, 204); background-color: rgb(255, 204, 204); color: rgb(255, 204, 204);">&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Record type</span> <span style="margin: 0px; padding-bottom: 1px; font-size: 90%; display: block;"><span style="border: medium none rgb(204, 255, 255); background-color: rgb(204, 255, 255); color: rgb(204, 255, 255);">&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Data</span> <span style="margin: 0px; padding-bottom: 1px; font-size: 90%; display: block;"><span style="border: medium none rgb(255, 204, 255); background-color: rgb(255, 204, 255); color: rgb(255, 204, 255);">&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Checksum</span></p>
+<p><a name="External_links" id="External_links"></a></p>
+<h2><span class="editsection">[<a href="http://en.wikipedia.org/w/index.php?title=Intel_HEX&amp;action=edit&amp;section=2" title="Edit section: External links">edit</a>]</span> <span class="mw-headline">External links</span></h2>
+<ul>
+<li><a href="http://www.microsym.com/content/index.php?pid=4&amp;id=25" class="external text" title="http://www.microsym.com/content/index.php?pid=4&amp;id=25" rel="nofollow">Intel Hexadecimal Object File Format Specification 1988 (PDF)</a></li>
+<li><a href="http://www.piclist.com/techref/fileext/hex/intel.htm" class="external text" title="http://www.piclist.com/techref/fileext/hex/intel.htm" rel="nofollow">Format description at PIC List</a></li>
+<li><a href="http://www.lucidtechnologies.info/intel.htm" class="external text" title="http://www.lucidtechnologies.info/intel.htm" rel="nofollow">Format description</a></li>
+<li><a href="http://sf.net/projects/srecord" class="external text" title="http://sf.net/projects/srecord" rel="nofollow">SRecord</a>, multi-platform <a href="http://en.wikipedia.org/wiki/GPL" title="GPL" class="mw-redirect">GPL</a>'ed tool for manipulating EPROM load files.</li>
+<li><a href="http://home.hetnet.nl/%7Enewlife-software/Binex/binex.htm" class="external text" title="http://home.hetnet.nl/~newlife-software/Binex/binex.htm" rel="nofollow">Binex</a>, a converter between Intel HEX and binary.</li>
+</ul>
+
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 209/1000000
+Post-expand include size: 2327/2048000 bytes
+Template argument size: 549/2048000 bytes
+Expensive parser function count: 1/500
+-->
+
+<!-- Saved in parser cache with key enwiki:pcache:idhash:3526622-0!1!0!default!!en!2 and timestamp 20090223141700 -->
+<div class="printfooter">
+Retrieved from "<a href="http://en.wikipedia.org/wiki/Intel_HEX">http://en.wikipedia.org/wiki/Intel_HEX</a>"</div>
+			<div id="catlinks" class="catlinks"><div id="mw-normal-catlinks"><a href="http://en.wikipedia.org/wiki/Special:Categories" title="Special:Categories">Categories</a>: <span dir="ltr"><a href="http://en.wikipedia.org/wiki/Category:Binary-to-text_encoding_formats" title="Category:Binary-to-text encoding formats">Binary-to-text encoding formats</a></span> | <span dir="ltr"><a href="http://en.wikipedia.org/wiki/Category:Embedded_systems" title="Category:Embedded systems">Embedded systems</a></span></div><div id="mw-hidden-catlinks" class="mw-hidden-cats-hidden">Hidden categories: <span dir="ltr"><a href="http://en.wikipedia.org/wiki/Category:All_articles_with_unsourced_statements" title="Category:All articles with unsourced statements">All articles with unsourced statements</a></span> | <span dir="ltr"><a href="http://en.wikipedia.org/wiki/Category:Articles_with_unsourced_statements_since_April_2008" title="Category:Articles with unsourced statements since April 2008">Articles with unsourced statements since April 2008</a></span></div></div>			<!-- end content -->
+						<div class="visualClear"></div>
+		</div>
+	</div>
+		</div>
+		<div id="column-one">
+	<div id="p-cactions" class="portlet">
+		<h5>Views</h5>
+		<div class="pBody">
+			<ul>
+	
+				 <li id="ca-nstab-main" class="selected"><a href="http://en.wikipedia.org/wiki/Intel_HEX" title="View the content page [alt-shift-c]" accesskey="c">Article</a></li>
+				 <li id="ca-talk"><a href="http://en.wikipedia.org/wiki/Talk:Intel_HEX" title="Discussion about the content page [alt-shift-t]" accesskey="t">Discussion</a></li>
+				 <li id="ca-edit"><a href="http://en.wikipedia.org/w/index.php?title=Intel_HEX&amp;action=edit" title="You can edit this page. 
+Please use the preview button before saving. [alt-shift-e]" accesskey="e">Edit this page</a></li>
+				 <li id="ca-history"><a href="http://en.wikipedia.org/w/index.php?title=Intel_HEX&amp;action=history" title="Past versions of this page [alt-shift-h]" accesskey="h">History</a></li>			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-personal">
+		<h5>Personal tools</h5>
+		<div class="pBody">
+			<ul>
+				<li id="pt-login"><a href="http://en.wikipedia.org/w/index.php?title=Special:UserLogin&amp;returnto=Intel_HEX" title="You are encouraged to log in; however, it is not mandatory. [alt-shift-o]" accesskey="o">Log in / create account</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-logo">
+		<a style="background-image: url(http://upload.wikimedia.org/wikipedia/en/b/bc/Wiki.png);" href="http://en.wikipedia.org/wiki/Main_Page" title="Visit the main page [alt-shift-z]" accesskey="z"></a>
+	</div>
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+	<div class="generated-sidebar portlet" id="p-navigation">
+		<h5>Navigation</h5>
+		<div class="pBody">
+			<ul>
+				<li id="n-mainpage-description"><a href="http://en.wikipedia.org/wiki/Main_Page" title="Visit the main page [alt-shift-z]" accesskey="z">Main page</a></li>
+				<li id="n-contents"><a href="http://en.wikipedia.org/wiki/Portal:Contents" title="Guides to browsing Wikipedia">Contents</a></li>
+				<li id="n-featuredcontent"><a href="http://en.wikipedia.org/wiki/Portal:Featured_content" title="Featured content — the best of Wikipedia">Featured content</a></li>
+				<li id="n-currentevents"><a href="http://en.wikipedia.org/wiki/Portal:Current_events" title="Find background information on current events">Current events</a></li>
+				<li id="n-randompage"><a href="http://en.wikipedia.org/wiki/Special:Random" title="Load a random article [alt-shift-x]" accesskey="x">Random article</a></li>
+			</ul>
+		</div>
+	</div>
+	<div id="p-search" class="portlet">
+		<h5><label for="searchInput">Search</label></h5>
+		<div id="searchBody" class="pBody">
+			<form action="/wiki/Special:Search" id="searchform"><div>
+				<input autocomplete="off" id="searchInput" name="search" title="Search Wikipedia [alt-shift-f]" accesskey="f" value="" type="text">
+				<input name="go" class="searchButton" id="searchGoButton" value="Go" title="Go to a page with this exact name if one exists" type="submit">&nbsp;
+				<input name="fulltext" class="searchButton" id="mw-searchButton" value="Search" title="Search Wikipedia for this text" type="submit">
+			</div></form>
+		</div>
+	</div>
+	<div class="generated-sidebar portlet" id="p-interaction">
+		<h5>Interaction</h5>
+		<div class="pBody">
+			<ul>
+				<li id="n-aboutsite"><a href="http://en.wikipedia.org/wiki/Wikipedia:About" title="Find out about Wikipedia">About Wikipedia</a></li>
+				<li id="n-portal"><a href="http://en.wikipedia.org/wiki/Wikipedia:Community_portal" title="About the project, what you can do, where to find things">Community portal</a></li>
+				<li id="n-recentchanges"><a href="http://en.wikipedia.org/wiki/Special:RecentChanges" title="The list of recent changes in the wiki [alt-shift-r]" accesskey="r">Recent changes</a></li>
+				<li id="n-contact"><a href="http://en.wikipedia.org/wiki/Wikipedia:Contact_us" title="How to contact Wikipedia">Contact Wikipedia</a></li>
+				<li id="n-sitesupport"><a href="http://wikimediafoundation.org/wiki/Donate" title="Support us">Donate to Wikipedia</a></li>
+				<li id="n-help"><a href="http://en.wikipedia.org/wiki/Help:Contents" title="Guidance on how to use and edit Wikipedia">Help</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>Toolbox</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a href="http://en.wikipedia.org/wiki/Special:WhatLinksHere/Intel_HEX" title="List of all English Wikipedia pages containing links to this page [alt-shift-j]" accesskey="j">What links here</a></li>
+				<li id="t-recentchangeslinked"><a href="http://en.wikipedia.org/wiki/Special:RecentChangesLinked/Intel_HEX" title="Recent changes in pages linked from this page [alt-shift-k]" accesskey="k">Related changes</a></li>
+<li id="t-upload"><a href="http://en.wikipedia.org/wiki/Wikipedia:Upload" title="Upload files [alt-shift-u]" accesskey="u">Upload file</a></li>
+<li id="t-specialpages"><a href="http://en.wikipedia.org/wiki/Special:SpecialPages" title="List of all special pages [alt-shift-q]" accesskey="q">Special pages</a></li>
+				<li id="t-print"><a href="http://en.wikipedia.org/w/index.php?title=Intel_HEX&amp;printable=yes" rel="alternate" title="Printable version of this page [alt-shift-p]" accesskey="p">Printable version</a></li>				<li id="t-permalink"><a href="http://en.wikipedia.org/w/index.php?title=Intel_HEX&amp;oldid=272720448" title="Permanent link to this version of the page">Permanent link</a></li><li id="t-cite"><a href="http://en.wikipedia.org/w/index.php?title=Special:Cite&amp;page=Intel_HEX&amp;id=272720448">Cite this page</a></li>			</ul>
+		</div>
+	</div>
+	<div id="p-lang" class="portlet">
+		<h5>Languages</h5>
+		<div class="pBody">
+			<ul>
+				<li class="interwiki-de"><a href="http://de.wikipedia.org/wiki/Intel_HEX">Deutsch</a></li>
+				<li class="interwiki-hu"><a href="http://hu.wikipedia.org/wiki/Intel_HEX">Magyar</a></li>
+				<li class="interwiki-ru"><a href="http://ru.wikipedia.org/wiki/Intel_Hex">Русский</a></li>
+			</ul>
+		</div>
+	</div>
+		</div><!-- end of the left (by default at least) column -->
+			<div class="visualClear"></div>
+			<div id="footer">
+				<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="Intel_hex_files/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki"></a></div>
+				<div id="f-copyrightico"><a href="http://wikimediafoundation.org/"><img src="Intel_hex_files/wikimedia-button.png" alt="Wikimedia Foundation" border="0"></a></div>
+			<ul id="f-list">
+					<li id="lastmod"> This page was last modified on 23 February 2009, at 14:17.</li>
+					<li id="copyright">All text is available under the terms of the <a class="internal" href="http://en.wikipedia.org/wiki/Wikipedia:Text_of_the_GNU_Free_Documentation_License" title="Wikipedia:Text of the GNU Free Documentation License">GNU Free Documentation License</a>. (See <b><a class="internal" href="http://en.wikipedia.org/wiki/Wikipedia:Copyrights" title="Wikipedia:Copyrights">Copyrights</a></b> for details.) <br> Wikipedia® is a registered trademark of the <a href="http://www.wikimediafoundation.org/">Wikimedia Foundation, Inc.</a>, a U.S. registered <a class="internal" href="http://en.wikipedia.org/wiki/501%28c%29#501.28c.29.283.29" title="501(c)(3)">501(c)(3)</a> <a href="http://wikimediafoundation.org/wiki/Deductibility_of_donations">tax-deductible</a> <a class="internal" href="http://en.wikipedia.org/wiki/Non-profit_organization" title="Non-profit organization">nonprofit</a> <a href="http://en.wikipedia.org/wiki/Charitable_organization" title="Charitable organization">charity</a>.<br></li>
+					<li id="privacy"><a href="http://wikimediafoundation.org/wiki/Privacy_policy" title="wikimedia:Privacy policy">Privacy policy</a></li>
+					<li id="about"><a href="http://en.wikipedia.org/wiki/Wikipedia:About" title="Wikipedia:About">About Wikipedia</a></li>
+					<li id="disclaimer"><a href="http://en.wikipedia.org/wiki/Wikipedia:General_disclaimer" title="Wikipedia:General disclaimer">Disclaimers</a></li>
+			</ul>
+		</div>
+</div>
+
+		<script type="text/javascript">if (window.runOnloadHook) runOnloadHook();</script>
+<!-- Served by srv207 in 0.063 secs. --></body></html>

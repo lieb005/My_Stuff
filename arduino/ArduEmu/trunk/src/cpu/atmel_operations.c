@@ -1,0 +1,1413 @@
+/*
+ * atmel_operations.c
+ *
+ *  Created on: 01-Mar-2009
+ *      Author: Samuel Truscott
+ *      Author: Richard Slaughter
+ */
+#include "atmel_decoder.h"
+#include "atmel_flash.h" 	/* used to access memory for loading program into */
+#include "atmel_sram.h" 	/* used to access memory for loading data into */
+#include "atmel_operations.h"
+#include <stdio.h>
+
+#include "global_types.h"
+
+/* a typical instruction is 16 bits (2 bytes) */
+#define INST_SIZE 2
+
+extern UINT16 atmel_PC;
+
+/* Memory access helper funcs */
+UINT8* get_status_register()
+{
+	return get_data_memory(STATUS_REGISTER_ADDRESS);
+}
+
+void set_status_reg_flag(UINT8 register_mask, boolean value)
+{
+	UINT8* status_reg = get_status_register();
+	if(value)
+		*status_reg |= register_mask;
+	else
+		*status_reg &= ~register_mask;
+}
+
+boolean get_status_reg_flag(UINT8 register_mask)
+{
+	UINT8* status_reg = get_status_register();
+	return (*status_reg & register_mask) == register_mask;
+}
+
+/* Main operations */
+void op_add(const instruction_type *instr)
+{
+	UINT8* addr1 = get_data_memory(instr->parameters.rd_rr.rd);
+	UINT8* addr2 = get_data_memory(instr->parameters.rd_rr.rr);
+
+	boolean rd3, rr3, r3, rd7, rr7, r7, vflag, nflag;
+
+	UINT16 res = (*addr1) + (*addr2);
+
+#ifdef _DEBUG
+	printf("add r%d, r%d\n",
+		instr->parameters.rd_rr.rd,
+		instr->parameters.rd_rr.rr);
+#endif
+
+	/* *addr1 = res > 255 ? res << 8 : res; //TODO: verify this */
+	write_data_memory(
+		instr->parameters.rd_rr.rd,
+		(UINT8*)&res,
+		sizeof(UINT16));
+
+	//setup flags
+	//Two�s complement overflow indicator
+	set_status_reg_flag(STATUS_REG_V, res > 255);
+	//negative flag
+	set_status_reg_flag(STATUS_REG_N, res & 0x80);
+	//N xor V, For signed tests
+	vflag=get_status_reg_flag(STATUS_REG_V);
+	//Negative Flag
+	nflag=get_status_reg_flag(STATUS_REG_N);
+	set_status_reg_flag(STATUS_REG_S, (vflag && !nflag) || (!vflag && nflag));
+	//Zero Flag
+	set_status_reg_flag(STATUS_REG_Z, res == 0);
+
+	//Half Carry Flag: Set if there was a carry from bit 3; cleared otherwise
+	rd3 = *addr1 & 0x08;
+	rr3 = *addr2 & 0x08;
+	r3 = res & 0x08;
+	set_status_reg_flag(STATUS_REG_H, (rd3 && rr3) || (rr3&&!r3) || (!r3 && rd3));
+	//Carry Flag: Set if there was carry from the MSB of the result; cleared otherwise.
+	rd7 = *addr1 & 0x80;
+	rr7 = *addr2 & 0x80;
+	r7 = res & 0x80;
+	set_status_reg_flag(STATUS_REG_C, (rd7 && rr7) || (rr7&&!r7) || (!r7 && rd7));
+
+	atmel_PC += INST_SIZE;
+}
+
+void op_adc(const instruction_type *instr)
+{
+	UINT8* addr1 = get_data_memory(instr->parameters.rd_rr.rd);
+	UINT8* addr2 = get_data_memory(instr->parameters.rd_rr.rr);
+
+	boolean rd3, rr3, r3, rd7, rr7, r7, vflag, nflag;
+
+	UINT16 res = (*addr1) + (*addr2);
+
+#ifdef _DEBUG
+	printf("adc r%d, r%d\n", 
+		instr->parameters.rd_rr.rd, 
+		instr->parameters.rd_rr.rr);
+#endif
+
+	//see if carry should be added
+	if(get_status_reg_flag(STATUS_REG_C))
+		res++;
+
+	/* *addr1 = res > 255 ? res << 8 : res; //TODO: verify this */
+	write_data_memory(
+		instr->parameters.rd_rr.rd,
+		(UINT8*)&res,
+		sizeof(UINT16));
+
+	//setup flags
+	//Two�s complement overflow indicator
+	set_status_reg_flag(STATUS_REG_V, res > 255);
+	//negative flag
+	set_status_reg_flag(STATUS_REG_N, res & 0x80);
+	//N xor V, For signed tests
+	vflag=get_status_reg_flag(STATUS_REG_V);
+	nflag=get_status_reg_flag(STATUS_REG_N);
+	set_status_reg_flag(STATUS_REG_S, (vflag && !nflag) || (!vflag && nflag));
+	//Zero Flag
+	set_status_reg_flag(STATUS_REG_Z, res == 0);
+
+	//Half Carry Flag: Set if there was a carry from bit 3; cleared otherwise
+	rd3 = *addr1 & 0x08;
+	rr3 = *addr2 & 0x08;
+	r3 = res & 0x08;
+	set_status_reg_flag(STATUS_REG_H, (rd3 && rr3) || (rr3&&!r3) || (!r3 && rd3));
+	//Carry Flag: Set if there was carry from the MSB of the result; cleared otherwise.
+	rd7 = *addr1 & 0x80;
+	rr7 = *addr2 & 0x80;
+	r7 = res & 0x80;
+	set_status_reg_flag(STATUS_REG_C, (rd7 && rr7) || (rr7&&!r7) || (!r7 && rd7));
+
+	atmel_PC += INST_SIZE;
+}
+
+void op_adiw(const instruction_type *instr)
+{
+	UINT16 res;
+	UINT16* addr = (UINT16*)get_data_memory(instr->parameters.rd_k.rd);
+	UINT16  val = instr->parameters.rd_k.k;
+
+#ifdef _DEBUG
+	printf("adiw r%d, %d\n", 
+		instr->parameters.rd_k.rd, 
+		instr->parameters.rd_k.k);
+#endif
+
+	res = (*addr) + val;
+
+	write_data_memory(
+		instr->parameters.rd_k.rd,
+		(UINT8*)&res,
+		sizeof(UINT16));
+
+	/* tests - TODO can these be put into generic operations? */
+
+	atmel_PC += INST_SIZE;
+}
+
+void op_sub(const instruction_type *instr)
+{
+	UINT8 *rd = get_data_memory(instr->parameters.rd_rr.rd);
+	UINT8 *rr = get_data_memory(instr->parameters.rd_rr.rr);
+
+	UINT8 res = (*rd) - (*rr);
+
+#ifdef _DEBUG
+	printf("sub r%d, r%d\n", 
+		instr->parameters.rd_rr.rd, 
+		instr->parameters.rd_rr.rr);
+#endif
+
+	write_data_memory(
+		instr->parameters.rd_rr.rd,
+		&res,
+		sizeof(UINT8));
+
+	/* tests - TODO can these be put into generic operations? */
+
+	atmel_PC += INST_SIZE;
+}
+
+void op_subi(const instruction_type *instr)
+{
+	UINT8 *rd = get_data_memory(instr->parameters.rd_k.rd);
+	UINT16 k = instr->parameters.rd_k.k;
+
+	UINT8 res = (*rd) - k;
+
+#ifdef _DEBUG
+	printf("subi r%d, 0x%04X\n", 
+		instr->parameters.rd_k.rd, 
+		instr->parameters.rd_k.k);
+#endif
+
+	write_data_memory(
+		instr->parameters.rd_k.rd,
+		&res,
+		sizeof(UINT8));
+
+	/* tests - TODO can these be put into generic operations? */
+
+	atmel_PC += INST_SIZE;
+}
+
+void op_and(const instruction_type *instr)
+{
+	UINT8* addr1 = get_data_memory(instr->parameters.rd_rr.rd);
+	UINT8* addr2 = get_data_memory(instr->parameters.rd_rr.rr);
+
+	boolean vflag, nflag;
+
+	UINT8 res = *addr1 & *addr2;
+
+#ifdef _DEBUG
+	printf("and r%d, r%d\n", 
+		instr->parameters.rd_rr.rd, 
+		instr->parameters.rd_rr.rr);
+#endif
+
+	write_data_memory(
+			instr->parameters.rd_rr.rd,
+			&res,
+			sizeof(UINT8));
+
+	//Two�s complement overflow indicator
+	set_status_reg_flag(STATUS_REG_V, FALSE);
+	//negative flag
+	set_status_reg_flag(STATUS_REG_N, res & 0x80);
+	//Zero Flag
+	set_status_reg_flag(STATUS_REG_Z, res == 0);
+	//N xor V, For signed tests
+	vflag=get_status_reg_flag(STATUS_REG_V);
+	nflag=get_status_reg_flag(STATUS_REG_N);
+	set_status_reg_flag(STATUS_REG_S, (vflag && !nflag) || (!vflag && nflag));
+
+	atmel_PC += INST_SIZE;
+}
+
+void op_andi(const instruction_type *instr)
+{
+	UINT8* addr1 = get_data_memory(instr->parameters.rd_k.rd);
+	UINT16 data = instr->parameters.rd_k.k;
+
+	boolean vflag, nflag;
+
+	UINT8 res = *addr1 & data;
+
+#ifdef _DEBUG
+	printf("andi r%d, 0x%04X\n", 
+		instr->parameters.rd_k.rd, 
+		instr->parameters.rd_k.k);
+#endif
+
+	write_data_memory(
+			instr->parameters.rd_k.rd,
+			&res,
+			sizeof(UINT8));
+
+	//Two�s complement overflow indicator
+	set_status_reg_flag(STATUS_REG_V, FALSE);
+	//negative flag
+	set_status_reg_flag(STATUS_REG_N, res & 0x80);
+	//Zero Flag
+	set_status_reg_flag(STATUS_REG_Z, res == 0);
+	//N xor V, For signed tests
+	vflag=get_status_reg_flag(STATUS_REG_V);
+	nflag=get_status_reg_flag(STATUS_REG_N);
+	set_status_reg_flag(STATUS_REG_S, (vflag && !nflag) || (!vflag && nflag));
+
+	atmel_PC += INST_SIZE;
+}
+
+void op_or(const instruction_type *instr)
+{
+	UINT8 *rd = get_data_memory(instr->parameters.rd_rr.rd);
+	UINT8 *rr = get_data_memory(instr->parameters.rd_rr.rr);
+
+	UINT8 res = (*rd) | (*rr);
+
+#ifdef _DEBUG
+	printf("or r%d, r%d\n", 
+		instr->parameters.rd_rr.rd, 
+		instr->parameters.rd_rr.rr);
+#endif
+
+	write_data_memory(
+			instr->parameters.rd_rr.rd,
+			&res,
+			sizeof(UINT8));
+
+	/* tests - TODO can these be put into generic operations? */
+
+	atmel_PC += INST_SIZE;
+}
+
+void op_ori(const instruction_type *instr)
+{
+	UINT8 *rd = get_data_memory(instr->parameters.rd_k.rd);
+	UINT16 k = instr->parameters.rd_k.k;
+
+	UINT8 res = (*rd) | k;
+
+#ifdef _DEBUG
+	printf("ori r%d, 0x%04X\n", 
+		instr->parameters.rd_k.rd, 
+		instr->parameters.rd_k.k);
+#endif
+
+	write_data_memory(
+			instr->parameters.rd_k.rd,
+			&res,
+			sizeof(UINT8));
+
+	/* tests - TODO can these be put into generic operations? */
+
+	atmel_PC += INST_SIZE;
+}
+
+void op_eor(const instruction_type *instr)
+{
+	UINT8 *rd = get_data_memory(instr->parameters.rd_rr.rd);
+	UINT8 *rr = get_data_memory(instr->parameters.rd_rr.rr);
+
+	UINT8 res = (*rd) ^ (*rr);
+
+#ifdef _DEBUG
+	printf("eor r%d, r%d\n", 
+		instr->parameters.rd_rr.rd, 
+		instr->parameters.rd_rr.rr);
+#endif
+
+	write_data_memory(
+			instr->parameters.rd_rr.rd,
+			&res,
+			sizeof(UINT8));
+
+	/* tests - TODO can these be put into generic operations? */
+
+	atmel_PC += INST_SIZE;
+}
+
+void op_com(const instruction_type *instr)
+{
+	UINT8 *rd = get_data_memory(instr->parameters.rd_rr.rd);
+
+	UINT8 res = 0xFFu - (*rd);
+
+#ifdef _DEBUG
+	printf("com r%d\n", 
+		instr->parameters.rd_rr.rd);
+#endif
+
+	write_data_memory(
+			instr->parameters.rd_rr.rd,
+			&res,
+			sizeof(UINT8));
+
+	/* tests - TODO can these be put into generic operations? */
+
+	atmel_PC += INST_SIZE;
+}
+
+void op_neg(const instruction_type *instr)
+{
+	UINT8 *rd = get_data_memory(instr->parameters.rd_rr.rd);
+
+	UINT8 res = 0x00 - (*rd);
+
+#ifdef _DEBUG
+	printf("neg r%d\n", 
+		instr->parameters.rd_rr.rd);
+#endif
+
+	write_data_memory(
+			instr->parameters.rd_rr.rd,
+			&res,
+			sizeof(UINT8));
+
+	/* tests - TODO can these be put into generic operations? */
+
+	atmel_PC += INST_SIZE;
+}
+
+void op_inc(const instruction_type *instr)
+{
+	UINT8* addr1 = get_data_memory(instr->parameters.rd_rr.rd);
+	UINT8 res = (*addr1)++;
+
+	boolean vflag, nflag;
+
+#ifdef _DEBUG
+	printf("inc r%d\n", 
+		instr->parameters.rd_rr.rd);
+#endif
+
+	write_data_memory(
+			instr->parameters.rd_rr.rd,
+			&res,
+			sizeof(UINT8));
+
+	//Two�s complement overflow indicator
+	set_status_reg_flag(STATUS_REG_V, res == 0x80);
+	//negative flag
+	set_status_reg_flag(STATUS_REG_N, res & 0x80);
+	//Zero Flag
+	set_status_reg_flag(STATUS_REG_Z, res == 0);
+	//N xor V, For signed tests
+	vflag=get_status_reg_flag(STATUS_REG_V);
+	nflag=get_status_reg_flag(STATUS_REG_N);
+	set_status_reg_flag(STATUS_REG_S, (vflag && !nflag) || (!vflag && nflag));
+
+	atmel_PC += INST_SIZE;
+}
+
+void op_dec(const instruction_type *instr)
+{
+	UINT8* addr1 = get_data_memory(instr->parameters.rd_rr.rd);
+	UINT8 res = (*addr1)--;
+
+#ifdef _DEBUG
+	printf("dec r%d\n", 
+		instr->parameters.rd_rr.rd);
+#endif
+
+	write_data_memory(
+			instr->parameters.rd_rr.rd,
+			&res,
+			sizeof(UINT8));
+
+	/* tests - TODO can these be put into generic operations? */
+
+	atmel_PC += INST_SIZE;
+}
+
+void op_ser(const instruction_type *instr)
+{
+	UINT8* addr1 = get_data_memory(instr->parameters.rd_rr.rd);
+	UINT8 res = 0xFFu;
+
+#ifdef _DEBUG
+	printf("ser r%d\n", 
+		instr->parameters.rd_rr.rd);
+#endif
+
+	write_data_memory(
+			*addr1,
+			&res,
+			sizeof(UINT8));
+
+	/* tests - TODO can these be put into generic operations? */
+
+	atmel_PC += INST_SIZE;
+}
+
+void op_mul(const instruction_type *instr)
+{
+	UINT8* rd = get_data_memory(instr->parameters.rd_rr.rd);
+	UINT8* rr = get_data_memory(instr->parameters.rd_rr.rr);
+
+	UINT16 res = (*rd) * (*rr);
+
+#ifdef _DEBUG
+	printf("mul r%d, r%d\n", 
+		instr->parameters.rd_rr.rd, instr->parameters.rd_rr.rr);
+#endif
+
+	write_data_memory(
+			REGISTER_0,
+			(UINT8*)&res,
+			sizeof(UINT16));
+
+	/* tests - TODO can these be put into generic operations? */
+
+	atmel_PC += INST_SIZE;
+}
+void op_muls(const instruction_type *instr)
+{
+	INT8* rd = (INT8*)get_data_memory(instr->parameters.rd_rr.rd + 16);
+	INT8* rr = (INT8*)get_data_memory(instr->parameters.rd_rr.rr + 16);
+
+	INT16 res = (*rd) * (*rr);
+
+#ifdef _DEBUG
+	printf("muls r%d, r%d\n",
+		instr->parameters.rd_rr.rd + 16,
+		instr->parameters.rd_rr.rr + 16);
+#endif
+
+	write_data_memory(
+			REGISTER_0,
+			(UINT8*)&res,
+			sizeof(UINT16));
+
+	/* tests - TODO can these be put into generic operations? */
+
+	atmel_PC += INST_SIZE;
+}
+
+void op_mulsu(const instruction_type *instr)
+{
+	INT8* rd = (INT8*)get_data_memory(instr->parameters.rd_rr.rd + 16);
+	UINT8* rr = get_data_memory(instr->parameters.rd_rr.rr + 16);
+
+	INT16 res = (*rd) * (*rr);
+
+#ifdef _DEBUG
+	printf("mulsu r%d, r%d\n",
+		instr->parameters.rd_rr.rd + 16,
+		instr->parameters.rd_rr.rr + 16);
+#endif
+
+	write_data_memory(
+			REGISTER_0,
+			(UINT8*)&res,
+			sizeof(UINT16));
+
+	/* tests - TODO can these be put into generic operations? */
+
+	atmel_PC += INST_SIZE;
+}
+
+void op_rjmp(const instruction_type *instr)
+{
+	atmel_PC += ((instr->parameters.kkkk * sizeof(UINT16)) + INST_SIZE);
+
+#ifdef _DEBUG
+	printf("rjmp 0x%04X\n", 
+		instr->parameters.kkkk * sizeof(UINT16));
+#endif
+
+}
+
+void op_ijmp(const instruction_type *instr)
+{
+	atmel_PC = *((UINT16*)get_data_memory(REGISTER_Z));
+
+#ifdef _DEBUG
+	printf("ijmp\n");
+#endif
+}
+
+void op_eijmp(const instruction_type *instr)
+{
+	atmel_PC = *((UINT16*)get_data_memory(REGISTER_Z));
+	atmel_PC |= (*((UINT16*)get_data_memory(REGISTER_EIND)) << 16);
+
+#ifdef _DEBUG
+	printf("eijmp\n");
+#endif
+}
+
+void op_jmp(const instruction_type *instr)
+{
+	atmel_PC = ( instr->parameters.call * sizeof(UINT16) );
+
+
+#ifdef _DEBUG
+	printf("jmp 0x%04X\n", 
+		atmel_PC);
+#endif
+}
+
+void op_rcall(const instruction_type *instr)
+{
+	/* get the SP and save the current PC*/
+	UINT16 *sp = (UINT16*)get_data_memory(REGISTER_SP);
+
+#ifdef _DEBUG
+	printf("rcall 0x%04X\n", 
+		instr->parameters.kkkk * sizeof(UINT16));
+#endif
+
+	atmel_PC += sizeof(UINT16);
+
+	write_data_memory(
+		*sp,
+		(UINT8*)&atmel_PC,
+		sizeof(UINT16));
+
+	(*sp) -= sizeof(UINT16);
+
+	/* update the SP and put it back */
+	write_data_memory(
+		REGISTER_SP,
+		(UINT8*)sp,
+		sizeof(UINT16));
+
+	/* jump! */
+	atmel_PC += ((instr->parameters.kkkk * sizeof(UINT16)) + INST_SIZE);
+}
+
+void op_icall(const instruction_type *instr)
+{
+	/* get the SP and save the current PC*/
+	UINT16 *sp = (UINT16*)get_data_memory(REGISTER_SP);
+
+#ifdef _DEBUG
+	printf("icall\n");
+#endif
+
+	atmel_PC += sizeof(UINT16);
+
+	write_data_memory(
+		*sp,
+		(UINT8*)&atmel_PC,
+		sizeof(UINT16));
+
+	(*sp) -= sizeof(UINT16);
+
+	/* update the SP and put it back */
+	write_data_memory(
+		REGISTER_SP,
+		(UINT8*)sp,
+		sizeof(UINT16));
+
+	/* jump! */
+	atmel_PC = *((UINT16*)get_data_memory(REGISTER_Z));
+}
+
+void op_eicall(const instruction_type *instr)
+{
+	/* get the SP and save the current PC*/
+	UINT16 *sp = (UINT16*)get_data_memory(REGISTER_SP);
+
+#ifdef _DEBUG
+	printf("eicall\n");
+#endif
+
+	atmel_PC += sizeof(UINT16);
+
+	write_data_memory(
+		*sp,
+		(UINT8*)&atmel_PC,
+		sizeof(UINT16));
+
+	(*sp) -= sizeof(UINT16);
+
+	/* update the SP and put it back */
+	write_data_memory(
+		REGISTER_SP,
+		(UINT8*)sp,
+		sizeof(UINT16));
+
+	atmel_PC = *((UINT16*)get_data_memory(REGISTER_Z));
+	atmel_PC |= (*((UINT16*)get_data_memory(REGISTER_EIND)) << 16);
+}
+
+void op_call(const instruction_type *instr)
+{
+	/* get the SP and save the current PC*/
+	UINT16 *sp = (UINT16*)get_data_memory(REGISTER_SP);
+
+#ifdef _DEBUG
+	printf("call 0x%04X\n", 
+		instr->parameters.call * sizeof(UINT16));
+#endif
+
+	atmel_PC += sizeof(UINT16) * 2; /* jump over two instructions */
+
+	write_data_memory(
+		*sp,
+		(UINT8*)&atmel_PC,
+		sizeof(UINT16));
+
+	(*sp) -= sizeof(UINT16);
+
+	/* update the SP and put it back */
+	write_data_memory(
+		REGISTER_SP,
+		(UINT8*)sp,
+		sizeof(UINT16));
+
+	atmel_PC = instr->parameters.call * sizeof(UINT16);
+}
+
+void op_ret(const instruction_type *instr)
+{
+	/* get the SP and save the current PC*/
+	UINT16 *sp = (UINT16*)get_data_memory(REGISTER_SP);
+	UINT16 *val;
+
+	(*sp) += sizeof(UINT16);
+
+	val = (UINT16*)get_data_memory(*sp);
+
+#ifdef _DEBUG
+	printf("ret (0x%04X)\n", 
+		*val);
+#endif
+
+	/* update the SP and put it back */
+	write_data_memory(
+		REGISTER_SP,
+		(UINT8*)sp,
+		sizeof(UINT16));
+
+	/* set the value to the popped value */
+	atmel_PC = (*val);
+}
+
+void op_push(const instruction_type *instr)
+{
+	/* get the SP and save the current PC*/
+	UINT16 *sp = (UINT16*)get_data_memory(REGISTER_SP);
+	UINT8 *v = get_data_memory(instr->parameters.rd_rr.rd);
+
+#ifdef _DEBUG
+	printf("push r%d\n", 
+		instr->parameters.rd_rr.rd);
+#endif
+
+	write_data_memory(
+		*sp,
+		v,
+		sizeof(UINT8));
+
+	(*sp) -= sizeof(UINT8);
+
+	/* update the SP and put it back */
+	write_data_memory(
+		REGISTER_SP,
+		(UINT8*)sp,
+		sizeof(UINT16));
+
+	atmel_PC += INST_SIZE;
+}
+
+void op_pop(const instruction_type *instr)
+{
+	/* get the SP and save the current PC*/
+	UINT16 *sp = (UINT16*)get_data_memory(REGISTER_SP);
+	UINT8 *v = get_data_memory(instr->parameters.rd_rr.rd);
+	UINT8 *val;
+
+	(*sp) += sizeof(UINT8);
+
+	val = get_data_memory(*sp);
+
+#ifdef _DEBUG
+	printf("pop r%d\n", 
+		instr->parameters.rd_rr.rd);
+#endif
+
+	write_data_memory(
+		*v,
+		val,
+		sizeof(UINT8));
+
+	/* update the SP and put it back */
+	write_data_memory(
+		REGISTER_SP,
+		(UINT8*)sp,
+		sizeof(UINT16));
+
+	atmel_PC += INST_SIZE;
+}
+
+void op_bset(const instruction_type *instr)
+{
+	//specified flag is 0 based so shift it left
+	set_status_reg_flag(1 << instr->parameters.sss, TRUE);
+	atmel_PC += INST_SIZE;
+
+#ifdef _DEBUG
+	printf("bset 0x%02X\n", 
+		instr->parameters.sss);
+#endif
+}
+
+void op_bclr(const instruction_type *instr)
+{
+	set_status_reg_flag(1 << instr->parameters.sss, FALSE);
+	atmel_PC += INST_SIZE;
+
+#ifdef _DEBUG
+	printf("bclr 0x%02X\n", 
+		instr->parameters.sss);
+#endif
+}
+
+void op_sec(const instruction_type *instr)
+{
+	set_status_reg_flag(STATUS_REG_C, TRUE);
+	atmel_PC += INST_SIZE;
+
+#ifdef _DEBUG
+	printf("src\n");
+#endif
+}
+
+void op_clc(const instruction_type *instr)
+{
+	set_status_reg_flag(STATUS_REG_C, FALSE);
+	atmel_PC += INST_SIZE;
+
+#ifdef _DEBUG
+	printf("clc\n");
+#endif
+}
+
+void op_seh(const instruction_type *instr)
+{
+	set_status_reg_flag(STATUS_REG_H, TRUE);
+	atmel_PC += INST_SIZE;
+
+#ifdef _DEBUG
+	printf("seh\n");
+#endif
+}
+
+void op_clh(const instruction_type *instr)
+{
+	set_status_reg_flag(STATUS_REG_H, FALSE);
+	atmel_PC += INST_SIZE;
+
+#ifdef _DEBUG
+	printf("clh\n");
+#endif
+}
+
+void op_sei(const instruction_type *instr)
+{
+	set_status_reg_flag(STATUS_REG_I, TRUE);
+	atmel_PC += INST_SIZE;
+
+#ifdef _DEBUG
+	printf("sei\n");
+#endif
+}
+
+void op_cli(const instruction_type *instr)
+{
+	set_status_reg_flag(STATUS_REG_I, FALSE);
+	atmel_PC += INST_SIZE;
+
+#ifdef _DEBUG
+	printf("cli\n");
+#endif
+}
+
+void op_sen(const instruction_type *instr)
+{
+	set_status_reg_flag(STATUS_REG_N, TRUE);
+	atmel_PC += INST_SIZE;
+
+#ifdef _DEBUG
+	printf("sen\n");
+#endif
+}
+
+void op_cln(const instruction_type *instr)
+{
+	set_status_reg_flag(STATUS_REG_N, FALSE);
+	atmel_PC += INST_SIZE;
+
+#ifdef _DEBUG
+	printf("cln\n");
+#endif
+}
+
+void op_ses(const instruction_type *instr)
+{
+	set_status_reg_flag(STATUS_REG_S, TRUE);
+	atmel_PC += INST_SIZE;
+
+#ifdef _DEBUG
+	printf("ses\n");
+#endif
+}
+
+void op_cls(const instruction_type *instr)
+{
+	set_status_reg_flag(STATUS_REG_S, FALSE);
+	atmel_PC += INST_SIZE;
+
+#ifdef _DEBUG
+	printf("cls\n");
+#endif
+}
+
+void op_set(const instruction_type *instr)
+{
+	set_status_reg_flag(STATUS_REG_T, TRUE);
+	atmel_PC += INST_SIZE;
+
+#ifdef _DEBUG
+	printf("set\n");
+#endif
+}
+
+void op_clt(const instruction_type *instr)
+{
+	set_status_reg_flag(STATUS_REG_T, FALSE);
+	atmel_PC += INST_SIZE;
+
+#ifdef _DEBUG
+	printf("clt\n");
+#endif
+}
+
+void op_sev(const instruction_type *instr)
+{
+	set_status_reg_flag(STATUS_REG_V, TRUE);
+	atmel_PC += INST_SIZE;
+
+#ifdef _DEBUG
+	printf("sev\n");
+#endif
+}
+
+void op_clv(const instruction_type *instr)
+{
+	set_status_reg_flag(STATUS_REG_V, FALSE);
+	atmel_PC += INST_SIZE;
+
+#ifdef _DEBUG
+	printf("clv\n");
+#endif
+}
+
+
+void op_sez(const instruction_type *instr)
+{
+	set_status_reg_flag(STATUS_REG_Z, TRUE);
+	atmel_PC += INST_SIZE;
+
+#ifdef _DEBUG
+	printf("sez\n");
+#endif
+}
+
+void op_clz(const instruction_type *instr)
+{
+	set_status_reg_flag(STATUS_REG_Z, FALSE);
+	atmel_PC += INST_SIZE;
+
+#ifdef _DEBUG
+	printf("clz\n");
+#endif
+}
+
+void op_des(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_sbc(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_sbci(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_sbcw(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_fmul(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_fmuls(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_fmulsu(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_reti(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_cpse(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_cp(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_cpc(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_cpi(const instruction_type *instr)
+{
+
+
+	register_type rd = instr->parameters.rd_k.rd;
+	UINT8* addr = get_data_memory(rd);
+	UINT8 result = *addr - instr->parameters.rd_k.rd;
+
+	//set_status_reg_flag(STATUS_REG_H, ~(*addr)
+	result = result;
+	atmel_PC += INST_SIZE;
+
+}
+
+void op_sbrc(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_sbrs(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_sbic(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_sbis(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_brbs(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_brbc(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_breq(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_brne(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_brcs(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_brcc(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_brsh(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_brlo(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_brmi(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_brpl(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_brge(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_brlt(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_brhs(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_brhc(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_brts(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_brtc(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_brvs(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_brvc(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_brie(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_brid(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_mov(const instruction_type *instr)
+{
+	UINT8* addr = get_data_memory(instr->parameters.rd_rr.rr);
+
+#ifdef _DEBUG
+	printf("mov r%d, r%d\n", 
+		instr->parameters.rd_rr.rd,
+		instr->parameters.rd_rr.rr);
+#endif
+
+	write_data_memory(
+			instr->parameters.rd_rr.rd,
+			addr,
+			sizeof(UINT8));
+
+	/* tests - TODO can these be put into generic operations? */
+
+	atmel_PC += INST_SIZE;
+}
+
+void op_movw(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_ldi(const instruction_type *instr)
+{	
+	UINT8* addr = get_data_memory(instr->parameters.rd_k.rd);
+	*addr = (UINT8)instr->parameters.rd_k.k;
+
+#ifdef _DEBUG
+	printf("ldi r%d, %d (0x%2X)\n",
+		instr->parameters.rd_k.rd,
+		instr->parameters.rd_k.k,
+		instr->parameters.rd_k.k);
+#endif
+
+	atmel_PC += INST_SIZE;
+}
+
+void op_lds(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_ld_1(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_ld_2(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_ld_3(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_ldd_1(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_ldd_2(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_ldd_3(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_ldd_5(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_ldd_6(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_ldd_7(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_sts(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_st_1(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_st_2(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_st_3(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_std_1(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_std_2(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_std_3(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_std_4(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_std_5(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_std_6(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_lpm_1(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_lpm_2(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_lpm_3(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_elpm_1(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_elpm_2(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_elpm_3(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_spm(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_spm_2_1(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_spm_2_2(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_in(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_out(const instruction_type *instr)
+{
+
+#ifdef _DEBUG
+	printf("out I/O(0x%2X,%2d), r%d\n",
+		instr->parameters.rd_aaaaa.aaaaa,
+		instr->parameters.rd_aaaaa.aaaaa,
+		instr->parameters.rd_aaaaa.rd);
+#endif
+
+	*get_data_memory(instr->parameters.rd_aaaaa.aaaaa)
+		= *get_data_memory(instr->parameters.rd_aaaaa.rd);
+
+	atmel_PC += INST_SIZE;
+}
+
+void op_lsl(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_lsr(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_rol(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_ror(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_asr(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_swap(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_sbi(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_cbi(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_bst(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_bld(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_break(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_nop(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_sleep(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+
+void op_wdr(const instruction_type *instr)
+{
+	printf("########## TODO ##########\n");
+}
+

@@ -1,0 +1,66 @@
+TODO
+
+0. fix blanks in notes.  Maybe fix size of font -> now 51, may need to be sth else.
+
+1. make backlight on ? sec & btn toggles on/off, B/L mentioned in timer and ports only.  port has no effect and timer assumes B/L button is
+	always pressed
+
+2. Get Eggwatch to work.  currently the lap reset button is coded incorrectly.
+3. Get Eggwatch to do the subdivided values like stopwatch, going up and down to make it easy.
+
+4. make Calendar.  When is_calendar(), takes up whole watch display.
+
+	top:
+	date ???MM.DD??? (star_long = set date, up = cycle alarms and date, star = nx_calendar)
+	alarm HH:MM (star_long = set alarm, up = cycle alarms and date, up_long = alarm toggle, star = nx_calendar)
+	bottom:
+	agendum (num_long = set agenda, num = nx_calendar, down = next agendum for day, down_long = scroll agendum)
+	alarm RRR.WW (down = cycle repeats, num = nx_calendar)(R = Repeat, W = Weekday)(So, Mo, De, Mi, Do, Fr, Sa)(Day, Wek, Dat, One)
+	
+	When setting
+	top:
+	date top: year
+	alarm top: HH:MM
+	bottom:
+	date top: MM DD
+	alarm bottom: RRR.WW (R = Repeat, W = Weekday)(So, Mo, De, Mi, Do, Fr, Sa)(Day, Wek, Dat, One)
+	
+	figure out a way to make the alarm repeat and be disabled from any of it's instances
+		
+	On setting date make different (top line = Month (Ja, Fe, Ma, Ap, My, Jn, Jl, Ag, Se, Ok, Nv, De) with a period,
+	then the day of month. when it is just viewing the alarm on top, di
+	
+DONE:   (In Global Functions) On setting agenda, make it like notes (star = next letter, star_long = reset, up/down = change value, num_long = add digit).  	
+
+	On nx_calendar, on star, make top advance and bottom get redrawn. On num press, advance to the item after the one that was there previously,
+	and advance the top too. We must remember what was there before us so we can advance the bottom or redraw it.
+	
+	MAKE DATES INITIALIZE (trivial, but is 2 in morning)
+
+5. Pedometer
+	would be a nice feature, able to set the stride length(s) in metres
+	max stride = when running
+	min stride when walking and use an algorithm to interpolate values
+	The data has to be based off of spikes in Y axis
+	Need to figure out how to make it so that it is possible to figure out the peak on a random curve (maybe take last couple values
+	and average them and find their relation to the current number (the more values sampled, the more delayed the response will be.
+	Needs to be relatively fast so that we can run
+	
+	Features:
+	Needs to have raw step count
+	Reset
+	(Kilo)metres
+	Set stride lengths
+	? sample rate
+	? timeout
+	? auto stop/slow down (so that when you stop, it stops/slows sampling)
+	? smartness (recognise only running and walking patterns.  All other patterns will not be added as step counts
+
+              1.5          __        /\
+        Y     1           /  \      /  \
+              .5         /    \    /    \
+        A     .25       /      \__/      \          ____________
+        x     0   _____/                  \        /
+        i     -.25                         \      /
+        s     -.5                           \____/
+                             Time -->

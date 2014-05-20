@@ -1,0 +1,20 @@
+/*
+ * Main.cpp
+ *
+ *  Created on: 21.02.2014
+ *      Author: mark
+ */
+
+#include "Main.h"
+#include <QtCore/qglobal.h>
+
+QScreen screen = new QScreen();
+Main::Main()
+{
+
+}
+
+Main::~Main()
+{
+	// TODO Auto-generated destructor stub
+}

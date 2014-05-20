@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete resource &apos;openchronos-ng-code/modules/schedule.h&apos;" deleteContents="false" description="Delete resource &apos;openchronos-ng-code/modules/schedule.h&apos;" element1="/openchronos-ng-code/modules/schedule.h" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1383438671155"/>
+</session>

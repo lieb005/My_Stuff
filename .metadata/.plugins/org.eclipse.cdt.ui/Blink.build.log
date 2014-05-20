@@ -1,0 +1,16 @@
+23:08:52 **** Build of configuration Release for project Blink ****
+make all 
+Building file: ../main.cpp
+Invoking: AVR C++ Compiler
+avr-g++ -I"/home/mark/wokspace_c/Arduino-Blink-Eclipse-Project/ArduinoCore/src" -w -Os -ffunction-sections -fdata-sections -fno-exceptions -DARDUINO=22 -g -mmcu=atmega328p -DF_CPU=16000000UL -MMD -MP -MF"main.d" -MT"main.d" -c -o "main.o" "../main.cpp"
+Finished building: ../main.cpp
+ 
+Building target: Blink.elf
+Invoking: AVR C++ Linker
+avr-gcc -s -Os -Wl,--gc-sections -o"Blink.elf"  ./main.o   -lArduinoCore -lm -Wl,-Map,Blink.map,--cref -L"/home/mark/wokspace_c/Arduino-Blink-Eclipse-Project/ArduinoCore/328P_16MHz" -mmcu=atmega328p
+/usr/bin/avr-ld: cannot find -lArduinoCore
+collect2: error: ld returned 1 exit status
+make: *** [Blink.elf] Fehler 1
+
+23:08:52 Build Finished (took 389ms)
+

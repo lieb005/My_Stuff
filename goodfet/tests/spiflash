@@ -1,0 +1,8 @@
+Connection Test: (- is bad)
+++++++++++++++++++++++++++++++++++++++++
+0 misreads
+All reads succeeded.  Wiring is probably good.
+Erasing.
+Testing erase.
+Testing flash write.
+Test complete.

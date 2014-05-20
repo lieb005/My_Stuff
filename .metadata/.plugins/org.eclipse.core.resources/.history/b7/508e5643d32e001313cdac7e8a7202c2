@@ -1,0 +1,41 @@
+/*
+ * colors.h
+ *
+ *  Created on: 06.10.2013
+ *      Author: mark
+ */
+
+#ifndef COLORS_H_
+#define COLORS_H_
+
+#define RED			(0xFF0000)
+#define GREEN		(0x00FF00)
+#define BLUE		(0x0000FF)
+
+#define DARK_RED	(0x7F0000)
+#define DARK_GREEN	(0x007F00)
+#define DARK_BLUE	(0x00007F)
+
+#define YELLOW		(0xFFFF00)
+#define CYAN		(0x00FFFF)
+#define MAGENTA		(0xFF00FF)
+
+#define ORANGE		(0xFF7F00)
+#define AQUA		(0x00FF7F)
+#define VIOLET		(0x7F00FF)
+
+#define CHARTREUSE	(0x7FFF00)
+#define SKY_BlUE	(0x007FFF)
+#define ROSE		(0xFF007F)
+
+#define OLIVE		(0x7F7F00)
+#define TEAL		(0x007F7F)
+#define PURPLE		(0x7F007F)
+
+#define CORAL		(0xFF7F7F)
+#define LIME		(0x7FFF7F)
+#define LAVENDER	(0x7F7FFF)
+
+
+
+#endif /* COLORS_H_ */

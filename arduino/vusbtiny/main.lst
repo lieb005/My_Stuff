@@ -1,0 +1,1741 @@
+GAS LISTING /tmp/cc8skBkM.s 			page 1
+
+
+   1               		.file	"main.c"
+   2               	__SP_L__ = 0x3d
+   3               	__SREG__ = 0x3f
+   4               	__tmp_reg__ = 0
+   5               	__zero_reg__ = 1
+   6               		.stabs	"/home/mark/workspace_c/vusbtiny/",100,0,2,.Ltext0
+   7               		.stabs	"main.c",100,0,2,.Ltext0
+   8               		.text
+   9               	.Ltext0:
+  10               		.stabs	"gcc2_compiled.",60,0,0,0
+  11               		.stabs	"int:t(0,1)=r(0,1);-32768;32767;",128,0,0,0
+  12               		.stabs	"char:t(0,2)=@s8;r(0,2);0;255;",128,0,0,0
+  13               		.stabs	"long int:t(0,3)=@s32;r(0,3);020000000000;017777777777;",128,0,0,0
+  14               		.stabs	"unsigned int:t(0,4)=r(0,4);0;0177777;",128,0,0,0
+  15               		.stabs	"long unsigned int:t(0,5)=@s32;r(0,5);0;037777777777;",128,0,0,0
+  16               		.stabs	"long long int:t(0,6)=@s64;r(0,6);01000000000000000000000;0777777777777777777777;",128,0,0,
+  17               		.stabs	"long long unsigned int:t(0,7)=@s64;r(0,7);0;01777777777777777777777;",128,0,0,0
+  18               		.stabs	"short int:t(0,8)=r(0,8);-32768;32767;",128,0,0,0
+  19               		.stabs	"short unsigned int:t(0,9)=r(0,9);0;0177777;",128,0,0,0
+  20               		.stabs	"signed char:t(0,10)=@s8;r(0,10);-128;127;",128,0,0,0
+  21               		.stabs	"unsigned char:t(0,11)=@s8;r(0,11);0;255;",128,0,0,0
+  22               		.stabs	"float:t(0,12)=r(0,1);4;0;",128,0,0,0
+  23               		.stabs	"double:t(0,13)=r(0,1);4;0;",128,0,0,0
+  24               		.stabs	"long double:t(0,14)=r(0,1);4;0;",128,0,0,0
+  25               		.stabs	"short _Fract:t(0,15)=r(0,1);1;0;",128,0,0,0
+  26               		.stabs	"_Fract:t(0,16)=r(0,1);2;0;",128,0,0,0
+  27               		.stabs	"long _Fract:t(0,17)=r(0,1);4;0;",128,0,0,0
+  28               		.stabs	"long long _Fract:t(0,18)=r(0,1);8;0;",128,0,0,0
+  29               		.stabs	"unsigned short _Fract:t(0,19)=r(0,1);1;0;",128,0,0,0
+  30               		.stabs	"unsigned _Fract:t(0,20)=r(0,1);2;0;",128,0,0,0
+  31               		.stabs	"unsigned long _Fract:t(0,21)=r(0,1);4;0;",128,0,0,0
+  32               		.stabs	"unsigned long long _Fract:t(0,22)=r(0,1);8;0;",128,0,0,0
+  33               		.stabs	"_Sat short _Fract:t(0,23)=r(0,1);1;0;",128,0,0,0
+  34               		.stabs	"_Sat _Fract:t(0,24)=r(0,1);2;0;",128,0,0,0
+  35               		.stabs	"_Sat long _Fract:t(0,25)=r(0,1);4;0;",128,0,0,0
+  36               		.stabs	"_Sat long long _Fract:t(0,26)=r(0,1);8;0;",128,0,0,0
+  37               		.stabs	"_Sat unsigned short _Fract:t(0,27)=r(0,1);1;0;",128,0,0,0
+  38               		.stabs	"_Sat unsigned _Fract:t(0,28)=r(0,1);2;0;",128,0,0,0
+  39               		.stabs	"_Sat unsigned long _Fract:t(0,29)=r(0,1);4;0;",128,0,0,0
+  40               		.stabs	"_Sat unsigned long long _Fract:t(0,30)=r(0,1);8;0;",128,0,0,0
+  41               		.stabs	"short _Accum:t(0,31)=r(0,1);2;0;",128,0,0,0
+  42               		.stabs	"_Accum:t(0,32)=r(0,1);4;0;",128,0,0,0
+  43               		.stabs	"long _Accum:t(0,33)=r(0,1);8;0;",128,0,0,0
+  44               		.stabs	"long long _Accum:t(0,34)=r(0,1);8;0;",128,0,0,0
+  45               		.stabs	"unsigned short _Accum:t(0,35)=r(0,1);2;0;",128,0,0,0
+  46               		.stabs	"unsigned _Accum:t(0,36)=r(0,1);4;0;",128,0,0,0
+  47               		.stabs	"unsigned long _Accum:t(0,37)=r(0,1);8;0;",128,0,0,0
+  48               		.stabs	"unsigned long long _Accum:t(0,38)=r(0,1);8;0;",128,0,0,0
+  49               		.stabs	"_Sat short _Accum:t(0,39)=r(0,1);2;0;",128,0,0,0
+  50               		.stabs	"_Sat _Accum:t(0,40)=r(0,1);4;0;",128,0,0,0
+  51               		.stabs	"_Sat long _Accum:t(0,41)=r(0,1);8;0;",128,0,0,0
+  52               		.stabs	"_Sat long long _Accum:t(0,42)=r(0,1);8;0;",128,0,0,0
+  53               		.stabs	"_Sat unsigned short _Accum:t(0,43)=r(0,1);2;0;",128,0,0,0
+  54               		.stabs	"_Sat unsigned _Accum:t(0,44)=r(0,1);4;0;",128,0,0,0
+  55               		.stabs	"_Sat unsigned long _Accum:t(0,45)=r(0,1);8;0;",128,0,0,0
+  56               		.stabs	"_Sat unsigned long long _Accum:t(0,46)=r(0,1);8;0;",128,0,0,0
+  57               		.stabs	"void:t(0,47)=(0,47)",128,0,0,0
+GAS LISTING /tmp/cc8skBkM.s 			page 2
+
+
+  58               		.stabs	"/usr/avr/include/avr/io.h",130,0,0,0
+  59               		.stabs	"/usr/avr/include/avr/sfr_defs.h",130,0,0,0
+  60               		.stabs	"/usr/avr/include/inttypes.h",130,0,0,0
+  61               		.stabs	"/usr/lib/gcc/avr/4.8.0/include/stdint.h",130,0,0,0
+  62               		.stabs	"/usr/avr/include/stdint.h",130,0,0,0
+  63               		.stabs	"int8_t:t(5,1)=(0,10)",128,0,121,0
+  64               		.stabs	"uint8_t:t(5,2)=(0,11)",128,0,122,0
+  65               		.stabs	"int16_t:t(5,3)=(0,1)",128,0,123,0
+  66               		.stabs	"uint16_t:t(5,4)=(0,4)",128,0,124,0
+  67               		.stabs	"int32_t:t(5,5)=(0,3)",128,0,125,0
+  68               		.stabs	"uint32_t:t(5,6)=(0,5)",128,0,126,0
+  69               		.stabs	"int64_t:t(5,7)=(0,6)",128,0,128,0
+  70               		.stabs	"uint64_t:t(5,8)=(0,7)",128,0,129,0
+  71               		.stabs	"intptr_t:t(5,9)=(5,3)",128,0,142,0
+  72               		.stabs	"uintptr_t:t(5,10)=(5,4)",128,0,147,0
+  73               		.stabs	"int_least8_t:t(5,11)=(5,1)",128,0,159,0
+  74               		.stabs	"uint_least8_t:t(5,12)=(5,2)",128,0,164,0
+  75               		.stabs	"int_least16_t:t(5,13)=(5,3)",128,0,169,0
+  76               		.stabs	"uint_least16_t:t(5,14)=(5,4)",128,0,174,0
+  77               		.stabs	"int_least32_t:t(5,15)=(5,5)",128,0,179,0
+  78               		.stabs	"uint_least32_t:t(5,16)=(5,6)",128,0,184,0
+  79               		.stabs	"int_least64_t:t(5,17)=(5,7)",128,0,192,0
+  80               		.stabs	"uint_least64_t:t(5,18)=(5,8)",128,0,199,0
+  81               		.stabs	"int_fast8_t:t(5,19)=(5,1)",128,0,213,0
+  82               		.stabs	"uint_fast8_t:t(5,20)=(5,2)",128,0,218,0
+  83               		.stabs	"int_fast16_t:t(5,21)=(5,3)",128,0,223,0
+  84               		.stabs	"uint_fast16_t:t(5,22)=(5,4)",128,0,228,0
+  85               		.stabs	"int_fast32_t:t(5,23)=(5,5)",128,0,233,0
+  86               		.stabs	"uint_fast32_t:t(5,24)=(5,6)",128,0,238,0
+  87               		.stabs	"int_fast64_t:t(5,25)=(5,7)",128,0,246,0
+  88               		.stabs	"uint_fast64_t:t(5,26)=(5,8)",128,0,253,0
+  89               		.stabs	"intmax_t:t(5,27)=(5,7)",128,0,273,0
+  90               		.stabs	"uintmax_t:t(5,28)=(5,8)",128,0,278,0
+  91               		.stabn	162,0,0,0
+  92               		.stabn	162,0,0,0
+  93               		.stabs	"int_farptr_t:t(3,1)=(5,5)",128,0,77,0
+  94               		.stabs	"uint_farptr_t:t(3,2)=(5,6)",128,0,81,0
+  95               		.stabn	162,0,0,0
+  96               		.stabn	162,0,0,0
+  97               		.stabs	"/usr/avr/include/avr/fuse.h",130,0,0,0
+  98               		.stabs	"__fuse_t:t(6,1)=(6,2)=s3low:(0,11),0,8;high:(0,11),8,8;extended:(0,11),16,8;;",128,0,244,0
+  99               		.stabn	162,0,0,0
+ 100               		.stabn	162,0,0,0
+ 101               		.stabs	"/usr/avr/include/avr/eeprom.h",130,0,0,0
+ 102               		.stabs	"/usr/lib/gcc/avr/4.8.0/include/stddef.h",130,0,0,0
+ 103               		.stabs	"ptrdiff_t:t(8,1)=(0,1)",128,0,147,0
+ 104               		.stabs	"size_t:t(8,2)=(0,4)",128,0,212,0
+ 105               		.stabs	"wchar_t:t(8,3)=(0,1)",128,0,324,0
+ 106               		.stabn	162,0,0,0
+ 107               		.stabn	162,0,0,0
+ 108               		.stabs	"/usr/avr/include/stdlib.h",130,0,0,0
+ 109               		.stabs	"div_t:t(9,1)=(9,2)=s4quot:(0,1),0,16;rem:(0,1),16,16;;",128,0,71,0
+ 110               		.stabs	"ldiv_t:t(9,3)=(9,4)=s8quot:(0,3),0,32;rem:(0,3),32,32;;",128,0,77,0
+ 111               		.stabs	"__compar_fn_t:t(9,5)=(9,6)=*(9,7)=f(0,1)",128,0,80,0
+ 112               		.stabn	162,0,0,0
+ 113               		.stabs	"usbdrv/usbdrv.h",130,0,0,0
+ 114               		.stabs	"usbTxStatus:T(10,1)=s12len:(10,2)=B(0,11),0,8;buffer:(10,3)=ar(10,4)=r(10,4);0;0177777;;0;
+GAS LISTING /tmp/cc8skBkM.s 			page 3
+
+
+ 115               		.stabs	"usbTxStatus_t:t(10,5)=(10,1)",128,0,650,0
+ 116               		.stabs	"usbWord:T(10,6)=u2word:(0,4),0,16;bytes:(10,7)=ar(10,4);0;1;(0,11),0,16;;",128,0,0,0
+ 117               		.stabs	"usbWord_t:t(10,8)=(10,6)",128,0,662,0
+ 118               		.stabs	"usbRequest:T(10,9)=s8bmRequestType:(0,11),0,8;bRequest:(0,11),8,8;wValue:(10,8),16,16;wInd
+ 119               		.stabs	"usbRequest_t:t(10,10)=(10,9)",128,0,670,0
+ 120               		.stabn	162,0,0,0
+ 121               		.stabs	" :T(0,48)=@s8;eUSBTINY_ECHO:0,USBTINY_READ:1,USBTINY_WRITE:2,USBTINY_CLR:3,USBTINY_SET:4,U
+ 122               		.stabs	"spi:f(0,47)",36,0,125,spi
+ 123               		.stabs	"cmd:P(0,49)=*(0,11)",64,0,125,24
+ 124               		.type	spi, @function
+ 125               	spi:
+ 126               		.stabd	46,0,0
+   1:main.c        **** /* Name: main.c
+   2:main.c        ****   
+   3:main.c        ****   created by chris chung, 2010 April
+   4:main.c        **** 
+   5:main.c        ****   based on the works found in
+   6:main.c        **** 
+   7:main.c        ****   v-usb framework http://www.obdev.at/vusb/
+   8:main.c        **** 	 Project: Thermostat based on AVR USB driver
+   9:main.c        **** 	 Author: Christian Starkjohann
+  10:main.c        ****     
+  11:main.c        ****   usbtiny isp http://www.xs4all.nl/~dicks/avr/usbtiny/
+  12:main.c        ****   	Dick Streefland
+  13:main.c        ****   
+  14:main.c        ****   please observe licensing term from the above two projects
+  15:main.c        **** 
+  16:main.c        **** 	Copyright (C) 2010  chris chung
+  17:main.c        **** 
+  18:main.c        **** 	This program is free software; you can redistribute it and/or
+  19:main.c        **** 	modify it under the terms of the GNU General Public License
+  20:main.c        **** 	as published by the Free Software Foundation; either version 2
+  21:main.c        **** 	of the License, or (at your option) any later version.
+  22:main.c        **** 
+  23:main.c        **** 	This program is distributed in the hope that it will be useful,
+  24:main.c        **** 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+  25:main.c        **** 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  26:main.c        **** 	GNU General Public License for more details.
+  27:main.c        **** 
+  28:main.c        **** 	You should have received a copy of the GNU General Public License
+  29:main.c        **** 	along with this program; if not, write to the Free Software
+  30:main.c        **** 	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+  31:main.c        **** 
+  32:main.c        **** 
+  33:main.c        ****   **** fuse setting, 
+  34:main.c        ****   **** this will blow reset fuse, u will need to use HV programmer to recover if u mess up
+  35:main.c        ****   avrdude -c usbtiny -p t45 -V -U lfuse:w:0xe1:m -U hfuse:w:0x5d:m -U efuse:w:0xff:m 
+  36:main.c        ****  */
+  37:main.c        **** 
+  38:main.c        **** #include <avr/io.h>
+  39:main.c        **** #include <avr/wdt.h>
+  40:main.c        **** #include <avr/eeprom.h>
+  41:main.c        **** #include <avr/interrupt.h>
+  42:main.c        **** #include <avr/pgmspace.h>
+  43:main.c        **** #include <util/delay.h>
+  44:main.c        **** #include <stdlib.h>
+  45:main.c        **** 
+GAS LISTING /tmp/cc8skBkM.s 			page 4
+
+
+  46:main.c        **** #include "usbdrv.h"
+  47:main.c        **** #include "oddebug.h"
+  48:main.c        **** 
+  49:main.c        **** enum
+  50:main.c        **** {
+  51:main.c        **** 	// Generic requests
+  52:main.c        **** 	USBTINY_ECHO,		// echo test
+  53:main.c        **** 	USBTINY_READ,		// read byte (wIndex:address)
+  54:main.c        **** 	USBTINY_WRITE,		// write byte (wIndex:address, wValue:value)
+  55:main.c        **** 	USBTINY_CLR,		// clear bit (wIndex:address, wValue:bitno)
+  56:main.c        **** 	USBTINY_SET,		// set bit (wIndex:address, wValue:bitno)
+  57:main.c        **** 	// Programming requests
+  58:main.c        **** 	USBTINY_POWERUP,	// apply power (wValue:SCK-period, wIndex:RESET)
+  59:main.c        **** 	USBTINY_POWERDOWN,	// remove power from chip
+  60:main.c        **** 	USBTINY_SPI,		// issue SPI command (wValue:c1c0, wIndex:c3c2)
+  61:main.c        **** 	USBTINY_POLL_BYTES,	// set poll bytes for write (wValue:p1p2)
+  62:main.c        **** 	USBTINY_FLASH_READ,	// read flash (wIndex:address)
+  63:main.c        **** 	USBTINY_FLASH_WRITE,	// write flash (wIndex:address, wValue:timeout)
+  64:main.c        **** 	USBTINY_EEPROM_READ,	// read eeprom (wIndex:address)
+  65:main.c        **** 	USBTINY_EEPROM_WRITE,	// write eeprom (wIndex:address, wValue:timeout)
+  66:main.c        **** };
+  67:main.c        **** 
+  68:main.c        **** #define	PORT	PORTB
+  69:main.c        **** #define	DDR		DDRB
+  70:main.c        **** #define	PIN		PINB
+  71:main.c        **** 
+  72:main.c        **** //
+  73:main.c        **** // to reduce pin count so that this can fit in a 8 pin tiny
+  74:main.c        **** // . no power nor ground pins to target, they are to be connected always
+  75:main.c        **** // . no reset control pin to target, target reset always grounded
+  76:main.c        **** //   * this had caused problem and there are two solutions
+  77:main.c        **** //     1. provide a toggle switch to off-on-off target reset to ground
+  78:main.c        **** //     2. introduce reset control and use reset pin as io
+  79:main.c        **** //
+  80:main.c        **** #define	POWER_MASK	0x00
+  81:main.c        **** #define	GND_MASK	0x00
+  82:main.c        **** 
+  83:main.c        **** #define	RESET_MASK	(1 << 5)
+  84:main.c        **** #define	SCK_MASK	(1 << 2)
+  85:main.c        **** #define	MISO_MASK	(1 << 1)
+  86:main.c        **** #define	MOSI_MASK	(1 << 0)
+  87:main.c        **** 
+  88:main.c        **** // ----------------------------------------------------------------------
+  89:main.c        **** // Programmer input pins:
+  90:main.c        **** //	MISO	PD3	(ACK)
+  91:main.c        **** // ----------------------------------------------------------------------
+  92:main.c        **** 
+  93:main.c        **** // ----------------------------------------------------------------------
+  94:main.c        **** // Local data
+  95:main.c        **** // ----------------------------------------------------------------------
+  96:main.c        **** static	uchar		sck_period=50;	// SCK period in microseconds (1..250)
+  97:main.c        **** static	uchar		poll1;		// first poll byte for write
+  98:main.c        **** static	uchar		poll2;		// second poll byte for write
+  99:main.c        **** static	unsigned		address;	// read/write address
+ 100:main.c        **** static	unsigned		timeout;	// write timeout in usec
+ 101:main.c        **** static	uchar		cmd0;		// current read/write command byte
+ 102:main.c        **** static	uchar		cmd[4];		// SPI command buffer
+GAS LISTING /tmp/cc8skBkM.s 			page 5
+
+
+ 103:main.c        **** static	uchar		res[4];		// SPI result buffer
+ 104:main.c        **** 
+ 105:main.c        **** // ----------------------------------------------------------------------
+ 106:main.c        **** // Delay exactly <sck_period> times 0.5 microseconds (6 cycles).
+ 107:main.c        **** // ----------------------------------------------------------------------
+ 108:main.c        **** __attribute__((always_inline))
+ 109:main.c        **** static	void	delay ( void )
+ 110:main.c        **** {
+ 111:main.c        **** 	asm volatile(
+ 112:main.c        **** 		"	mov	__tmp_reg__,%0	\n"
+ 113:main.c        **** 		"0:	rjmp	1f		\n"
+ 114:main.c        **** 		"1:	nop			\n"
+ 115:main.c        **** 		"2:	nop			\n"
+ 116:main.c        **** 		"3:	nop			\n"
+ 117:main.c        **** 		"	dec	__tmp_reg__	\n"
+ 118:main.c        **** 		"	brne	0b		\n"
+ 119:main.c        **** 		: : "r" (sck_period) );
+ 120:main.c        **** }
+ 121:main.c        **** 
+ 122:main.c        **** // ----------------------------------------------------------------------
+ 123:main.c        **** // Issue one SPI command.
+ 124:main.c        **** // ----------------------------------------------------------------------
+ 125:main.c        **** static	void	spi ( uchar* cmd, uchar* res )
+ 126:main.c        **** {
+ 127               		.stabn	68,0,126,.LM0-.LFBB1
+ 128               	.LM0:
+ 129               	.LFBB1:
+ 130 0000 CF93      		push r28
+ 131 0002 DF93      		push r29
+ 132               	/* prologue: function */
+ 133               	/* frame size = 0 */
+ 134               	/* stack size = 2 */
+ 135               	.L__stack_usage = 2
+ 136 0004 FB01      		movw r30,r22
+ 137 0006 AC01      		movw r20,r24
+ 138 0008 4C5F      		subi r20,-4
+ 139 000a 5F4F      		sbci r21,-1
+ 140               	.L7:
+ 127:main.c        **** 	uchar	i;
+ 128:main.c        **** 	uchar	c;
+ 129:main.c        **** 	uchar	r;
+ 130:main.c        **** 	uchar	mask;
+ 131:main.c        **** 
+ 132:main.c        **** 	for	( i = 0; i < 4; i++ )
+ 133:main.c        **** 	{
+ 134:main.c        **** 		c = *cmd++;
+ 141               		.stabn	68,0,134,.LM1-.LFBB1
+ 142               	.LM1:
+ 143 000c EC01      		movw r28,r24
+ 144 000e A991      		ld r26,Y+
+ 145 0010 CE01      		movw r24,r28
+ 146 0012 28E0      		ldi r18,lo8(8)
+ 147 0014 30E0      		ldi r19,0
+ 135:main.c        **** 		r = 0;
+ 136:main.c        **** 		for	( mask = 0x80; mask; mask >>= 1 )
+ 148               		.stabn	68,0,136,.LM2-.LFBB1
+ 149               	.LM2:
+GAS LISTING /tmp/cc8skBkM.s 			page 6
+
+
+ 150 0016 70E8      		ldi r23,lo8(-128)
+ 135:main.c        **** 		r = 0;
+ 151               		.stabn	68,0,135,.LM3-.LFBB1
+ 152               	.LM3:
+ 153 0018 60E0      		ldi r22,0
+ 154               	.L5:
+ 137:main.c        **** 		{
+ 138:main.c        **** 			if	( c & mask )
+ 155               		.stabn	68,0,138,.LM4-.LFBB1
+ 156               	.LM4:
+ 157 001a B72F      		mov r27,r23
+ 158 001c BA23      		and r27,r26
+ 159 001e 01F0      		breq .L2
+ 139:main.c        **** 			{
+ 140:main.c        **** 				PORT |= MOSI_MASK;
+ 160               		.stabn	68,0,140,.LM5-.LFBB1
+ 161               	.LM5:
+ 162 0020 C09A      		sbi 0x18,0
+ 163               	.L2:
+ 164               	.LBB8:
+ 165               	.LBB9:
+ 111:main.c        **** 	asm volatile(
+ 166               		.stabn	68,0,111,.LM6-.LFBB1
+ 167               	.LM6:
+ 168 0022 B091 0000 		lds r27,sck_period
+ 169               	/* #APP */
+ 170               	 ;  111 "main.c" 1
+ 171 0026 0B2E      			mov	__tmp_reg__,r27	
+ 172 0028 00C0      	0:	rjmp	1f		
+ 173 002a 0000      	1:	nop			
+ 174 002c 0000      	2:	nop			
+ 175 002e 0000      	3:	nop			
+ 176 0030 0A94      		dec	__tmp_reg__	
+ 177 0032 01F4      		brne	0b		
+ 178               	
+ 179               	 ;  0 "" 2
+ 180               	/* #NOAPP */
+ 181               	.LBE9:
+ 182               	.LBE8:
+ 141:main.c        **** 			}
+ 142:main.c        **** 			delay();
+ 143:main.c        **** 			PORT |= SCK_MASK;
+ 183               		.stabn	68,0,143,.LM7-.LFBB1
+ 184               	.LM7:
+ 185 0034 C29A      		sbi 0x18,2
+ 186               	.LBB10:
+ 187               	.LBB11:
+ 111:main.c        **** 	asm volatile(
+ 188               		.stabn	68,0,111,.LM8-.LFBB1
+ 189               	.LM8:
+ 190 0036 B091 0000 		lds r27,sck_period
+ 191               	/* #APP */
+ 192               	 ;  111 "main.c" 1
+ 193 003a 0B2E      			mov	__tmp_reg__,r27	
+ 194 003c 00C0      	0:	rjmp	1f		
+ 195 003e 0000      	1:	nop			
+ 196 0040 0000      	2:	nop			
+GAS LISTING /tmp/cc8skBkM.s 			page 7
+
+
+ 197 0042 0000      	3:	nop			
+ 198 0044 0A94      		dec	__tmp_reg__	
+ 199 0046 01F4      		brne	0b		
+ 200               	
+ 201               	 ;  0 "" 2
+ 202               	/* #NOAPP */
+ 203               	.LBE11:
+ 204               	.LBE10:
+ 144:main.c        **** 			delay();
+ 145:main.c        **** 			r <<= 1;
+ 205               		.stabn	68,0,145,.LM9-.LFBB1
+ 206               	.LM9:
+ 207 0048 660F      		lsl r22
+ 146:main.c        **** 			if	( PIN & MISO_MASK )
+ 208               		.stabn	68,0,146,.LM10-.LFBB1
+ 209               	.LM10:
+ 210 004a B199      		sbic 0x16,1
+ 147:main.c        **** 			{
+ 148:main.c        **** 				r++;
+ 211               		.stabn	68,0,148,.LM11-.LFBB1
+ 212               	.LM11:
+ 213 004c 6F5F      		subi r22,lo8(-(1))
+ 214               	.L3:
+ 149:main.c        **** 			}
+ 150:main.c        **** 			PORT &= ~MOSI_MASK;
+ 215               		.stabn	68,0,150,.LM12-.LFBB1
+ 216               	.LM12:
+ 217 004e C098      		cbi 0x18,0
+ 151:main.c        **** 			PORT &= ~SCK_MASK;
+ 218               		.stabn	68,0,151,.LM13-.LFBB1
+ 219               	.LM13:
+ 220 0050 C298      		cbi 0x18,2
+ 136:main.c        **** 		for	( mask = 0x80; mask; mask >>= 1 )
+ 221               		.stabn	68,0,136,.LM14-.LFBB1
+ 222               	.LM14:
+ 223 0052 7695      		lsr r23
+ 224 0054 2150      		subi r18,1
+ 225 0056 3109      		sbc r19,__zero_reg__
+ 226 0058 2115      		cp r18,__zero_reg__
+ 227 005a 3105      		cpc r19,__zero_reg__
+ 228 005c 01F4      		brne .L5
+ 152:main.c        **** 		}
+ 153:main.c        **** 		*res++ = r;
+ 229               		.stabn	68,0,153,.LM15-.LFBB1
+ 230               	.LM15:
+ 231 005e 6193      		st Z+,r22
+ 132:main.c        **** 	for	( i = 0; i < 4; i++ )
+ 232               		.stabn	68,0,132,.LM16-.LFBB1
+ 233               	.LM16:
+ 234 0060 8417      		cp r24,r20
+ 235 0062 9507      		cpc r25,r21
+ 236 0064 01F0      		breq .+2
+ 237 0066 00C0      		rjmp .L7
+ 238               	/* epilogue start */
+ 154:main.c        **** 	}
+ 155:main.c        **** }
+ 239               		.stabn	68,0,155,.LM17-.LFBB1
+GAS LISTING /tmp/cc8skBkM.s 			page 8
+
+
+ 240               	.LM17:
+ 241 0068 DF91      		pop r29
+ 242 006a CF91      		pop r28
+ 243 006c 0895      		ret
+ 244               		.size	spi, .-spi
+ 245               		.stabs	"c:r(0,11)",64,0,128,26
+ 246               		.stabs	"r:r(0,11)",64,0,129,22
+ 247               		.stabs	"mask:r(0,11)",64,0,130,23
+ 248               		.stabn	192,0,0,.LFBB1-.LFBB1
+ 249               		.stabn	224,0,0,.Lscope1-.LFBB1
+ 250               	.Lscope1:
+ 251               		.stabs	"",36,0,0,.Lscope1-.LFBB1
+ 252               		.stabd	78,0,0
+ 253               		.stabs	"spi_rw:f(0,47)",36,0,160,spi_rw
+ 254               		.type	spi_rw, @function
+ 255               	spi_rw:
+ 256               		.stabd	46,0,0
+ 156:main.c        **** 
+ 157:main.c        **** // ----------------------------------------------------------------------
+ 158:main.c        **** // Create and issue a read or write SPI command.
+ 159:main.c        **** // ----------------------------------------------------------------------
+ 160:main.c        **** static	void	spi_rw ( void )
+ 161:main.c        **** {
+ 257               		.stabn	68,0,161,.LM18-.LFBB2
+ 258               	.LM18:
+ 259               	.LFBB2:
+ 260               	/* prologue: function */
+ 261               	/* frame size = 0 */
+ 262               	/* stack size = 0 */
+ 263               	.L__stack_usage = 0
+ 162:main.c        **** 	unsigned	a;
+ 163:main.c        **** 
+ 164:main.c        **** 	a = address++;
+ 264               		.stabn	68,0,164,.LM19-.LFBB2
+ 265               	.LM19:
+ 266 006e 8091 0000 		lds r24,address
+ 267 0072 9091 0000 		lds r25,address+1
+ 268 0076 9C01      		movw r18,r24
+ 269 0078 2F5F      		subi r18,-1
+ 270 007a 3F4F      		sbci r19,-1
+ 271 007c 3093 0000 		sts address+1,r19
+ 272 0080 2093 0000 		sts address,r18
+ 165:main.c        **** 	if	( cmd0 & 0x80 )
+ 273               		.stabn	68,0,165,.LM20-.LFBB2
+ 274               	.LM20:
+ 275 0084 2091 0000 		lds r18,cmd0
+ 276 0088 27FF      		sbrs r18,7
+ 277 008a 00C0      		rjmp .L16
+ 166:main.c        **** 	{	// eeprom
+ 167:main.c        **** 		a <<= 1;
+ 278               		.stabn	68,0,167,.LM21-.LFBB2
+ 279               	.LM21:
+ 280 008c 880F      		lsl r24
+ 281 008e 991F      		rol r25
+ 282               	.L16:
+ 168:main.c        **** 	}
+ 169:main.c        **** 	cmd[0] = cmd0;
+GAS LISTING /tmp/cc8skBkM.s 			page 9
+
+
+ 170:main.c        **** 	if	( a & 1 )
+ 283               		.stabn	68,0,170,.LM22-.LFBB2
+ 284               	.LM22:
+ 285 0090 80FD      		sbrc r24,0
+ 171:main.c        **** 	{
+ 172:main.c        **** 		cmd[0] |= 0x08;
+ 286               		.stabn	68,0,172,.LM23-.LFBB2
+ 287               	.LM23:
+ 288 0092 2860      		ori r18,lo8(8)
+ 289               	.L19:
+ 290 0094 2093 0000 		sts cmd,r18
+ 173:main.c        **** 	}
+ 174:main.c        **** 	cmd[1] = a >> 9;
+ 291               		.stabn	68,0,174,.LM24-.LFBB2
+ 292               	.LM24:
+ 293 0098 292F      		mov r18,r25
+ 294 009a 2695      		lsr r18
+ 295 009c 2093 0000 		sts cmd+1,r18
+ 175:main.c        **** 	cmd[2] = a >> 1;
+ 296               		.stabn	68,0,175,.LM25-.LFBB2
+ 297               	.LM25:
+ 298 00a0 9695      		lsr r25
+ 299 00a2 8795      		ror r24
+ 300 00a4 8093 0000 		sts cmd+2,r24
+ 176:main.c        **** 	spi( cmd, res );
+ 301               		.stabn	68,0,176,.LM26-.LFBB2
+ 302               	.LM26:
+ 303 00a8 60E0      		ldi r22,lo8(res)
+ 304 00aa 70E0      		ldi r23,hi8(res)
+ 305 00ac 80E0      		ldi r24,lo8(cmd)
+ 306 00ae 90E0      		ldi r25,hi8(cmd)
+ 307 00b0 00C0      		rjmp spi
+ 308               		.size	spi_rw, .-spi_rw
+ 309               		.stabs	"a:r(0,4)",64,0,162,24
+ 310               		.stabn	192,0,0,.LFBB2-.LFBB2
+ 311               		.stabn	224,0,0,.Lscope2-.LFBB2
+ 312               	.Lscope2:
+ 313               		.stabs	"",36,0,0,.Lscope2-.LFBB2
+ 314               		.stabd	78,0,0
+ 315               		.stabs	"usbFunctionRead:F(0,11)",36,0,182,usbFunctionRead
+ 316               		.stabs	"len:P(0,11)",64,0,182,22
+ 317               	.global	usbFunctionRead
+ 318               		.type	usbFunctionRead, @function
+ 319               	usbFunctionRead:
+ 320               		.stabd	46,0,0
+ 177:main.c        **** }
+ 178:main.c        **** 
+ 179:main.c        **** // ----------------------------------------------------------------------
+ 180:main.c        **** // Handle an IN packet.
+ 181:main.c        **** // ----------------------------------------------------------------------
+ 182:main.c        **** uchar usbFunctionRead(uchar *data, uchar len)
+ 183:main.c        **** {
+ 321               		.stabn	68,0,183,.LM27-.LFBB3
+ 322               	.LM27:
+ 323               	.LFBB3:
+ 324 00b2 EF92      		push r14
+ 325 00b4 FF92      		push r15
+GAS LISTING /tmp/cc8skBkM.s 			page 10
+
+
+ 326 00b6 1F93      		push r17
+ 327 00b8 CF93      		push r28
+ 328 00ba DF93      		push r29
+ 329 00bc 1F92      		push __zero_reg__
+ 330 00be CDB7      		in r28,__SP_L__
+ 331 00c0 DD27      		clr r29
+ 332               	/* prologue: function */
+ 333               	/* frame size = 1 */
+ 334               	/* stack size = 6 */
+ 335               	.L__stack_usage = 6
+ 336 00c2 182F      		mov r17,r24
+ 184:main.c        **** 	uchar	i;
+ 185:main.c        **** 
+ 186:main.c        **** 	for	( i = 0; i < len; i++ )
+ 337               		.stabn	68,0,186,.LM28-.LFBB3
+ 338               	.LM28:
+ 339 00c4 7C01      		movw r14,r24
+ 340               	.L21:
+ 341 00c6 8E2D      		mov r24,r14
+ 342 00c8 811B      		sub r24,r17
+ 343               		.stabn	68,0,186,.LM29-.LFBB3
+ 344               	.LM29:
+ 345 00ca 8617      		cp r24,r22
+ 346 00cc 00F4      		brsh .L23
+ 187:main.c        **** 	{
+ 188:main.c        **** 		spi_rw();
+ 347               		.stabn	68,0,188,.LM30-.LFBB3
+ 348               	.LM30:
+ 349 00ce 6983      		std Y+1,r22
+ 350 00d0 00D0      		rcall spi_rw
+ 189:main.c        **** 		data[i] = res[3];
+ 351               		.stabn	68,0,189,.LM31-.LFBB3
+ 352               	.LM31:
+ 353 00d2 8091 0000 		lds r24,res+3
+ 354 00d6 F701      		movw r30,r14
+ 355 00d8 8193      		st Z+,r24
+ 356 00da 7F01      		movw r14,r30
+ 357 00dc 6981      		ldd r22,Y+1
+ 358 00de 00C0      		rjmp .L21
+ 359               	.L23:
+ 190:main.c        **** 	}
+ 191:main.c        **** 	return len;
+ 192:main.c        **** }
+ 360               		.stabn	68,0,192,.LM32-.LFBB3
+ 361               	.LM32:
+ 362 00e0 862F      		mov r24,r22
+ 363               	/* epilogue start */
+ 364 00e2 0F90      		pop __tmp_reg__
+ 365 00e4 DF91      		pop r29
+ 366 00e6 CF91      		pop r28
+ 367 00e8 1F91      		pop r17
+ 368 00ea FF90      		pop r15
+ 369 00ec EF90      		pop r14
+ 370 00ee 0895      		ret
+ 371               		.size	usbFunctionRead, .-usbFunctionRead
+ 372               	.Lscope3:
+ 373               		.stabs	"",36,0,0,.Lscope3-.LFBB3
+GAS LISTING /tmp/cc8skBkM.s 			page 11
+
+
+ 374               		.stabd	78,0,0
+ 375               		.stabs	"usbFunctionWrite:F(0,11)",36,0,197,usbFunctionWrite
+ 376               		.stabs	"len:P(0,11)",64,0,197,15
+ 377               	.global	usbFunctionWrite
+ 378               		.type	usbFunctionWrite, @function
+ 379               	usbFunctionWrite:
+ 380               		.stabd	46,0,0
+ 193:main.c        **** 
+ 194:main.c        **** // ----------------------------------------------------------------------
+ 195:main.c        **** // Handle an OUT packet.
+ 196:main.c        **** // ----------------------------------------------------------------------
+ 197:main.c        **** uchar usbFunctionWrite(uchar *data, uchar len)
+ 198:main.c        **** {
+ 381               		.stabn	68,0,198,.LM33-.LFBB4
+ 382               	.LM33:
+ 383               	.LFBB4:
+ 384 00f0 DF92      		push r13
+ 385 00f2 EF92      		push r14
+ 386 00f4 FF92      		push r15
+ 387 00f6 0F93      		push r16
+ 388 00f8 1F93      		push r17
+ 389 00fa CF93      		push r28
+ 390 00fc DF93      		push r29
+ 391               	/* prologue: function */
+ 392               	/* frame size = 0 */
+ 393               	/* stack size = 7 */
+ 394               	.L__stack_usage = 7
+ 395 00fe F62E      		mov r15,r22
+ 396 0100 E82E      		mov r14,r24
+ 199:main.c        **** 	uchar	i;
+ 200:main.c        **** 	unsigned	usec;
+ 201:main.c        **** 	uchar	r;
+ 202:main.c        **** 	//uchar	last = (len != 8);
+ 203:main.c        **** 
+ 204:main.c        **** 	for	( i = 0; i < len; i++ )
+ 397               		.stabn	68,0,204,.LM34-.LFBB4
+ 398               	.LM34:
+ 399 0102 EC01      		movw r28,r24
+ 205:main.c        **** 	{
+ 206:main.c        **** 		cmd[3] = data[i];
+ 207:main.c        **** 		spi_rw();
+ 208:main.c        **** 		cmd[0] ^= 0x60;	// turn write into read
+ 400               		.stabn	68,0,208,.LM35-.LFBB4
+ 401               	.LM35:
+ 402 0104 50E6      		ldi r21,lo8(96)
+ 403 0106 D52E      		mov r13,r21
+ 404               	.L25:
+ 405 0108 8C2F      		mov r24,r28
+ 406 010a 8E19      		sub r24,r14
+ 204:main.c        **** 	for	( i = 0; i < len; i++ )
+ 407               		.stabn	68,0,204,.LM36-.LFBB4
+ 408               	.LM36:
+ 409 010c 8F15      		cp r24,r15
+ 410 010e 00F4      		brsh .L32
+ 206:main.c        **** 		cmd[3] = data[i];
+ 411               		.stabn	68,0,206,.LM37-.LFBB4
+ 412               	.LM37:
+GAS LISTING /tmp/cc8skBkM.s 			page 12
+
+
+ 413 0110 8991      		ld r24,Y+
+ 414 0112 8093 0000 		sts cmd+3,r24
+ 207:main.c        **** 		spi_rw();
+ 415               		.stabn	68,0,207,.LM38-.LFBB4
+ 416               	.LM38:
+ 417 0116 00D0      		rcall spi_rw
+ 418               		.stabn	68,0,208,.LM39-.LFBB4
+ 419               	.LM39:
+ 420 0118 8091 0000 		lds r24,cmd
+ 421 011c 8D25      		eor r24,r13
+ 422 011e 8093 0000 		sts cmd,r24
+ 209:main.c        **** 		//
+ 210:main.c        **** 		for	( usec = 0; usec < timeout; usec += 32 * sck_period )
+ 423               		.stabn	68,0,210,.LM40-.LFBB4
+ 424               	.LM40:
+ 425 0122 00E0      		ldi r16,0
+ 426 0124 10E0      		ldi r17,0
+ 427               	.L26:
+ 428               		.stabn	68,0,210,.LM41-.LFBB4
+ 429               	.LM41:
+ 430 0126 8091 0000 		lds r24,timeout
+ 431 012a 9091 0000 		lds r25,timeout+1
+ 432 012e 0817      		cp r16,r24
+ 433 0130 1907      		cpc r17,r25
+ 434 0132 00F4      		brsh .L25
+ 211:main.c        **** 		{	// when timeout > 0, poll until byte is written
+ 212:main.c        **** 			spi( cmd, res );
+ 435               		.stabn	68,0,212,.LM42-.LFBB4
+ 436               	.LM42:
+ 437 0134 60E0      		ldi r22,lo8(res)
+ 438 0136 70E0      		ldi r23,hi8(res)
+ 439 0138 80E0      		ldi r24,lo8(cmd)
+ 440 013a 90E0      		ldi r25,hi8(cmd)
+ 441 013c 00D0      		rcall spi
+ 213:main.c        **** 			r = res[3];
+ 442               		.stabn	68,0,213,.LM43-.LFBB4
+ 443               	.LM43:
+ 444 013e 8091 0000 		lds r24,res+3
+ 214:main.c        **** 			if	( r == cmd[3] && r != poll1 && r != poll2 )
+ 445               		.stabn	68,0,214,.LM44-.LFBB4
+ 446               	.LM44:
+ 447 0142 9091 0000 		lds r25,cmd+3
+ 448 0146 8913      		cpse r24,r25
+ 449 0148 00C0      		rjmp .L27
+ 450               		.stabn	68,0,214,.LM45-.LFBB4
+ 451               	.LM45:
+ 452 014a 9091 0000 		lds r25,poll1
+ 453 014e 8917      		cp r24,r25
+ 454 0150 01F0      		breq .L27
+ 455 0152 9091 0000 		lds r25,poll2
+ 456 0156 8913      		cpse r24,r25
+ 457 0158 00C0      		rjmp .L25
+ 458               	.L27:
+ 210:main.c        **** 		for	( usec = 0; usec < timeout; usec += 32 * sck_period )
+ 459               		.stabn	68,0,210,.LM46-.LFBB4
+ 460               	.LM46:
+ 461 015a 8091 0000 		lds r24,sck_period
+GAS LISTING /tmp/cc8skBkM.s 			page 13
+
+
+ 462 015e 90E0      		ldi r25,0
+ 463 0160 45E0      		ldi r20,5
+ 464               		1:
+ 465 0162 880F      		lsl r24
+ 466 0164 991F      		rol r25
+ 467 0166 4A95      		dec r20
+ 468 0168 01F4      		brne 1b
+ 469 016a 080F      		add r16,r24
+ 470 016c 191F      		adc r17,r25
+ 471 016e 00C0      		rjmp .L26
+ 472               	.L32:
+ 215:main.c        **** 			{
+ 216:main.c        **** 				break;
+ 217:main.c        **** 			}
+ 218:main.c        **** 		}
+ 219:main.c        **** 		//
+ 220:main.c        **** 	}
+ 221:main.c        **** 	//return last;
+ 222:main.c        **** 	return 1;
+ 223:main.c        **** }
+ 473               		.stabn	68,0,223,.LM47-.LFBB4
+ 474               	.LM47:
+ 475 0170 81E0      		ldi r24,lo8(1)
+ 476               	/* epilogue start */
+ 477 0172 DF91      		pop r29
+ 478 0174 CF91      		pop r28
+ 479 0176 1F91      		pop r17
+ 480 0178 0F91      		pop r16
+ 481 017a FF90      		pop r15
+ 482 017c EF90      		pop r14
+ 483 017e DF90      		pop r13
+ 484 0180 0895      		ret
+ 485               		.size	usbFunctionWrite, .-usbFunctionWrite
+ 486               		.stabs	"usec:r(0,4)",64,0,200,16
+ 487               		.stabs	"r:r(0,11)",64,0,201,24
+ 488               		.stabn	192,0,0,.LFBB4-.LFBB4
+ 489               		.stabn	224,0,0,.Lscope4-.LFBB4
+ 490               	.Lscope4:
+ 491               		.stabs	"",36,0,0,.Lscope4-.LFBB4
+ 492               		.stabd	78,0,0
+ 493               		.stabs	"usbFunctionSetup:F(0,11)",36,0,229,usbFunctionSetup
+ 494               		.stabs	"data:P(0,49)",64,0,229,28
+ 495               	.global	usbFunctionSetup
+ 496               		.type	usbFunctionSetup, @function
+ 497               	usbFunctionSetup:
+ 498               		.stabd	46,0,0
+ 224:main.c        **** 
+ 225:main.c        **** /* ------------------------------------------------------------------------- */
+ 226:main.c        **** /* ------------------------ interface to USB driver ------------------------ */
+ 227:main.c        **** /* ------------------------------------------------------------------------- */
+ 228:main.c        **** 
+ 229:main.c        **** uchar	usbFunctionSetup(uchar data[8])
+ 230:main.c        **** {
+ 499               		.stabn	68,0,230,.LM48-.LFBB5
+ 500               	.LM48:
+ 501               	.LFBB5:
+ 502 0182 CF93      		push r28
+GAS LISTING /tmp/cc8skBkM.s 			page 14
+
+
+ 503 0184 DF93      		push r29
+ 504               	/* prologue: function */
+ 505               	/* frame size = 0 */
+ 506               	/* stack size = 2 */
+ 507               	.L__stack_usage = 2
+ 508 0186 EC01      		movw r28,r24
+ 231:main.c        **** // ----------------------------------------------------------------------
+ 232:main.c        **** // Handle a non-standard SETUP packet.
+ 233:main.c        **** // ----------------------------------------------------------------------
+ 234:main.c        **** 	uchar	bit;
+ 235:main.c        **** 	uchar	mask;
+ 236:main.c        **** 	uchar*	addr;
+ 237:main.c        **** 	uchar	req;
+ 238:main.c        **** 
+ 239:main.c        **** 	// Generic requests
+ 240:main.c        **** 	req = data[1];
+ 509               		.stabn	68,0,240,.LM49-.LFBB5
+ 510               	.LM49:
+ 511 0188 2981      		ldd r18,Y+1
+ 241:main.c        **** 	if	( req == USBTINY_ECHO )
+ 512               		.stabn	68,0,241,.LM50-.LFBB5
+ 513               	.LM50:
+ 514 018a 2111      		cpse r18,__zero_reg__
+ 515 018c 00C0      		rjmp .L34
+ 242:main.c        **** 	{
+ 243:main.c        **** 		usbMsgPtr = data;
+ 516               		.stabn	68,0,243,.LM51-.LFBB5
+ 517               	.LM51:
+ 518 018e 9093 0000 		sts usbMsgPtr+1,r25
+ 519 0192 8093 0000 		sts usbMsgPtr,r24
+ 244:main.c        **** 		return 8;
+ 520               		.stabn	68,0,244,.LM52-.LFBB5
+ 521               	.LM52:
+ 522 0196 88E0      		ldi r24,lo8(8)
+ 523 0198 00C0      		rjmp .L35
+ 524               	.L34:
+ 245:main.c        **** 	}
+ 246:main.c        **** 	addr = (uchar*) (int) data[4];
+ 525               		.stabn	68,0,246,.LM53-.LFBB5
+ 526               	.LM53:
+ 527 019a EC81      		ldd r30,Y+4
+ 528 019c F0E0      		ldi r31,0
+ 247:main.c        **** 	if	( req == USBTINY_READ )
+ 529               		.stabn	68,0,247,.LM54-.LFBB5
+ 530               	.LM54:
+ 531 019e 2130      		cpi r18,lo8(1)
+ 532 01a0 01F4      		brne .L36
+ 248:main.c        **** 	{
+ 249:main.c        **** 		data[0] = *addr;
+ 533               		.stabn	68,0,249,.LM55-.LFBB5
+ 534               	.LM55:
+ 535 01a2 8081      		ld r24,Z
+ 536 01a4 8883      		st Y,r24
+ 250:main.c        **** 		usbMsgPtr = data;
+ 537               		.stabn	68,0,250,.LM56-.LFBB5
+ 538               	.LM56:
+ 539 01a6 D093 0000 		sts usbMsgPtr+1,r29
+GAS LISTING /tmp/cc8skBkM.s 			page 15
+
+
+ 540 01aa C093 0000 		sts usbMsgPtr,r28
+ 251:main.c        **** 		return 1;
+ 541               		.stabn	68,0,251,.LM57-.LFBB5
+ 542               	.LM57:
+ 543 01ae 81E0      		ldi r24,lo8(1)
+ 544 01b0 00C0      		rjmp .L35
+ 545               	.L36:
+ 546 01b2 3A81      		ldd r19,Y+2
+ 252:main.c        **** 	}
+ 253:main.c        **** 	if	( req == USBTINY_WRITE )
+ 547               		.stabn	68,0,253,.LM58-.LFBB5
+ 548               	.LM58:
+ 549 01b4 2230      		cpi r18,lo8(2)
+ 550 01b6 01F4      		brne .L37
+ 254:main.c        **** 	{
+ 255:main.c        **** 		*addr = data[2];
+ 551               		.stabn	68,0,255,.LM59-.LFBB5
+ 552               	.LM59:
+ 553 01b8 3083      		st Z,r19
+ 554 01ba 00C0      		rjmp .L47
+ 555               	.L37:
+ 256:main.c        **** 		return 0;
+ 257:main.c        **** 	}
+ 258:main.c        **** 	bit = data[2] & 7;
+ 556               		.stabn	68,0,258,.LM60-.LFBB5
+ 557               	.LM60:
+ 558 01bc 432F      		mov r20,r19
+ 559 01be 4770      		andi r20,lo8(7)
+ 259:main.c        **** 	mask = 1 << bit;
+ 560               		.stabn	68,0,259,.LM61-.LFBB5
+ 561               	.LM61:
+ 562 01c0 81E0      		ldi r24,lo8(1)
+ 563 01c2 90E0      		ldi r25,0
+ 564 01c4 042E      		mov r0,r20
+ 565 01c6 00C0      		rjmp 2f
+ 566               		1:
+ 567 01c8 880F      		lsl r24
+ 568               		2:
+ 569 01ca 0A94      		dec r0
+ 570 01cc 02F4      		brpl 1b
+ 260:main.c        **** 	if	( req == USBTINY_CLR )
+ 571               		.stabn	68,0,260,.LM62-.LFBB5
+ 572               	.LM62:
+ 573 01ce 2330      		cpi r18,lo8(3)
+ 574 01d0 01F4      		brne .L38
+ 261:main.c        **** 	{
+ 262:main.c        **** 		*addr &= ~ mask;
+ 575               		.stabn	68,0,262,.LM63-.LFBB5
+ 576               	.LM63:
+ 577 01d2 8095      		com r24
+ 578 01d4 9081      		ld r25,Z
+ 579 01d6 9823      		and r25,r24
+ 580 01d8 00C0      		rjmp .L49
+ 581               	.L38:
+ 263:main.c        **** 		return 0;
+ 264:main.c        **** 	}
+ 265:main.c        **** 	if	( req == USBTINY_SET )
+GAS LISTING /tmp/cc8skBkM.s 			page 16
+
+
+ 582               		.stabn	68,0,265,.LM64-.LFBB5
+ 583               	.LM64:
+ 584 01da 2430      		cpi r18,lo8(4)
+ 585 01dc 01F4      		brne .L39
+ 266:main.c        **** 	{
+ 267:main.c        **** 		*addr |= mask;
+ 586               		.stabn	68,0,267,.LM65-.LFBB5
+ 587               	.LM65:
+ 588 01de 9081      		ld r25,Z
+ 589 01e0 982B      		or r25,r24
+ 590               	.L49:
+ 591 01e2 9083      		st Z,r25
+ 592 01e4 00C0      		rjmp .L47
+ 593               	.L39:
+ 268:main.c        **** 		return 0;
+ 269:main.c        **** 	}
+ 270:main.c        **** 
+ 271:main.c        **** 	// Programming requests
+ 272:main.c        **** 	if	( req == USBTINY_POWERUP )
+ 594               		.stabn	68,0,272,.LM66-.LFBB5
+ 595               	.LM66:
+ 596 01e6 2530      		cpi r18,lo8(5)
+ 597 01e8 01F4      		brne .L40
+ 273:main.c        **** 	{
+ 274:main.c        **** 		sck_period = data[2];
+ 598               		.stabn	68,0,274,.LM67-.LFBB5
+ 599               	.LM67:
+ 600 01ea 3093 0000 		sts sck_period,r19
+ 275:main.c        **** 		mask = POWER_MASK;
+ 276:main.c        **** 		if	( data[4] )
+ 277:main.c        **** 		{
+ 278:main.c        **** 			mask |= RESET_MASK;
+ 279:main.c        **** 		}
+ 280:main.c        **** 		DDR  &= ~MISO_MASK;
+ 601               		.stabn	68,0,280,.LM68-.LFBB5
+ 602               	.LM68:
+ 603 01ee B998      		cbi 0x17,1
+ 281:main.c        **** 		DDR  |= (RESET_MASK|SCK_MASK|MOSI_MASK);
+ 604               		.stabn	68,0,281,.LM69-.LFBB5
+ 605               	.LM69:
+ 606 01f0 87B3      		in r24,0x17
+ 607 01f2 8562      		ori r24,lo8(37)
+ 608 01f4 87BB      		out 0x17,r24
+ 282:main.c        **** 		PORT &= ~(RESET_MASK|SCK_MASK|MOSI_MASK|MISO_MASK);
+ 609               		.stabn	68,0,282,.LM70-.LFBB5
+ 610               	.LM70:
+ 611 01f6 88B3      		in r24,0x18
+ 612 01f8 887D      		andi r24,lo8(-40)
+ 613 01fa 00C0      		rjmp .L50
+ 614               	.L40:
+ 283:main.c        **** 		return 0;
+ 284:main.c        **** 	}
+ 285:main.c        **** 	if	( req == USBTINY_POWERDOWN )
+ 615               		.stabn	68,0,285,.LM71-.LFBB5
+ 616               	.LM71:
+ 617 01fc 2630      		cpi r18,lo8(6)
+ 618 01fe 01F4      		brne .L41
+GAS LISTING /tmp/cc8skBkM.s 			page 17
+
+
+ 286:main.c        **** 	{
+ 287:main.c        **** 		//PORT |= RESET_MASK;
+ 288:main.c        **** 		//DDR  &= ~(SCK_MASK|MOSI_MASK);
+ 289:main.c        **** 		DDRB  = RESET_MASK;
+ 619               		.stabn	68,0,289,.LM72-.LFBB5
+ 620               	.LM72:
+ 621 0200 80E2      		ldi r24,lo8(32)
+ 622 0202 87BB      		out 0x17,r24
+ 623               	.L50:
+ 290:main.c        **** 		PORTB = RESET_MASK;
+ 624               		.stabn	68,0,290,.LM73-.LFBB5
+ 625               	.LM73:
+ 626 0204 88BB      		out 0x18,r24
+ 627 0206 00C0      		rjmp .L47
+ 628               	.L41:
+ 291:main.c        **** 		return 0;
+ 292:main.c        **** 	}
+ 293:main.c        **** 	/* have to remove the following check as we strip a lot of io
+ 294:main.c        **** 	if	( ! PORT )
+ 295:main.c        **** 	{
+ 296:main.c        **** 		return 0;
+ 297:main.c        **** 	}
+ 298:main.c        **** 	*/
+ 299:main.c        **** 	if	( req == USBTINY_SPI )
+ 629               		.stabn	68,0,299,.LM74-.LFBB5
+ 630               	.LM74:
+ 631 0208 2730      		cpi r18,lo8(7)
+ 632 020a 01F4      		brne .L42
+ 300:main.c        **** 	{
+ 301:main.c        **** 		spi( data + 2, data + 0 );
+ 633               		.stabn	68,0,301,.LM75-.LFBB5
+ 634               	.LM75:
+ 635 020c BE01      		movw r22,r28
+ 636 020e CE01      		movw r24,r28
+ 637 0210 0296      		adiw r24,2
+ 638 0212 00D0      		rcall spi
+ 302:main.c        **** 		usbMsgPtr = data;
+ 639               		.stabn	68,0,302,.LM76-.LFBB5
+ 640               	.LM76:
+ 641 0214 D093 0000 		sts usbMsgPtr+1,r29
+ 642 0218 C093 0000 		sts usbMsgPtr,r28
+ 303:main.c        **** 		return 4;
+ 643               		.stabn	68,0,303,.LM77-.LFBB5
+ 644               	.LM77:
+ 645 021c 84E0      		ldi r24,lo8(4)
+ 646 021e 00C0      		rjmp .L35
+ 647               	.L42:
+ 304:main.c        **** 	}
+ 305:main.c        **** 	if	( req == USBTINY_POLL_BYTES )
+ 648               		.stabn	68,0,305,.LM78-.LFBB5
+ 649               	.LM78:
+ 650 0220 2830      		cpi r18,lo8(8)
+ 651 0222 01F4      		brne .L43
+ 306:main.c        **** 	{
+ 307:main.c        **** 		poll1 = data[2];
+ 652               		.stabn	68,0,307,.LM79-.LFBB5
+ 653               	.LM79:
+GAS LISTING /tmp/cc8skBkM.s 			page 18
+
+
+ 654 0224 3093 0000 		sts poll1,r19
+ 308:main.c        **** 		poll2 = data[3];
+ 655               		.stabn	68,0,308,.LM80-.LFBB5
+ 656               	.LM80:
+ 657 0228 8B81      		ldd r24,Y+3
+ 658 022a 8093 0000 		sts poll2,r24
+ 659 022e 00C0      		rjmp .L47
+ 660               	.L43:
+ 309:main.c        **** 		return 0;
+ 310:main.c        **** 	}
+ 311:main.c        **** 	address = * (unsigned*) & data[4];
+ 661               		.stabn	68,0,311,.LM81-.LFBB5
+ 662               	.LM81:
+ 663 0230 8C81      		ldd r24,Y+4
+ 664 0232 9D81      		ldd r25,Y+5
+ 665 0234 9093 0000 		sts address+1,r25
+ 666 0238 8093 0000 		sts address,r24
+ 312:main.c        **** 	if	( req == USBTINY_FLASH_READ )
+ 667               		.stabn	68,0,312,.LM82-.LFBB5
+ 668               	.LM82:
+ 669 023c 2930      		cpi r18,lo8(9)
+ 670 023e 01F4      		brne .L44
+ 313:main.c        **** 	{
+ 314:main.c        **** 		cmd0 = 0x20;
+ 671               		.stabn	68,0,314,.LM83-.LFBB5
+ 672               	.LM83:
+ 673 0240 80E2      		ldi r24,lo8(32)
+ 674 0242 00C0      		rjmp .L48
+ 675               	.L44:
+ 315:main.c        **** 		return 0xff;	// usb_in() will be called to get the data
+ 316:main.c        **** 	}
+ 317:main.c        **** 	if	( req == USBTINY_EEPROM_READ )
+ 676               		.stabn	68,0,317,.LM84-.LFBB5
+ 677               	.LM84:
+ 678 0244 2B30      		cpi r18,lo8(11)
+ 679 0246 01F4      		brne .L45
+ 318:main.c        **** 	{
+ 319:main.c        **** 		cmd0 = 0xa0;
+ 680               		.stabn	68,0,319,.LM85-.LFBB5
+ 681               	.LM85:
+ 682 0248 80EA      		ldi r24,lo8(-96)
+ 683 024a 00C0      		rjmp .L48
+ 684               	.L45:
+ 320:main.c        **** 		return 0xff;	// usb_in() will be called to get the data
+ 321:main.c        **** 	}
+ 322:main.c        **** 	timeout = * (unsigned*) & data[2];
+ 685               		.stabn	68,0,322,.LM86-.LFBB5
+ 686               	.LM86:
+ 687 024c 8A81      		ldd r24,Y+2
+ 688 024e 9B81      		ldd r25,Y+3
+ 689 0250 9093 0000 		sts timeout+1,r25
+ 690 0254 8093 0000 		sts timeout,r24
+ 323:main.c        **** 	if	( req == USBTINY_FLASH_WRITE )
+ 691               		.stabn	68,0,323,.LM87-.LFBB5
+ 692               	.LM87:
+ 693 0258 2A30      		cpi r18,lo8(10)
+ 694 025a 01F4      		brne .L46
+GAS LISTING /tmp/cc8skBkM.s 			page 19
+
+
+ 324:main.c        **** 	{
+ 325:main.c        **** 		cmd0 = 0x40;
+ 695               		.stabn	68,0,325,.LM88-.LFBB5
+ 696               	.LM88:
+ 697 025c 80E4      		ldi r24,lo8(64)
+ 698 025e 00C0      		rjmp .L48
+ 699               	.L46:
+ 326:main.c        **** 		return 0xff;	// data will be received by usb_out()
+ 327:main.c        **** 	}
+ 328:main.c        **** 	if	( req == USBTINY_EEPROM_WRITE )
+ 700               		.stabn	68,0,328,.LM89-.LFBB5
+ 701               	.LM89:
+ 702 0260 2C30      		cpi r18,lo8(12)
+ 703 0262 01F4      		brne .L47
+ 329:main.c        **** 	{
+ 330:main.c        **** 		cmd0 = 0xc0;
+ 704               		.stabn	68,0,330,.LM90-.LFBB5
+ 705               	.LM90:
+ 706 0264 80EC      		ldi r24,lo8(-64)
+ 707               	.L48:
+ 708 0266 8093 0000 		sts cmd0,r24
+ 331:main.c        **** 		return 0xff;	// data will be received by usb_out()
+ 709               		.stabn	68,0,331,.LM91-.LFBB5
+ 710               	.LM91:
+ 711 026a 8FEF      		ldi r24,lo8(-1)
+ 712 026c 00C0      		rjmp .L35
+ 713               	.L47:
+ 332:main.c        **** 	}
+ 333:main.c        **** 	return 0;
+ 714               		.stabn	68,0,333,.LM92-.LFBB5
+ 715               	.LM92:
+ 716 026e 80E0      		ldi r24,0
+ 717               	.L35:
+ 718               	/* epilogue start */
+ 334:main.c        **** }
+ 719               		.stabn	68,0,334,.LM93-.LFBB5
+ 720               	.LM93:
+ 721 0270 DF91      		pop r29
+ 722 0272 CF91      		pop r28
+ 723 0274 0895      		ret
+ 724               		.size	usbFunctionSetup, .-usbFunctionSetup
+ 725               		.stabs	"addr:r(0,49)",64,0,236,30
+ 726               		.stabs	"req:r(0,11)",64,0,237,18
+ 727               		.stabn	192,0,0,.LFBB5-.LFBB5
+ 728               		.stabn	224,0,0,.Lscope5-.LFBB5
+ 729               	.Lscope5:
+ 730               		.stabs	"",36,0,0,.Lscope5-.LFBB5
+ 731               		.stabd	78,0,0
+ 732               		.stabs	"usbEventResetReady:F(0,47)",36,0,392,usbEventResetReady
+ 733               	.global	usbEventResetReady
+ 734               		.type	usbEventResetReady, @function
+ 735               	usbEventResetReady:
+ 736               		.stabd	46,0,0
+ 335:main.c        **** 
+ 336:main.c        **** 
+ 337:main.c        **** /* ------------------------------------------------------------------------- */
+ 338:main.c        **** /* ------------------------ Oscillator Calibration ------------------------- */
+GAS LISTING /tmp/cc8skBkM.s 			page 20
+
+
+ 339:main.c        **** /* ------------------------------------------------------------------------- */
+ 340:main.c        **** 
+ 341:main.c        **** /* Calibrate the RC oscillator to 8.25 MHz. The core clock of 16.5 MHz is
+ 342:main.c        ****  * derived from the 66 MHz peripheral clock by dividing. Our timing reference
+ 343:main.c        ****  * is the Start Of Frame signal (a single SE0 bit) available immediately after
+ 344:main.c        ****  * a USB RESET. We first do a binary search for the OSCCAL value and then
+ 345:main.c        ****  * optimize this value with a neighboorhod search.
+ 346:main.c        ****  * This algorithm may also be used to calibrate the RC oscillator directly to
+ 347:main.c        ****  * 12 MHz (no PLL involved, can therefore be used on almost ALL AVRs), but this
+ 348:main.c        ****  * is wide outside the spec for the OSCCAL value and the required precision for
+ 349:main.c        ****  * the 12 MHz clock! Use the RC oscillator calibrated to 12 MHz for
+ 350:main.c        ****  * experimental purposes only!
+ 351:main.c        ****  */
+ 352:main.c        **** static void calibrateOscillator(void)
+ 353:main.c        **** {
+ 354:main.c        **** uchar       step = 128;
+ 355:main.c        **** uchar       trialValue = 0, optimumValue;
+ 356:main.c        **** int         x, optimumDev, targetValue = (unsigned)(1499 * (double)F_CPU / 10.5e6 + 0.5);
+ 357:main.c        **** 
+ 358:main.c        ****     /* do a binary search: */
+ 359:main.c        ****     do{
+ 360:main.c        ****         OSCCAL = trialValue + step;
+ 361:main.c        ****         x = usbMeasureFrameLength();    /* proportional to current real frequency */
+ 362:main.c        ****         if(x < targetValue)             /* frequency still too low */
+ 363:main.c        ****             trialValue += step;
+ 364:main.c        ****         step >>= 1;
+ 365:main.c        ****     }while(step > 0);
+ 366:main.c        ****     /* We have a precision of +/- 1 for optimum OSCCAL here */
+ 367:main.c        ****     /* now do a neighborhood search for optimum value */
+ 368:main.c        ****     optimumValue = trialValue;
+ 369:main.c        ****     optimumDev = x; /* this is certainly far away from optimum */
+ 370:main.c        ****     for(OSCCAL = trialValue - 1; OSCCAL <= trialValue + 1; OSCCAL++){
+ 371:main.c        ****         x = usbMeasureFrameLength() - targetValue;
+ 372:main.c        ****         if(x < 0)
+ 373:main.c        ****             x = -x;
+ 374:main.c        ****         if(x < optimumDev){
+ 375:main.c        ****             optimumDev = x;
+ 376:main.c        ****             optimumValue = OSCCAL;
+ 377:main.c        ****         }
+ 378:main.c        ****     }
+ 379:main.c        ****     OSCCAL = optimumValue;
+ 380:main.c        **** }
+ 381:main.c        **** /*
+ 382:main.c        **** Note: This calibration algorithm may try OSCCAL values of up to 192 even if
+ 383:main.c        **** the optimum value is far below 192. It may therefore exceed the allowed clock
+ 384:main.c        **** frequency of the CPU in low voltage designs!
+ 385:main.c        **** You may replace this search algorithm with any other algorithm you like if
+ 386:main.c        **** you have additional constraints such as a maximum CPU clock.
+ 387:main.c        **** For version 5.x RC oscillators (those with a split range of 2x128 steps, e.g.
+ 388:main.c        **** ATTiny25, ATTiny45, ATTiny85), it may be useful to search for the optimum in
+ 389:main.c        **** both regions.
+ 390:main.c        **** */
+ 391:main.c        **** 
+ 392:main.c        **** void    usbEventResetReady(void)
+ 393:main.c        **** {
+ 737               		.stabn	68,0,393,.LM94-.LFBB6
+ 738               	.LM94:
+GAS LISTING /tmp/cc8skBkM.s 			page 21
+
+
+ 739               	.LFBB6:
+ 740 0276 DF92      		push r13
+ 741 0278 EF92      		push r14
+ 742 027a FF92      		push r15
+ 743 027c 0F93      		push r16
+ 744 027e 1F93      		push r17
+ 745 0280 CF93      		push r28
+ 746 0282 DF93      		push r29
+ 747               	/* prologue: function */
+ 748               	/* frame size = 0 */
+ 749               	/* stack size = 7 */
+ 750               	.L__stack_usage = 7
+ 751               		.stabn	68,0,393,.LM95-.LFBB6
+ 752               	.LM95:
+ 753 0284 C8E0      		ldi r28,lo8(8)
+ 754 0286 D0E0      		ldi r29,0
+ 755               	.LBB14:
+ 756               	.LBB15:
+ 355:main.c        **** uchar       trialValue = 0, optimumValue;
+ 757               		.stabn	68,0,355,.LM96-.LFBB6
+ 758               	.LM96:
+ 759 0288 F12C      		mov r15,__zero_reg__
+ 354:main.c        **** uchar       step = 128;
+ 760               		.stabn	68,0,354,.LM97-.LFBB6
+ 761               	.LM97:
+ 762 028a 60E8      		ldi r22,lo8(-128)
+ 763 028c E62E      		mov r14,r22
+ 764               	.L54:
+ 360:main.c        ****         OSCCAL = trialValue + step;
+ 765               		.stabn	68,0,360,.LM98-.LFBB6
+ 766               	.LM98:
+ 767 028e DE2C      		mov r13,r14
+ 768 0290 DF0C      		add r13,r15
+ 769 0292 D1BE      		out 0x31,r13
+ 361:main.c        ****         x = usbMeasureFrameLength();    /* proportional to current real frequency */
+ 770               		.stabn	68,0,361,.LM99-.LFBB6
+ 771               	.LM99:
+ 772 0294 00D0      		rcall usbMeasureFrameLength
+ 773 0296 8C01      		movw r16,r24
+ 362:main.c        ****         if(x < targetValue)             /* frequency still too low */
+ 774               		.stabn	68,0,362,.LM100-.LFBB6
+ 775               	.LM100:
+ 776 0298 0433      		cpi r16,52
+ 777 029a 89E0      		ldi r24,9
+ 778 029c 1807      		cpc r17,r24
+ 779 029e 04F4      		brge .L52
+ 363:main.c        ****             trialValue += step;
+ 780               		.stabn	68,0,363,.LM101-.LFBB6
+ 781               	.LM101:
+ 782 02a0 FD2C      		mov r15,r13
+ 783               	.L52:
+ 364:main.c        ****         step >>= 1;
+ 784               		.stabn	68,0,364,.LM102-.LFBB6
+ 785               	.LM102:
+ 786 02a2 E694      		lsr r14
+ 787 02a4 2197      		sbiw r28,1
+ 365:main.c        ****     }while(step > 0);
+GAS LISTING /tmp/cc8skBkM.s 			page 22
+
+
+ 788               		.stabn	68,0,365,.LM103-.LFBB6
+ 789               	.LM103:
+ 790 02a6 2097      		sbiw r28,0
+ 791 02a8 01F4      		brne .L54
+ 370:main.c        ****     for(OSCCAL = trialValue - 1; OSCCAL <= trialValue + 1; OSCCAL++){
+ 792               		.stabn	68,0,370,.LM104-.LFBB6
+ 793               	.LM104:
+ 794 02aa 8FEF      		ldi r24,lo8(-1)
+ 795 02ac 8F0D      		add r24,r15
+ 796 02ae 81BF      		out 0x31,r24
+ 797 02b0 CF2D      		mov r28,r15
+ 798 02b2 D0E0      		ldi r29,0
+ 799 02b4 2196      		adiw r28,1
+ 800               	.L55:
+ 801 02b6 81B7      		in r24,0x31
+ 802 02b8 90E0      		ldi r25,0
+ 803 02ba C817      		cp r28,r24
+ 804 02bc D907      		cpc r29,r25
+ 805 02be 04F0      		brlt .L60
+ 371:main.c        ****         x = usbMeasureFrameLength() - targetValue;
+ 806               		.stabn	68,0,371,.LM105-.LFBB6
+ 807               	.LM105:
+ 808 02c0 00D0      		rcall usbMeasureFrameLength
+ 809 02c2 8453      		subi r24,52
+ 810 02c4 9940      		sbci r25,9
+ 811 02c6 97FF      		sbrs r25,7
+ 812 02c8 00C0      		rjmp .L56
+ 813 02ca 9195      		neg r25
+ 814 02cc 8195      		neg r24
+ 815 02ce 9109      		sbc r25,__zero_reg__
+ 816               	.L56:
+ 374:main.c        ****         if(x < optimumDev){
+ 817               		.stabn	68,0,374,.LM106-.LFBB6
+ 818               	.LM106:
+ 819 02d0 8017      		cp r24,r16
+ 820 02d2 9107      		cpc r25,r17
+ 821 02d4 04F4      		brge .L57
+ 376:main.c        ****             optimumValue = OSCCAL;
+ 822               		.stabn	68,0,376,.LM107-.LFBB6
+ 823               	.LM107:
+ 824 02d6 F1B6      		in r15,0x31
+ 825 02d8 8C01      		movw r16,r24
+ 826               	.L57:
+ 370:main.c        ****     for(OSCCAL = trialValue - 1; OSCCAL <= trialValue + 1; OSCCAL++){
+ 827               		.stabn	68,0,370,.LM108-.LFBB6
+ 828               	.LM108:
+ 829 02da 81B7      		in r24,0x31
+ 830 02dc 8F5F      		subi r24,lo8(-(1))
+ 831 02de 81BF      		out 0x31,r24
+ 832 02e0 00C0      		rjmp .L55
+ 833               	.L60:
+ 379:main.c        ****     OSCCAL = optimumValue;
+ 834               		.stabn	68,0,379,.LM109-.LFBB6
+ 835               	.LM109:
+ 836 02e2 F1BE      		out 0x31,r15
+ 837               	.LBE15:
+ 838               	.LBE14:
+GAS LISTING /tmp/cc8skBkM.s 			page 23
+
+
+ 394:main.c        ****     calibrateOscillator();
+ 395:main.c        ****     eeprom_write_byte(0, OSCCAL);   /* store the calibrated value in EEPROM */
+ 839               		.stabn	68,0,395,.LM110-.LFBB6
+ 840               	.LM110:
+ 841 02e4 61B7      		in r22,0x31
+ 842 02e6 80E0      		ldi r24,0
+ 843 02e8 90E0      		ldi r25,0
+ 844               	/* epilogue start */
+ 396:main.c        **** }
+ 845               		.stabn	68,0,396,.LM111-.LFBB6
+ 846               	.LM111:
+ 847 02ea DF91      		pop r29
+ 848 02ec CF91      		pop r28
+ 849 02ee 1F91      		pop r17
+ 850 02f0 0F91      		pop r16
+ 851 02f2 FF90      		pop r15
+ 852 02f4 EF90      		pop r14
+ 853 02f6 DF90      		pop r13
+ 395:main.c        ****     eeprom_write_byte(0, OSCCAL);   /* store the calibrated value in EEPROM */
+ 854               		.stabn	68,0,395,.LM112-.LFBB6
+ 855               	.LM112:
+ 856 02f8 00C0      		rjmp __eewr_byte_tn25
+ 857               		.size	usbEventResetReady, .-usbEventResetReady
+ 858               		.stabs	"step:r(0,11)",64,0,354,14
+ 859               		.stabn	192,0,0,.LBB15-.LFBB6
+ 860               		.stabn	224,0,0,.LBE15-.LFBB6
+ 861               	.Lscope6:
+ 862               		.stabs	"",36,0,0,.Lscope6-.LFBB6
+ 863               		.stabd	78,0,0
+ 864               		.section	.text.startup,"ax",@progbits
+ 865               		.stabs	"main:F(0,1)",36,0,402,main
+ 866               	.global	main
+ 867               		.type	main, @function
+ 868               	main:
+ 869               		.stabd	46,0,0
+ 397:main.c        **** 
+ 398:main.c        **** /* ------------------------------------------------------------------------- */
+ 399:main.c        **** /* --------------------------------- main ---------------------------------- */
+ 400:main.c        **** /* ------------------------------------------------------------------------- */
+ 401:main.c        **** 
+ 402:main.c        **** int main(void) {
+ 870               		.stabn	68,0,402,.LM113-.LFBB7
+ 871               	.LM113:
+ 872               	.LFBB7:
+ 873               	/* prologue: function */
+ 874               	/* frame size = 0 */
+ 875               	/* stack size = 0 */
+ 876               	.L__stack_usage = 0
+ 403:main.c        **** 	uchar   i;
+ 404:main.c        **** 	uchar   calibrationValue;
+ 405:main.c        **** 
+ 406:main.c        **** 	//DDRB  = (RESET_MASK|SCK_MASK|MOSI_MASK);
+ 407:main.c        **** 	DDRB  = RESET_MASK;
+ 877               		.stabn	68,0,407,.LM114-.LFBB7
+ 878               	.LM114:
+ 879 0000 80E2      		ldi r24,lo8(32)
+ 880 0002 87BB      		out 0x17,r24
+GAS LISTING /tmp/cc8skBkM.s 			page 24
+
+
+ 408:main.c        **** 	PORTB = RESET_MASK;
+ 881               		.stabn	68,0,408,.LM115-.LFBB7
+ 882               	.LM115:
+ 883 0004 88BB      		out 0x18,r24
+ 409:main.c        **** 	/*
+ 410:main.c        **** 	_delay_ms(25);
+ 411:main.c        **** 	uchar pgm[] = { 0xac, 0x53, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, };
+ 412:main.c        **** 	spi(pgm, pgm+4);
+ 413:main.c        **** 	*/
+ 414:main.c        ****     calibrationValue = eeprom_read_byte(0); /* calibration value from last time */
+ 884               		.stabn	68,0,414,.LM116-.LFBB7
+ 885               	.LM116:
+ 886 0006 80E0      		ldi r24,0
+ 887 0008 90E0      		ldi r25,0
+ 888 000a 00D0      		rcall __eerd_byte_tn25
+ 415:main.c        ****     if(calibrationValue != 0xff){
+ 889               		.stabn	68,0,415,.LM117-.LFBB7
+ 890               	.LM117:
+ 891 000c 8F3F      		cpi r24,lo8(-1)
+ 892 000e 01F0      		breq .L62
+ 416:main.c        ****         OSCCAL = calibrationValue;
+ 893               		.stabn	68,0,416,.LM118-.LFBB7
+ 894               	.LM118:
+ 895 0010 81BF      		out 0x31,r24
+ 896               	.L62:
+ 417:main.c        ****     }
+ 418:main.c        ****     odDebugInit();
+ 419:main.c        ****     usbDeviceDisconnect();
+ 897               		.stabn	68,0,419,.LM119-.LFBB7
+ 898               	.LM119:
+ 899 0012 BC9A      		sbi 0x17,4
+ 900 0014 84E1      		ldi r24,lo8(20)
+ 901               	.L64:
+ 902               	.LBB16:
+ 903               	.LBB17:
+ 904               		.stabs	"/usr/avr/include/util/delay.h",132,0,0,.Ltext1
+ 905               	.Ltext1:
+   1:/usr/avr/include/util/delay.h **** /* Copyright (c) 2002, Marek Michalkiewicz
+   2:/usr/avr/include/util/delay.h ****    Copyright (c) 2004,2005,2007 Joerg Wunsch
+   3:/usr/avr/include/util/delay.h ****    Copyright (c) 2007  Florin-Viorel Petrov
+   4:/usr/avr/include/util/delay.h ****    All rights reserved.
+   5:/usr/avr/include/util/delay.h **** 
+   6:/usr/avr/include/util/delay.h ****    Redistribution and use in source and binary forms, with or without
+   7:/usr/avr/include/util/delay.h ****    modification, are permitted provided that the following conditions are met:
+   8:/usr/avr/include/util/delay.h **** 
+   9:/usr/avr/include/util/delay.h ****    * Redistributions of source code must retain the above copyright
+  10:/usr/avr/include/util/delay.h ****      notice, this list of conditions and the following disclaimer.
+  11:/usr/avr/include/util/delay.h **** 
+  12:/usr/avr/include/util/delay.h ****    * Redistributions in binary form must reproduce the above copyright
+  13:/usr/avr/include/util/delay.h ****      notice, this list of conditions and the following disclaimer in
+  14:/usr/avr/include/util/delay.h ****      the documentation and/or other materials provided with the
+  15:/usr/avr/include/util/delay.h ****      distribution.
+  16:/usr/avr/include/util/delay.h **** 
+  17:/usr/avr/include/util/delay.h ****    * Neither the name of the copyright holders nor the names of
+  18:/usr/avr/include/util/delay.h ****      contributors may be used to endorse or promote products derived
+  19:/usr/avr/include/util/delay.h ****      from this software without specific prior written permission.
+  20:/usr/avr/include/util/delay.h **** 
+GAS LISTING /tmp/cc8skBkM.s 			page 25
+
+
+  21:/usr/avr/include/util/delay.h ****   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  22:/usr/avr/include/util/delay.h ****   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  23:/usr/avr/include/util/delay.h ****   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  24:/usr/avr/include/util/delay.h ****   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  25:/usr/avr/include/util/delay.h ****   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  26:/usr/avr/include/util/delay.h ****   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  27:/usr/avr/include/util/delay.h ****   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  28:/usr/avr/include/util/delay.h ****   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  29:/usr/avr/include/util/delay.h ****   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  30:/usr/avr/include/util/delay.h ****   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  31:/usr/avr/include/util/delay.h ****   POSSIBILITY OF SUCH DAMAGE. */
+  32:/usr/avr/include/util/delay.h **** 
+  33:/usr/avr/include/util/delay.h **** /* $Id: delay.h.in 2251 2011-09-14 08:20:33Z joerg_wunsch $ */
+  34:/usr/avr/include/util/delay.h **** 
+  35:/usr/avr/include/util/delay.h **** #ifndef _UTIL_DELAY_H_
+  36:/usr/avr/include/util/delay.h **** #define _UTIL_DELAY_H_ 1
+  37:/usr/avr/include/util/delay.h **** 
+  38:/usr/avr/include/util/delay.h **** #ifndef __HAS_DELAY_CYCLES
+  39:/usr/avr/include/util/delay.h **** #define __HAS_DELAY_CYCLES 1
+  40:/usr/avr/include/util/delay.h **** #endif
+  41:/usr/avr/include/util/delay.h **** 
+  42:/usr/avr/include/util/delay.h **** #include <inttypes.h>
+  43:/usr/avr/include/util/delay.h **** #include <util/delay_basic.h>
+  44:/usr/avr/include/util/delay.h **** #include <math.h>
+  45:/usr/avr/include/util/delay.h **** 
+  46:/usr/avr/include/util/delay.h **** /** \file */
+  47:/usr/avr/include/util/delay.h **** /** \defgroup util_delay <util/delay.h>: Convenience functions for busy-wait delay loops
+  48:/usr/avr/include/util/delay.h ****     \code
+  49:/usr/avr/include/util/delay.h ****     #define F_CPU 1000000UL  // 1 MHz
+  50:/usr/avr/include/util/delay.h ****     //#define F_CPU 14.7456E6
+  51:/usr/avr/include/util/delay.h ****     #include <util/delay.h>
+  52:/usr/avr/include/util/delay.h ****     \endcode
+  53:/usr/avr/include/util/delay.h **** 
+  54:/usr/avr/include/util/delay.h ****     \note As an alternative method, it is possible to pass the
+  55:/usr/avr/include/util/delay.h ****     F_CPU macro down to the compiler from the Makefile.
+  56:/usr/avr/include/util/delay.h ****     Obviously, in that case, no \c \#define statement should be
+  57:/usr/avr/include/util/delay.h ****     used.
+  58:/usr/avr/include/util/delay.h **** 
+  59:/usr/avr/include/util/delay.h ****     The functions in this header file are wrappers around the basic
+  60:/usr/avr/include/util/delay.h ****     busy-wait functions from <util/delay_basic.h>.  They are meant as
+  61:/usr/avr/include/util/delay.h ****     convenience functions where actual time values can be specified
+  62:/usr/avr/include/util/delay.h ****     rather than a number of cycles to wait for.  The idea behind is
+  63:/usr/avr/include/util/delay.h ****     that compile-time constant expressions will be eliminated by
+  64:/usr/avr/include/util/delay.h ****     compiler optimization so floating-point expressions can be used
+  65:/usr/avr/include/util/delay.h ****     to calculate the number of delay cycles needed based on the CPU
+  66:/usr/avr/include/util/delay.h ****     frequency passed by the macro F_CPU.
+  67:/usr/avr/include/util/delay.h **** 
+  68:/usr/avr/include/util/delay.h ****     \note In order for these functions to work as intended, compiler
+  69:/usr/avr/include/util/delay.h ****     optimizations <em>must</em> be enabled, and the delay time
+  70:/usr/avr/include/util/delay.h ****     <em>must</em> be an expression that is a known constant at
+  71:/usr/avr/include/util/delay.h ****     compile-time.  If these requirements are not met, the resulting
+  72:/usr/avr/include/util/delay.h ****     delay will be much longer (and basically unpredictable), and
+  73:/usr/avr/include/util/delay.h ****     applications that otherwise do not use floating-point calculations
+  74:/usr/avr/include/util/delay.h ****     will experience severe code bloat by the floating-point library
+  75:/usr/avr/include/util/delay.h ****     routines linked into the application.
+  76:/usr/avr/include/util/delay.h **** 
+  77:/usr/avr/include/util/delay.h ****     The functions available allow the specification of microsecond, and
+GAS LISTING /tmp/cc8skBkM.s 			page 26
+
+
+  78:/usr/avr/include/util/delay.h ****     millisecond delays directly, using the application-supplied macro
+  79:/usr/avr/include/util/delay.h ****     F_CPU as the CPU clock frequency (in Hertz).
+  80:/usr/avr/include/util/delay.h **** 
+  81:/usr/avr/include/util/delay.h **** */
+  82:/usr/avr/include/util/delay.h **** 
+  83:/usr/avr/include/util/delay.h **** #if !defined(__DOXYGEN__)
+  84:/usr/avr/include/util/delay.h **** static inline void _delay_us(double __us) __attribute__((always_inline));
+  85:/usr/avr/include/util/delay.h **** static inline void _delay_ms(double __ms) __attribute__((always_inline));
+  86:/usr/avr/include/util/delay.h **** #endif
+  87:/usr/avr/include/util/delay.h **** 
+  88:/usr/avr/include/util/delay.h **** #ifndef F_CPU
+  89:/usr/avr/include/util/delay.h **** /* prevent compiler error by supplying a default */
+  90:/usr/avr/include/util/delay.h **** # warning "F_CPU not defined for <util/delay.h>"
+  91:/usr/avr/include/util/delay.h **** # define F_CPU 1000000UL
+  92:/usr/avr/include/util/delay.h **** #endif
+  93:/usr/avr/include/util/delay.h **** 
+  94:/usr/avr/include/util/delay.h **** #ifndef __OPTIMIZE__
+  95:/usr/avr/include/util/delay.h **** # warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+  96:/usr/avr/include/util/delay.h **** #endif
+  97:/usr/avr/include/util/delay.h **** 
+  98:/usr/avr/include/util/delay.h **** #if __HAS_DELAY_CYCLES && defined(__OPTIMIZE__) && \
+  99:/usr/avr/include/util/delay.h ****   !defined(__DELAY_BACKWARD_COMPATIBLE__) &&	   \
+ 100:/usr/avr/include/util/delay.h ****   __STDC_HOSTED__
+ 101:/usr/avr/include/util/delay.h **** #  include <math.h>
+ 102:/usr/avr/include/util/delay.h **** #endif
+ 103:/usr/avr/include/util/delay.h **** 
+ 104:/usr/avr/include/util/delay.h **** /**
+ 105:/usr/avr/include/util/delay.h ****    \ingroup util_delay
+ 106:/usr/avr/include/util/delay.h **** 
+ 107:/usr/avr/include/util/delay.h ****    Perform a delay of \c __ms milliseconds, using _delay_loop_2().
+ 108:/usr/avr/include/util/delay.h **** 
+ 109:/usr/avr/include/util/delay.h ****    The macro F_CPU is supposed to be defined to a
+ 110:/usr/avr/include/util/delay.h ****    constant defining the CPU clock frequency (in Hertz).
+ 111:/usr/avr/include/util/delay.h **** 
+ 112:/usr/avr/include/util/delay.h ****    The maximal possible delay is 262.14 ms / F_CPU in MHz.
+ 113:/usr/avr/include/util/delay.h **** 
+ 114:/usr/avr/include/util/delay.h ****    When the user request delay which exceed the maximum possible one,
+ 115:/usr/avr/include/util/delay.h ****    _delay_ms() provides a decreased resolution functionality. In this
+ 116:/usr/avr/include/util/delay.h ****    mode _delay_ms() will work with a resolution of 1/10 ms, providing
+ 117:/usr/avr/include/util/delay.h ****    delays up to 6.5535 seconds (independent from CPU frequency).  The
+ 118:/usr/avr/include/util/delay.h ****    user will not be informed about decreased resolution.
+ 119:/usr/avr/include/util/delay.h **** 
+ 120:/usr/avr/include/util/delay.h ****    If the avr-gcc toolchain has __builtin_avr_delay_cycles(unsigned long)
+ 121:/usr/avr/include/util/delay.h ****    support, maximal possible delay is 4294967.295 ms/ F_CPU in MHz. For
+ 122:/usr/avr/include/util/delay.h ****    values greater than the maximal possible delay, overflows results in
+ 123:/usr/avr/include/util/delay.h ****    no delay i.e., 0ms.
+ 124:/usr/avr/include/util/delay.h **** 
+ 125:/usr/avr/include/util/delay.h ****    Conversion of __us into clock cycles may not always result in integer.
+ 126:/usr/avr/include/util/delay.h ****    By default, the clock cycles rounded up to next integer. This ensures that
+ 127:/usr/avr/include/util/delay.h ****    the user gets atleast __us microseconds of delay.
+ 128:/usr/avr/include/util/delay.h **** 
+ 129:/usr/avr/include/util/delay.h ****    Alternatively, user can define __DELAY_ROUND_DOWN__ and __DELAY_ROUND_CLOSEST__
+ 130:/usr/avr/include/util/delay.h ****    to round down and round to closest integer.
+ 131:/usr/avr/include/util/delay.h **** 
+ 132:/usr/avr/include/util/delay.h ****    Note: The new implementation of _delay_ms(double __ms) with 
+ 133:/usr/avr/include/util/delay.h ****     __builtin_avr_delay_cycles(unsigned long) support is not backward compatible. 
+ 134:/usr/avr/include/util/delay.h ****    User can define __DELAY_BACKWARD_COMPATIBLE__ to get a backward compatible delay.
+GAS LISTING /tmp/cc8skBkM.s 			page 27
+
+
+ 135:/usr/avr/include/util/delay.h ****    Also, the backward compatible
+ 136:/usr/avr/include/util/delay.h ****    algorithm will be chosen if the code is compiled in a <em>freestanding
+ 137:/usr/avr/include/util/delay.h ****    environment</em> (GCC option \c -ffreestanding), as the math functions
+ 138:/usr/avr/include/util/delay.h ****    required for rounding are not available to the compiler then.
+ 139:/usr/avr/include/util/delay.h **** 
+ 140:/usr/avr/include/util/delay.h ****  */
+ 141:/usr/avr/include/util/delay.h **** void
+ 142:/usr/avr/include/util/delay.h **** _delay_ms(double __ms)
+ 143:/usr/avr/include/util/delay.h **** {
+ 144:/usr/avr/include/util/delay.h **** 	uint16_t __ticks;
+ 145:/usr/avr/include/util/delay.h **** 	double __tmp ; 
+ 146:/usr/avr/include/util/delay.h **** #if __HAS_DELAY_CYCLES && defined(__OPTIMIZE__) && \
+ 147:/usr/avr/include/util/delay.h ****   !defined(__DELAY_BACKWARD_COMPATIBLE__) &&	   \
+ 148:/usr/avr/include/util/delay.h ****   __STDC_HOSTED__
+ 149:/usr/avr/include/util/delay.h **** 	uint32_t __ticks_dc;
+ 150:/usr/avr/include/util/delay.h **** 	extern void __builtin_avr_delay_cycles(unsigned long);
+ 151:/usr/avr/include/util/delay.h **** 	__tmp = ((F_CPU) / 1e3) * __ms;
+ 152:/usr/avr/include/util/delay.h **** 
+ 153:/usr/avr/include/util/delay.h **** 	#if defined(__DELAY_ROUND_DOWN__)
+ 154:/usr/avr/include/util/delay.h **** 		__ticks_dc = (uint32_t)fabs(__tmp);
+ 155:/usr/avr/include/util/delay.h **** 
+ 156:/usr/avr/include/util/delay.h **** 	#elif defined(__DELAY_ROUND_CLOSEST__)
+ 157:/usr/avr/include/util/delay.h **** 		__ticks_dc = (uint32_t)(fabs(__tmp)+0.5);
+ 158:/usr/avr/include/util/delay.h **** 
+ 159:/usr/avr/include/util/delay.h **** 	#else
+ 160:/usr/avr/include/util/delay.h **** 		//round up by default
+ 161:/usr/avr/include/util/delay.h **** 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+ 162:/usr/avr/include/util/delay.h **** 	#endif
+ 163:/usr/avr/include/util/delay.h **** 
+ 164:/usr/avr/include/util/delay.h **** 	__builtin_avr_delay_cycles(__ticks_dc);
+ 906               		.stabn	68,0,164,.LM120-.LFBB7
+ 907               	.LM120:
+ 908 0016 E2EB      		ldi r30,lo8(-3662)
+ 909 0018 F1EF      		ldi r31,hi8(-3662)
+ 910 001a 3197      		1: sbiw r30,1
+ 911 001c 01F4      		brne 1b
+ 912 001e 00C0      		rjmp .
+ 913 0020 0000      		nop
+ 914 0022 8150      		subi r24,lo8(-(-1))
+ 915               	.LBE17:
+ 916               	.LBE16:
+ 917               		.stabs	"main.c",132,0,0,.Ltext2
+ 918               	.Ltext2:
+ 420:main.c        ****     for(i=0;i<20;i++){  /* 300 ms disconnect */
+ 919               		.stabn	68,0,420,.LM121-.LFBB7
+ 920               	.LM121:
+ 921 0024 01F4      		brne .L64
+ 421:main.c        ****         _delay_ms(15);
+ 422:main.c        ****     }
+ 423:main.c        ****     usbDeviceConnect();
+ 922               		.stabn	68,0,423,.LM122-.LFBB7
+ 923               	.LM122:
+ 924 0026 BC98      		cbi 0x17,4
+ 424:main.c        **** 
+ 425:main.c        ****     wdt_enable(WDTO_1S);
+ 925               		.stabn	68,0,425,.LM123-.LFBB7
+ 926               	.LM123:
+GAS LISTING /tmp/cc8skBkM.s 			page 28
+
+
+ 927 0028 2EE0      		ldi r18,lo8(14)
+ 928 002a 88E1      		ldi r24,lo8(24)
+ 929 002c 90E0      		ldi r25,0
+ 930               	/* #APP */
+ 931               	 ;  425 "main.c" 1
+ 932 002e 0FB6      		in __tmp_reg__,__SREG__
+ 933 0030 F894      		cli
+ 934 0032 A895      		wdr
+ 935 0034 81BD      		out 33,r24
+ 936 0036 0FBE      		out __SREG__,__tmp_reg__
+ 937 0038 21BD      		out 33,r18
+ 938               	 ;  0 "" 2
+ 426:main.c        **** 
+ 427:main.c        ****     usbInit();
+ 939               		.stabn	68,0,427,.LM124-.LFBB7
+ 940               	.LM124:
+ 941               	/* #NOAPP */
+ 942 003a 00D0      		rcall usbInit
+ 428:main.c        ****     sei();
+ 943               		.stabn	68,0,428,.LM125-.LFBB7
+ 944               	.LM125:
+ 945               	/* #APP */
+ 946               	 ;  428 "main.c" 1
+ 947 003c 7894      		sei
+ 948               	 ;  0 "" 2
+ 949               	/* #NOAPP */
+ 950               	.L65:
+ 429:main.c        ****     for(;;){    /* main event loop */
+ 430:main.c        ****         wdt_reset();
+ 951               		.stabn	68,0,430,.LM126-.LFBB7
+ 952               	.LM126:
+ 953               	/* #APP */
+ 954               	 ;  430 "main.c" 1
+ 955 003e A895      		wdr
+ 956               	 ;  0 "" 2
+ 431:main.c        ****         usbPoll();
+ 957               		.stabn	68,0,431,.LM127-.LFBB7
+ 958               	.LM127:
+ 959               	/* #NOAPP */
+ 960 0040 00D0      		rcall usbPoll
+ 961 0042 00C0      		rjmp .L65
+ 962               		.size	main, .-main
+ 963               		.stabs	"calibrationValue:r(0,11)",64,0,404,24
+ 964               		.stabn	192,0,0,.LFBB7-.LFBB7
+ 965               		.stabn	224,0,0,.Lscope7-.LFBB7
+ 966               	.Lscope7:
+ 967               		.stabs	"",36,0,0,.Lscope7-.LFBB7
+ 968               		.stabd	78,0,0
+ 969               		.local	res
+ 970               		.comm	res,4,1
+ 971               		.local	cmd
+ 972               		.comm	cmd,4,1
+ 973               		.local	cmd0
+ 974               		.comm	cmd0,1,1
+ 975               		.local	timeout
+ 976               		.comm	timeout,2,1
+ 977               		.local	address
+GAS LISTING /tmp/cc8skBkM.s 			page 29
+
+
+ 978               		.comm	address,2,1
+ 979               		.local	poll2
+ 980               		.comm	poll2,1,1
+ 981               		.local	poll1
+ 982               		.comm	poll1,1,1
+ 983               		.data
+ 984               		.type	sck_period, @object
+ 985               		.size	sck_period, 1
+ 986               	sck_period:
+ 987 0000 32        		.byte	50
+ 988               		.stabs	"sck_period:S(0,11)",38,0,96,sck_period
+ 989               		.stabs	"poll1:S(0,11)",40,0,97,poll1
+ 990               		.stabs	"poll2:S(0,11)",40,0,98,poll2
+ 991               		.stabs	"address:S(0,4)",40,0,99,address
+ 992               		.stabs	"timeout:S(0,4)",40,0,100,timeout
+ 993               		.stabs	"cmd0:S(0,11)",40,0,101,cmd0
+ 994               		.stabs	"cmd:S(0,50)=ar(10,4);0;3;(0,11)",40,0,102,cmd
+ 995               		.stabs	"res:S(0,50)",40,0,103,res
+ 996               		.text
+ 997               		.stabs	"",100,0,0,.Letext0
+ 998               	.Letext0:
+ 999               		.ident	"GCC: (GNU) 4.8.0"
+ 1000               	.global __do_copy_data
+ 1001               	.global __do_clear_bss
+GAS LISTING /tmp/cc8skBkM.s 			page 30
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 main.c
+     /tmp/cc8skBkM.s:2      *ABS*:000000000000003d __SP_L__
+     /tmp/cc8skBkM.s:3      *ABS*:000000000000003f __SREG__
+     /tmp/cc8skBkM.s:4      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/cc8skBkM.s:5      *ABS*:0000000000000001 __zero_reg__
+     /tmp/cc8skBkM.s:125    .text:0000000000000000 spi
+     /tmp/cc8skBkM.s:986    .data:0000000000000000 sck_period
+     /tmp/cc8skBkM.s:255    .text:000000000000006e spi_rw
+     /tmp/cc8skBkM.s:976    .bss:000000000000000b address
+     /tmp/cc8skBkM.s:972    .bss:0000000000000008 cmd0
+     /tmp/cc8skBkM.s:970    .bss:0000000000000004 cmd
+                             .bss:0000000000000000 res
+     /tmp/cc8skBkM.s:319    .text:00000000000000b2 usbFunctionRead
+     /tmp/cc8skBkM.s:379    .text:00000000000000f0 usbFunctionWrite
+     /tmp/cc8skBkM.s:974    .bss:0000000000000009 timeout
+     /tmp/cc8skBkM.s:980    .bss:000000000000000e poll1
+     /tmp/cc8skBkM.s:978    .bss:000000000000000d poll2
+     /tmp/cc8skBkM.s:497    .text:0000000000000182 usbFunctionSetup
+     /tmp/cc8skBkM.s:735    .text:0000000000000276 usbEventResetReady
+     /tmp/cc8skBkM.s:868    .text.startup:0000000000000000 main
+
+UNDEFINED SYMBOLS
+usbMsgPtr
+usbMeasureFrameLength
+__eewr_byte_tn25
+__eerd_byte_tn25
+usbInit
+usbPoll
+__do_copy_data
+__do_clear_bss

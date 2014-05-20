@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svnroot/adruemu/!svn/ver/63/trunk/src/cpu
+END
+atmel_decoder.c
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svnroot/adruemu/!svn/ver/63/trunk/src/cpu/atmel_decoder.c
+END
+atmel_operations.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svnroot/adruemu/!svn/ver/63/trunk/src/cpu/atmel_operations.c
+END
+atmel_cpu.c
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svnroot/adruemu/!svn/ver/61/trunk/src/cpu/atmel_cpu.c
+END

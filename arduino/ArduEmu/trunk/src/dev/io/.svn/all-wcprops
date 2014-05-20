@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svnroot/adruemu/!svn/ver/55/trunk/src/dev/io
+END
+serial_console.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svnroot/adruemu/!svn/ver/55/trunk/src/dev/io/serial_console.c
+END
+serial_adapter_win32.c
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/adruemu/!svn/ver/55/trunk/src/dev/io/serial_adapter_win32.c
+END

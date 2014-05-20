@@ -1,0 +1,1 @@
+/usr/share/arduino/hardware/arduino/bootloaders/stk500v2/avr_cpunames.h

@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "arduemu", "vs2005\vs2005.vcproj", "{DF9C4029-355F-47DC-8FD7-9A31A04181C6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		debug (boot)|Win32 = debug (boot)|Win32
+		Debug (hex)|Win32 = Debug (hex)|Win32
+		Debug (obj)|Win32 = Debug (obj)|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DF9C4029-355F-47DC-8FD7-9A31A04181C6}.debug (boot)|Win32.ActiveCfg = debug (boot)|Win32
+		{DF9C4029-355F-47DC-8FD7-9A31A04181C6}.debug (boot)|Win32.Build.0 = debug (boot)|Win32
+		{DF9C4029-355F-47DC-8FD7-9A31A04181C6}.Debug (hex)|Win32.ActiveCfg = Debug (hex)|Win32
+		{DF9C4029-355F-47DC-8FD7-9A31A04181C6}.Debug (hex)|Win32.Build.0 = Debug (hex)|Win32
+		{DF9C4029-355F-47DC-8FD7-9A31A04181C6}.Debug (obj)|Win32.ActiveCfg = Debug|Win32
+		{DF9C4029-355F-47DC-8FD7-9A31A04181C6}.Debug (obj)|Win32.Build.0 = Debug|Win32
+		{DF9C4029-355F-47DC-8FD7-9A31A04181C6}.Release|Win32.ActiveCfg = Release|Win32
+		{DF9C4029-355F-47DC-8FD7-9A31A04181C6}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

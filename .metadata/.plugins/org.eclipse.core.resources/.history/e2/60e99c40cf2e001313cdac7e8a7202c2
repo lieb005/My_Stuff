@@ -1,0 +1,29 @@
+/*
+ * colors.h
+ *
+ *  Created on: 06.10.2013
+ *      Author: mark
+ */
+
+#ifndef COLORS_H_
+#define COLORS_H_
+
+#define RED			(0xFF0000)
+#define GREEN		(0x00FF00)
+#define BLUE		(0x0000FF)
+
+#define DARK_RED	(0x7F0000)
+#define DARK_GREEN	(0x007F00)
+#define DARK_BLUE	(0x00007F)
+
+#define YELLOW		(0xFFFF00)
+#define TEAL		(0x00FFFF)
+#define PINK		(0xFF00FF)
+
+#define ORANGE		(0xFF7F00)
+#define AQUA		(0x00FF7F)
+#define 		(0x7F00FF)
+
+#define SKY_BlUE	(0x007FFF)
+
+#endif /* COLORS_H_ */

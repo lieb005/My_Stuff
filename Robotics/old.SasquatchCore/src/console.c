@@ -1,0 +1,1 @@
+/usr/share/arduino/hardware/arduino/firmwares/wifishield/wifiHD/src/console.c

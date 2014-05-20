@@ -1,0 +1,1 @@
+/usr/share/arduino/hardware/arduino/firmwares/wifishield/wifiHD/src/SOFTWARE_FRAMEWORK/DRIVERS/EIC/eic.h

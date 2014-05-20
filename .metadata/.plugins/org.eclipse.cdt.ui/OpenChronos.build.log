@@ -1,0 +1,36 @@
+16:59:09 **** Incremental Build of configuration Default for project OpenChronos ****
+make main 
+Assembling even_in_range in one step for MSP430...
+msp430-gcc -D_GNU_ASSEMBLER_ -x assembler-with-cpp -c even_in_range.s -o even_in_range.o
+msp430-gcc -mmcu=cc430f6137 -D__MSP430_6137__ -DMRFI_CC430 -D__CC430F6137__  -DELIMINATE_BLUEROBIN  -I./ -I./include/ -I./gcc/ -I./driver/ -I./logic/ -I./bluerobin/ -I./simpliciti/ -I./simpliciti/Components/bsp -I./simpliciti/Components/bsp/drivers -I./simpliciti/Components/bsp/boards/CC430EM -I./simpliciti/Components/mrfi -I./simpliciti/Components/nwk -I./simpliciti/Components/nwk_applications  -Os -Wall -fomit-frame-pointer -fno-force-addr -finline-limit=1 -fno-schedule-insns -ffunction-sections -Wl,-Map=output.map -Wl,--gc-sections -DISM_US -c simpliciti/Components/mrfi/mrfi.c -o simpliciti/Components/mrfi/mrfi.o
+In file included from simpliciti/Components/mrfi/mrfi.c:74:0:
+simpliciti/Components/mrfi/radios/family5/mrfi_radio.c: In function 'MRFI_Init':
+makefile:76: recipe for target 'simpliciti/Components/mrfi/mrfi.o' failed
+simpliciti/Components/mrfi/radios/family5/mrfi_radio.c:434:5: error: 'READ_SR' undeclared (first use in this function)
+simpliciti/Components/mrfi/radios/family5/mrfi_radio.c:434:5: note: each undeclared identifier is reported only once for each function it appears in
+simpliciti/Components/mrfi/radios/family5/mrfi_radio.c: In function 'Mrfi_SyncPinRxIsr':
+simpliciti/Components/mrfi/radios/family5/mrfi_radio.c:909:7: error: 'READ_SR' undeclared (first use in this function)
+simpliciti/Components/mrfi/radios/family5/mrfi_radio.c: In function 'MRFI_Sleep':
+simpliciti/Components/mrfi/radios/family5/mrfi_radio.c:1115:3: error: 'READ_SR' undeclared (first use in this function)
+simpliciti/Components/mrfi/radios/family5/mrfi_radio.c: In function 'Mrfi_DelayUsec':
+simpliciti/Components/mrfi/radios/family5/mrfi_radio.c:1394:7: error: 'READ_SR' undeclared (first use in this function)
+simpliciti/Components/mrfi/radios/family5/mrfi_radio.c: In function 'Mrfi_DelayUsecSem':
+simpliciti/Components/mrfi/radios/family5/mrfi_radio.c:1427:7: error: 'READ_SR' undeclared (first use in this function)
+simpliciti/Components/mrfi/radios/family5/mrfi_radio.c: In function 'MRFI_ReplyDelay':
+simpliciti/Components/mrfi/radios/family5/mrfi_radio.c:1477:3: error: 'READ_SR' undeclared (first use in this function)
+In file included from simpliciti/Components/mrfi/mrfi.c:75:0:
+simpliciti/Components/mrfi/radios/family5/mrfi_radio_interface.c: In function 'mrfiRadioInterfaceCmdStrobe':
+simpliciti/Components/mrfi/radios/family5/mrfi_radio_interface.c:118:3: warning: suggest parentheses around '&&' within '||' [-Wparentheses]
+simpliciti/Components/mrfi/radios/family5/mrfi_radio_interface.c:121:3: error: 'READ_SR' undeclared (first use in this function)
+simpliciti/Components/mrfi/radios/family5/mrfi_radio_interface.c: In function 'mrfiRadioInterfaceReadReg':
+simpliciti/Components/mrfi/radios/family5/mrfi_radio_interface.c:195:3: error: 'READ_SR' undeclared (first use in this function)
+simpliciti/Components/mrfi/radios/family5/mrfi_radio_interface.c: In function 'mrfiRadioInterfaceWriteReg':
+simpliciti/Components/mrfi/radios/family5/mrfi_radio_interface.c:240:3: error: 'READ_SR' undeclared (first use in this function)
+simpliciti/Components/mrfi/radios/family5/mrfi_radio_interface.c: In function 'mrfiRadioInterfaceWriteTxFifo':
+simpliciti/Components/mrfi/radios/family5/mrfi_radio_interface.c:277:3: error: 'READ_SR' undeclared (first use in this function)
+simpliciti/Components/mrfi/radios/family5/mrfi_radio_interface.c: In function 'mrfiRadioInterfaceReadRxFifo':
+simpliciti/Components/mrfi/radios/family5/mrfi_radio_interface.c:322:3: error: 'READ_SR' undeclared (first use in this function)
+make: *** [simpliciti/Components/mrfi/mrfi.o] Error 1
+
+16:59:10 Build Finished (took 992ms)
+

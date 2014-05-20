@@ -1,0 +1,8 @@
+K 10
+svn:ignore
+V 47
+Debug
+vs2005.vcproj.APOLLO.sam.user
+Release
+
+END

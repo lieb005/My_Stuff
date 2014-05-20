@@ -1,0 +1,6 @@
+11:00:45 **** Incremental Build of configuration Default for project SasquatchCore ****
+make all 
+make: *** No rule to make target 'all'.  Schluss.
+
+11:00:45 Build Finished (took 94ms)
+

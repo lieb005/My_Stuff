@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project>
+	<configuration id="cdt.managedbuild.toolchain.gnu.cross.base.1978000964" name="Default">
+		<extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
+			<provider id="org.eclipse.cdt.ui.UserLanguageSettingsProvider">
+				<language id="org.eclipse.cdt.core.gcc">
+					<resource project-relative-path="">
+						<entry kind="includePath" name="/usr/msp430/include">
+							<flag value="BUILTIN"/>
+						</entry>
+					</resource>
+				</language>
+				<language id="org.eclipse.cdt.core.g++">
+					<resource project-relative-path="">
+						<entry kind="includePath" name="/usr/msp430/include">
+							<flag value="BUILTIN"/>
+						</entry>
+					</resource>
+				</language>
+			</provider>
+		</extension>
+	</configuration>
+</project>
