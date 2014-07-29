@@ -1,0 +1,1047 @@
+ package srcpkg;
+ 
+ import java.awt.BorderLayout;
+ import java.awt.Component;
+ import java.awt.Dimension;
+ import java.awt.Graphics;
+ import java.awt.GridLayout;
+ import java.awt.Toolkit;
+ import java.awt.event.ActionEvent;
+ import java.awt.event.ActionListener;
+ import java.awt.event.FocusEvent;
+ import java.awt.event.FocusListener;
+ import java.awt.event.ItemEvent;
+ import java.awt.event.ItemListener;
+ import java.awt.event.MouseAdapter;
+ import java.awt.event.MouseEvent;
+ import java.awt.event.MouseListener;
+ import java.awt.event.WindowAdapter;
+ import java.awt.event.WindowEvent;
+ import java.io.BufferedReader;
+ import java.io.FileNotFoundException;
+ import java.io.IOException;
+ import java.io.InputStreamReader;
+ import java.io.OutputStreamWriter;
+ import java.io.PrintStream;
+ import java.net.HttpURLConnection;
+ import java.net.MalformedURLException;
+ import java.net.URL;
+ import java.net.URLConnection;
+ import java.net.URLEncoder;
+ import java.util.ArrayList;
+ import java.util.HashMap;
+ import java.util.LinkedHashMap;
+ import java.util.Random;
+ import java.util.Set;
+ import java.util.Vector;
+ import javax.swing.DefaultCellEditor;
+ import javax.swing.ImageIcon;
+ import javax.swing.JApplet;
+ import javax.swing.JButton;
+ import javax.swing.JCheckBox;
+ import javax.swing.JCheckBoxMenuItem;
+ import javax.swing.JComboBox;
+ import javax.swing.JComponent;
+ import javax.swing.JFrame;
+ import javax.swing.JLabel;
+ import javax.swing.JList;
+ import javax.swing.JMenu;
+ import javax.swing.JMenuBar;
+ import javax.swing.JMenuItem;
+ import javax.swing.JPanel;
+ import javax.swing.JPopupMenu;
+ import javax.swing.JScrollPane;
+ import javax.swing.JSpinner;
+ import javax.swing.JTable;
+ import javax.swing.JTextField;
+ import javax.swing.JWindow;
+ import javax.swing.KeyStroke;
+ import javax.swing.SpinnerNumberModel;
+ import javax.swing.border.BevelBorder;
+ import javax.swing.table.DefaultTableModel;
+ import javax.swing.table.TableCellRenderer;
+ import javax.swing.table.TableColumn;
+ import javax.swing.table.TableColumnModel;
+ 
+ public class Bot_2 extends JApplet
+   implements ActionListener, MouseListener, FocusListener, ItemListener
+ {
+   public static final transient boolean DEBUG = false;
+   public static final transient int URL_INDEX = 0;
+   public static final transient int POST_INDEX = 1;
+   public static final transient int REF_INDEX = 2;
+   public static final transient int DEFAULT_THREAD_COUNT = 1;
+   static ImageIcon img = null;
+   Vector<Vector<Object>> rowData = new Vector();
+   Vector<Object> columnNames = new Vector(
+     3);
+ 
+   LinkedHashMap<String, String[]> bots = new LinkedHashMap();
+   JFrame userDataFrame = new JFrame(
+     "User Data");
+ 
+   Vector<Integer> count = new Vector();
+   Vector<String> emails = new Vector();
+ 
+   JMenuItem contextRunBotItem = new JMenuItem(
+     "Run");
+ 
+   JMenuItem contextStopBotItem = new JMenuItem(
+     "Stop");
+ 
+   JMenuItem runBotItem = new JMenuItem(
+     "Run");
+ 
+   JMenuItem stopBotItem = new JMenuItem(
+     "Stop");
+ 
+   JMenuItem removeBotItem = new JMenuItem(
+     "Remove the selected bot");
+ 
+   JMenuItem contextRemoveBotItem = new JMenuItem(
+     "Remove");
+ 
+   HashMap<String, String> userInfo = new HashMap();
+ 
+   JTable botTable = new JTable(
+     new DefaultTableModel(
+     this.rowData, 
+     this.columnNames));
+ 
+   JList botList = new JList(
+     this.bots.keySet()
+     .toArray());
+   boolean isStandalone;
+   JPopupMenu tableContextMenu = new JPopupMenu();
+   JMenu runMenu = new JMenu(
+     "Run");
+ 
+   JLabel statusLabel = new JLabel(
+     " ");
+ 
+   JCheckBoxMenuItem autoSendUserDataItem = new JCheckBoxMenuItem(
+     "Auto send User Data", 
+     true);
+   Thread requestThread;
+   JSpinner threadLimit = new JSpinner(
+     new SpinnerNumberModel(
+     8, 
+     2, 
+     126, 
+     2));
+ 
+   Vector<Boolean> looping = new Vector();
+ 
+   HashMap<String, JComponent> textFieldMap = new HashMap();
+ 
+   public Bot_2(boolean isStandalone)
+   {
+     this.isStandalone = isStandalone;
+   }
+ 
+   public Bot_2()
+   {
+     this.isStandalone = false;
+   }
+ 
+   public static void main(String[] args)
+   {
+     try
+     {
+       img = new ImageIcon(new URL("http", "www.botalive.com", 
+         "/autocoder/splash.png"));
+     }
+     catch (MalformedURLException e1) {
+       e1.printStackTrace();
+     }
+ 
+     System.out.println("JWindow");
+     JWindow splash = new JWindow()
+     {
+       public void update(Graphics g)
+       {
+         super.update(g);
+         g.drawImage(Bot_2.img.getImage(), 0, 0, Bot_2.img.getIconWidth(), 
+           Bot_2.img.getIconHeight(), null);
+       }
+ 
+       public void paint(Graphics g)
+       {
+         super.paint(g);
+         g.drawImage(Bot_2.img.getImage(), 0, 0, Bot_2.img.getIconWidth(), 
+           Bot_2.img.getIconHeight(), null);
+       }
+     };
+     splash.setSize(new Dimension(img.getIconWidth(), img
+       .getIconHeight()));
+     int x = Toolkit.getDefaultToolkit().getScreenSize().width / 2 - 
+       splash.getSize().width / 2;
+     int y = Toolkit.getDefaultToolkit().getScreenSize().height / 2 - 
+       splash.getSize().height / 2;
+     splash.setLocation(x, y);
+     splash.setVisible(true);
+     splash.repaint();
+     final Bot_2 i = new Bot_2(true);
+     JFrame frame = new JFrame("Java Bot");
+     System.runFinalizersOnExit(true);
+     frame.addWindowListener(new WindowAdapter()
+     {
+       public void windowClosed(WindowEvent e) {
+         i.stop();
+         i.destroy();
+         System.exit(0);
+       }
+     });
+     try
+     {
+       frame.setIconImage(new ImageIcon(new URL("http", 
+         "www.botalive.com", "/autocoder/icon.png")).getImage());
+     }
+     catch (MalformedURLException e2) {
+       e2.printStackTrace();
+     }
+     splash.addMouseListener(new MouseAdapter()
+     {
+       public void mouseReleased(MouseEvent e)
+       {
+         super.mouseReleased(e);
+         Thread.currentThread().interrupt();
+       }
+     });
+     for (int time = 0; time < 200; time++)
+     {
+       try
+       {
+         Thread.sleep(10L);
+         splash.validate();
+       }
+       catch (InterruptedException e1) {
+         e1.printStackTrace();
+       }
+     }
+ 
+     frame.setDefaultCloseOperation(3);
+     frame.add(i);
+     i.init();
+     i.start();
+     frame.setSize(500, 250);
+     splash.setVisible(false);
+     frame.setVisible(true);
+     frame.repaint();
+   }
+ 
+   public void init()
+   {
+     super.init();
+     setLayout(new BorderLayout());
+     JMenuBar menuBar = new JMenuBar();
+     JMenu fileMenu = new JMenu("File");
+     JMenu settingMenu = new JMenu("Settings");
+     JMenu helpMenu = new JMenu("Help");
+     JMenuItem addBotItem = new JMenuItem("Add a bot");
+     addBotItem.setAccelerator(KeyStroke.getKeyStroke(78, 
+       2));
+     this.removeBotItem.setAccelerator(KeyStroke.getKeyStroke(82, 
+       2));
+     JMenuItem exitItem = new JMenuItem("Exit");
+     exitItem.setAccelerator(KeyStroke.getKeyStroke(115, 
+       8));
+     JSpinner threadLimit = new JSpinner(new SpinnerNumberModel(
+       1, 1, 127, 1));
+     JCheckBoxMenuItem updateCalendarItem = new JCheckBoxMenuItem(
+       "Auto Update Calendar", true);
+     JMenu userDataMenu = new JMenu("User Data");
+     JMenuItem sendUserDataItem = new JMenuItem("Send User Data");
+     JMenuItem getUserDataItem = new JMenuItem("Retrieve User Data");
+     JMenuItem setUserDataItem = new JMenuItem("Set User Data");
+     setUserDataItem.addActionListener(new ActionListener()
+     {
+       public void actionPerformed(ActionEvent e)
+       {
+         Bot_2.this.userDataFrame.setVisible(true);
+         Bot_2.this.userDataFrame.pack();
+         Bot_2.this.userDataFrame.setVisible(true);
+         Bot_2.this.updateUserInfoTextFields();
+       }
+     });
+     JTextField nameField = new JTextField();
+     JTextField cityField = new JTextField();
+     JTextField addressField = new JTextField();
+     JComboBox stateField = new JComboBox(new String[] { "AL", "AK", "AZ", 
+       "AR", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", 
+       "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", 
+       "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", 
+       "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", 
+       "TX", "UT", "VT", "VI", "VA", "WA", "WV", "WI", "WY" });
+     stateField.setEditable(false);
+     JTextField zipField = new JTextField();
+     JTextField emailField = new JTextField();
+ 
+     this.userDataFrame.setLayout(new GridLayout(6, 2));
+     this.userDataFrame.add(new JLabel("Name"));
+     this.userDataFrame.add(new JLabel("Email"));
+     this.userDataFrame.add(nameField);
+     this.userDataFrame.add(emailField);
+     this.userDataFrame.add(new JLabel("Address"));
+     this.userDataFrame.add(new JLabel("City"));
+     this.userDataFrame.add(addressField);
+     this.userDataFrame.add(cityField);
+     this.userDataFrame.add(new JLabel("State"));
+     this.userDataFrame.add(new JLabel("Zip"));
+     this.userDataFrame.add(stateField);
+     this.userDataFrame.add(zipField);
+ 
+     this.textFieldMap.put("name", nameField);
+     this.textFieldMap.put("email", emailField);
+     this.textFieldMap.put("city", cityField);
+     this.textFieldMap.put("state", stateField);
+     this.textFieldMap.put("address", addressField);
+     this.textFieldMap.put("zip", zipField);
+ 
+     nameField.setName("name");
+     emailField.setName("email");
+     cityField.setName("city");
+     stateField.setName("state");
+     addressField.setName("address");
+     zipField.setName("zip");
+ 
+     nameField.addFocusListener(this);
+     emailField.addFocusListener(this);
+     stateField.addFocusListener(this);
+     addressField.addFocusListener(this);
+     zipField.addFocusListener(this);
+     cityField.addFocusListener(this);
+ 
+     this.runMenu.addActionListener(this);
+     this.runMenu.setName("run menu");
+ 
+     menuBar.add(fileMenu);
+     menuBar.add(this.runMenu);
+     menuBar.add(settingMenu);
+     menuBar.add(helpMenu);
+     fileMenu.add(addBotItem);
+     fileMenu.add(this.removeBotItem);
+     fileMenu.addSeparator();
+     fileMenu.add(exitItem);
+     settingMenu.add(new JLabel("Threads"));
+     settingMenu.add(threadLimit);
+     settingMenu.add(updateCalendarItem);
+     settingMenu.add(userDataMenu);
+     userDataMenu.add(sendUserDataItem);
+     userDataMenu.add(getUserDataItem);
+     userDataMenu.add(this.autoSendUserDataItem);
+     userDataMenu.add(setUserDataItem);
+ 
+     addBotItem.addActionListener(this);
+     this.removeBotItem.addActionListener(this);
+     exitItem.addActionListener(new ActionListener()
+     {
+       public void actionPerformed(ActionEvent e)
+       {
+         System.exit(0);
+       }
+     });
+     sendUserDataItem.addActionListener(this);
+     getUserDataItem.addActionListener(this);
+     setUserDataItem.addActionListener(this);
+ 
+     addBotItem.setName("add");
+     this.removeBotItem.setName("remove");
+     sendUserDataItem.setName("get");
+     getUserDataItem.setName("send");
+ 
+     setJMenuBar(menuBar);
+ 
+     this.columnNames.add("Name");
+     this.columnNames.add("Count");
+     this.columnNames.add("Status");
+ 
+     this.botTable = new JTable(this.rowData, this.columnNames);
+     JScrollPane botTableScrollPane = new JScrollPane(this.botTable);
+     add(botTableScrollPane, "Center");
+ 
+     this.botTable.setSelectionMode(0);
+     this.botTable.setColumnSelectionAllowed(false);
+     this.botTable.setFillsViewportHeight(true);
+     this.botTable.addMouseListener(this);
+ 
+     JCheckBox jCheckBox = new JCheckBox();
+     jCheckBox.addItemListener(this);
+     this.botTable.getColumnModel().getColumn(2)
+       .setCellEditor(new DefaultCellEditor(jCheckBox));
+     this.botTable.getColumnModel().getColumn(2)
+       .setCellRenderer(new TableCellRenderer()
+     {
+       public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean isFocused, int row, int col)
+       {
+         boolean marked = ((Boolean)value).booleanValue();
+         JCheckBox rendererComponent = new JCheckBox();
+         if (marked)
+         {
+           rendererComponent.setSelected(true);
+         }
+         return rendererComponent;
+       }
+     });
+     this.botTable.getColumnModel().getColumn(2).sizeWidthToFit();
+     JTextField textBox = new JTextField();
+     textBox.setEditable(false);
+     this.botTable.getColumn(this.columnNames.get(0)).setCellEditor(
+       new DefaultCellEditor(textBox));
+     this.botTable.getColumn(this.columnNames.get(1)).setCellEditor(
+       new DefaultCellEditor(textBox));
+ 
+     JMenuItem contextAddBotItem = new JMenuItem("Add");
+ 
+     this.tableContextMenu.add(contextAddBotItem);
+     this.tableContextMenu.add(this.contextRemoveBotItem);
+ 
+     contextAddBotItem.addActionListener(this);
+     this.contextRemoveBotItem.addActionListener(this);
+     this.contextRunBotItem.addActionListener(this);
+     this.contextStopBotItem.addActionListener(this);
+     this.runBotItem.addActionListener(this);
+     this.stopBotItem.addActionListener(this);
+ 
+     contextAddBotItem.setName("add");
+     this.contextRemoveBotItem.setName("remove");
+     this.contextRunBotItem.setName("run");
+     this.contextStopBotItem.setName("stop");
+     this.runBotItem.setName("run");
+     this.stopBotItem.setName("stop");
+     this.statusLabel.setBorder(new BevelBorder(1));
+     add(this.statusLabel, "South");
+   }
+ 
+   public synchronized void start()
+   {
+     super.start();
+     if (this.bots.size() < 1)
+     {
+       getBots();
+     }
+     getUserInfo();
+   }
+ 
+   private void calendar(String name, int count)
+   {
+     try
+     {
+       URLConnection conn = new URL("http", "www.botalive.com", 
+         "/autocoder/calendar.php?method=upload&botname=" + 
+         URLEncoder.encode(name, "UTF-8") + "&count=" + 
+         count).openConnection();
+       conn.connect();
+       this.statusLabel.setText(new BufferedReader(new InputStreamReader(
+         conn.getInputStream())).readLine());
+     }
+     catch (MalformedURLException e) {
+       e.printStackTrace();
+     }
+     catch (IOException e) {
+       e.printStackTrace();
+     }
+   }
+ 
+   public synchronized void growVector(Vector v, int size, Object defaultVal)
+   {
+     int oldSize = v.size();
+     v.setSize(size);
+ 
+     for (int i = oldSize; i < size; i++)
+     {
+       v.set(i, defaultVal);
+     }
+   }
+ 
+   public synchronized void runBot(final int index_of_bot)
+   {
+     growVector(this.count, this.botTable.getRowCount(), Integer.valueOf(0));
+     this.looping.setSize(this.botTable.getRowCount());
+     this.looping.set(index_of_bot, Boolean.valueOf(true));
+     String[] name = ((String)this.userInfo.get("name")).split(" ", 2);
+     ((Vector)this.rowData.get(index_of_bot)).set(1, this.count.get(index_of_bot));
+     if (name.length != 2)
+     {
+       this.statusLabel.setText("First and last name");
+       return;
+     }
+     if ((this.userInfo.get("email") == "@gmail") || (this.userInfo.get("email") == ""))
+     {
+       this.statusLabel.setText("Valid gmail needed");
+       return;
+     }
+     if (this.autoSendUserDataItem.getState())
+     {
+       sendUserInfo();
+     }
+     populateEmails((String)this.userInfo.get("email"));
+     this.requestThread = new Thread(new Runnable()
+     {
+       public synchronized void run() {
+         final int row = index_of_bot;
+         int threads = ((Integer)Bot_2.this.threadLimit.getValue()).intValue();
+         Thread[] send = new Thread[threads];
+         Bot_2.this.looping.set(row, Boolean.valueOf(true));
+         ((Vector)Bot_2.this.rowData.get(row)).set(2, Boolean.valueOf(true));
+         for (int threadIndex = 0; ((Boolean)Bot_2.this.looping.get(index_of_bot)).booleanValue(); threadIndex = (threadIndex + 1) % 
+           threads)
+         {
+           if ((threadIndex == 0) && (send[(threads - 1)] != null))
+           {
+             try
+             {
+               send[(threads - 1)].join();
+             }
+             catch (InterruptedException e) {
+               e.printStackTrace();
+             }
+           }
+           send[threadIndex] = new Thread(new Runnable()
+           {
+             public synchronized void run() {
+               System.out.println(((String[])Bot_2.this.bots.get(((Vector)Bot_2.this.rowData.get(row))
+                 .get(0)))[0]);
+               Bot_2.this.writePOST((String[])Bot_2.this.bots.get(((Vector)Bot_2.this.rowData.get(row)).get(0)), 
+                 row);
+               Bot_2.this.count.set(row, Integer.valueOf(((Integer)Bot_2.this.count.get(row)).intValue() + 1));
+               ((Vector)Bot_2.this.rowData.get(row)).set(1, Bot_2.this.count.get(row));
+               Bot_2.this._inv();
+             }
+           });
+           send[threadIndex].start();
+           System.out.println("started thread " + threadIndex + 
+             " on row " + row);
+           System.out.println("Offer: " + ((Vector)Bot_2.this.rowData.get(row)).get(0));
+         }
+       }
+     });
+     this.requestThread.start();
+   }
+ 
+   public void stopBot(int index_of_bot)
+   {
+     this.looping.set(index_of_bot, Boolean.valueOf(false));
+     ((Vector)this.rowData.get(index_of_bot)).set(2, Boolean.valueOf(false));
+     calendar((String)((Vector)this.rowData.get(index_of_bot)).get(0), 
+       ((Integer)this.count.get(index_of_bot)).intValue());
+   }
+ 
+   public void sendUserInfo()
+   {
+     char[] chr = "There was an Error.  Check your Internet Connection."
+       .toCharArray();
+     try
+     {
+       URL setUserInfoURL = new URL("http", "www.botalive.com", 
+         "/autocoder/info.php?method=upload&name=" + 
+         ((String)this.userInfo.get("name")).replace(' ', '+') + 
+         "&email=" + 
+         ((String)this.userInfo.get("email")).replace(' ', '+') + 
+         "&address=" + 
+         ((String)this.userInfo.get("address")).replace(' ', '+') + 
+         "&zip=" + 
+         ((String)this.userInfo.get("zip")).replace(' ', '+') + 
+         "&state=" + 
+         ((String)this.userInfo.get("state")).toUpperCase()
+         .replace(' ', '+') + "&city=" + 
+         ((String)this.userInfo.get("city")).replace(' ', '+'));
+       HttpURLConnection conn = (HttpURLConnection)setUserInfoURL
+         .openConnection();
+       conn.connect();
+       InputStreamReader imp = new InputStreamReader(
+         conn.getInputStream());
+       chr = new char[1024];
+       imp.read(chr, 0, 1023);
+       conn.disconnect();
+     }
+     catch (Exception e) {
+       e.printStackTrace();
+     }
+     updateUserInfoTextFields();
+     this.statusLabel.setText(String.copyValueOf(chr).trim());
+   }
+ 
+   public void getUserInfo()
+   {
+     String status = "There was an Error.  Check your Internet Connection.";
+     try
+     {
+       URL getUserInfoURL = new URL("http", "www.botalive.com", 
+         "/autocoder/info.php?method=get&newline=true");
+       HttpURLConnection conn = (HttpURLConnection)getUserInfoURL
+         .openConnection();
+       BufferedReader reader = new BufferedReader(new InputStreamReader(
+         conn.getInputStream()));
+       String output = "";
+       for (String tempData = ""; (tempData = reader.readLine()) != null; tempData = "")
+       {
+         String[] tmp = tempData.trim().split("=");
+         if (tmp.length > 1)
+         {
+           this.userInfo.put(tmp[0].toLowerCase(), tmp[1]);
+         }
+ 
+         output = tempData;
+       }
+       if (this.userInfo.size() < 5)
+       {
+         this.statusLabel.setText(output);
+         return;
+       }
+       status = "Success";
+     }
+     catch (MalformedURLException e) {
+       e.printStackTrace();
+     }
+     catch (IOException e) {
+       e.printStackTrace();
+     }
+     updateUserInfoTextFields();
+     this.statusLabel.setText(status);
+   }
+ 
+   public synchronized void writePOST(String[] info, int caller)
+   {
+     String UrlStr = info[0]; String POST = info[1]; String referrer = info[2];
+     this.rowData.setSize(this.botTable.getRowCount());
+     this.count.setSize(this.rowData.size());
+     try
+     {
+       POST = POST
+         .replaceAll("#FirstName#", 
+         ((String)this.userInfo.get("name")).split(" ", 2)[0])
+         .replaceAll("#LastName#", 
+         ((String)this.userInfo.get("name")).split(" ", 2)[1])
+         .replaceAll("#Name#", (String)this.userInfo.get("name"))
+         .replaceAll(
+         "#Email#", 
+         URLEncoder.encode(binaryDotString(
+         ((Integer)this.count
+         .get(this.botTable.getSelectedRow())).intValue()), "UTF-8"))
+         .replaceAll("#Zip#", (String)this.userInfo.get("zip"))
+         .replaceAll("#City#", (String)this.userInfo.get("city"))
+         .replaceAll("#State#", 
+         ((String)this.userInfo.get("state")).toUpperCase())
+         .replaceAll(
+         "#Address#", 
+         (String)this.userInfo.get("address") + " " + 
+         this.count.get(caller))
+         .replaceAll("#Count#", String.valueOf(this.count.get(caller)))
+         .replaceAll(" ", "+");
+       URL url = new URL(UrlStr);
+       final URLConnection conn = url.openConnection();
+       conn.setDoOutput(true);
+       conn.setRequestProperty("Content-Type", 
+         "application/x-www-form-urlencoded");
+       conn.setRequestProperty("Referer", referrer);
+       OutputStreamWriter writer = new OutputStreamWriter(
+         conn.getOutputStream());
+ 
+       writer.write(POST);
+       writer.flush();
+ 
+       Thread output = new Thread(new Runnable()
+       {
+         public void run()
+         {
+           String answer = "";
+           try
+           {
+             BufferedReader reader = new BufferedReader(
+               new InputStreamReader(conn.getInputStream()));
+             String line;
+             while ((line = reader.readLine()) != null);
+             reader.close();
+           }
+           catch (IOException e) {
+             e.printStackTrace();
+           }
+         }
+       });
+       output.start();
+       writer.close();
+ 
+       this.count.set(caller, Integer.valueOf(((Integer)this.count.get(caller)).intValue() + 1));
+       ((Vector)this.rowData.get(caller)).set(1, this.count.get(caller));
+       _inv();
+     }
+     catch (IOException e) {
+       e.printStackTrace();
+     }
+   }
+ 
+   public void populateEmails(String email)
+   {
+     email = email.replaceAll("@gmail.com", "");
+ 
+     for (int i = 0; i < Math.min(Math.pow(2.0D, email.length() - 1), 
+       16777215.0D); 
+       i++)
+     {
+       ArrayList newEmail = new ArrayList(
+         email.length() * 2 + 1);
+ 
+       String bin = Integer.toBinaryString(i);
+       while (bin.length() < email.length())
+       {
+         bin = "0".concat(bin);
+       }
+ 
+       for (int j = 0; j < email.length(); j++)
+       {
+         if (bin.toCharArray()[j] == '1')
+           newEmail.add(Character.valueOf('.'));
+         newEmail.add(Character.valueOf(email.toCharArray()[j]));
+       }
+ 
+       char[] charemail = new char[newEmail.size()];
+       for (int l = 0; l < newEmail.size(); l++)
+       {
+         charemail[l] = ((Character)newEmail.get(l)).charValue();
+       }
+       this.emails.add(String.valueOf(charemail).concat("@gmail.com"));
+     }
+ 
+     Random rng = new Random();
+     int n = this.emails.size();
+     while (n > 1)
+     {
+       n--;
+       int k = rng.nextInt(n + 1);
+       String value = (String)this.emails.elementAt(k);
+       this.emails.set(k, (String)this.emails.elementAt(n));
+       this.emails.set(n, value);
+     }
+   }
+ 
+   public String binaryDotString(int val)
+   {
+     return (String)this.emails.elementAt(val % (this.emails.size() - 1));
+   }
+ 
+   private synchronized void _inv()
+   {
+     this.botTable.invalidate();
+     this.botTable.validate();
+     this.botTable.revalidate();
+     this.botTable.repaint();
+   }
+ 
+   public void actionPerformed(ActionEvent e)
+   {
+     JComponent comp = (JComponent)e.getSource();
+     String name = comp.getName();
+     if ((comp instanceof JMenuItem))
+     {
+       if (name == "add")
+       {
+         addBot();
+         _inv();
+       }
+       else if (name == "remove")
+       {
+         removeBot();
+         _inv();
+       }
+       else if (name == "get")
+       {
+         getUserInfo();
+         _inv();
+       }
+       else if (name == "send")
+       {
+         sendUserInfo();
+         _inv();
+       }
+       else if (name == "stop")
+       {
+         ((Vector)this.rowData.get(this.botTable.getSelectedRow())).set(2, Boolean.valueOf(false));
+         stopBot(this.botTable.getSelectedRow());
+         _inv();
+       }
+       else if (name == "start")
+       {
+         ((Vector)this.rowData.get(this.botTable.getSelectedRow())).set(2, Boolean.valueOf(true));
+         runBot(this.botTable.getSelectedRow());
+         _inv();
+       }
+       else if (name == "run menu")
+       {
+         if (this.rowData.size() <= 0)
+         {
+           this.runMenu.remove(this.runBotItem);
+           this.runMenu.remove(this.stopBotItem);
+         }
+         else if (((Boolean)this.looping.get(this.botTable.getSelectedRow())).booleanValue())
+         {
+           this.runMenu.remove(this.runBotItem);
+           this.runMenu.add(this.stopBotItem);
+         }
+         else
+         {
+           this.runMenu.add(this.runBotItem);
+           this.runMenu.remove(this.stopBotItem);
+         }
+         this.runMenu.add(this.removeBotItem);
+         if (this.botTable.getSelectedRowCount() == 0)
+         {
+           this.runMenu.remove(this.removeBotItem);
+         }
+       }
+ 
+       _inv();
+     }
+   }
+ 
+   public void addBot()
+   {
+     final JFrame addBotFrame = new JFrame("Create New Bot");
+     final Object[] botArray = this.bots.keySet().toArray();
+     final JList botsList = new JList(botArray);
+     JScrollPane botScrollPane = new JScrollPane(botsList);
+     JButton ok = new JButton("OK");
+     JButton cancel = new JButton("Cancel");
+     JPanel buttonPanel = new JPanel();
+     addBotFrame.setLayout(new BorderLayout());
+     buttonPanel.add(ok);
+     buttonPanel.add(cancel);
+     addBotFrame.add(botScrollPane, "Center");
+     addBotFrame.add(buttonPanel, "South");
+     botsList.setSelectionMode(2);
+     ok.addActionListener(new ActionListener()
+     {
+       public void actionPerformed(ActionEvent e)
+       {
+         int[] selection = botsList.getSelectedIndices();
+         for (int i = 0; i < botsList.getSelectedIndices().length; i++)
+         {
+           Vector newData = new Vector();
+           newData.add(botArray[selection[i]]);
+           newData.add(Integer.valueOf(0));
+           newData.add(new Boolean(false));
+           if (newData.get(0) != "")
+             Bot_2.this.rowData.add(newData);
+         }
+         addBotFrame.setVisible(false);
+         Bot_2.this.looping.setSize(Bot_2.this.botTable.getRowCount());
+         Bot_2.this._inv();
+       }
+     });
+     cancel.addActionListener(new ActionListener()
+     {
+       public void actionPerformed(ActionEvent e)
+       {
+         addBotFrame.setVisible(false);
+         Bot_2.this._inv();
+       }
+     });
+     addBotFrame.setVisible(true);
+     addBotFrame.pack();
+     Dimension buttonDim = cancel.getSize();
+     addBotFrame.setSize(200, 400);
+     ok.setSize(buttonDim);
+     cancel.setSize(buttonDim);
+   }
+ 
+   public void removeBot()
+   {
+     this.rowData.remove(this.botTable.getSelectedRow());
+     _inv();
+   }
+ 
+   public void updateUserInfoTextFields()
+   {
+     ((JTextField)this.textFieldMap.get("name"))
+       .setText((String)this.userInfo.get("name"));
+     ((JTextField)this.textFieldMap.get("zip")).setText((String)this.userInfo.get("zip"));
+     ((JComboBox)this.textFieldMap.get("state")).setSelectedItem(((String)this.userInfo.get(
+       "state")).toUpperCase());
+     ((JTextField)this.textFieldMap.get("city"))
+       .setText((String)this.userInfo.get("city"));
+     ((JTextField)this.textFieldMap.get("address")).setText(
+       (String)this.userInfo
+       .get("address"));
+     ((JTextField)this.textFieldMap.get("email")).setText(
+       (String)this.userInfo
+       .get("email"));
+     _inv();
+   }
+ 
+   public Vector<String> getBots()
+   {
+     try
+     {
+       URLConnection conn = new URL("http", "www.botalive.com", 
+         "/autocoder/urls.url").openConnection();
+       BufferedReader urls = new BufferedReader(new InputStreamReader(
+         conn.getInputStream()));
+       int i = 0;
+       String[] data = new String[3];
+       String comment = "";
+       Vector returnVal = new Vector();
+       String tempURL;
+       while ((tempURL = urls.readLine()) != null)
+       {
+         tempURL = tempURL.trim();
+         System.out.println(tempURL);
+         if ((tempURL.length() >= 5) && (!tempURL.startsWith("//")) && 
+           (!tempURL.startsWith("'")))
+         {
+           if (tempURL.startsWith("#"))
+           {
+             i = 0;
+             this.bots.put(comment, data);
+             returnVal.add(comment);
+             data = new String[3];
+             comment = new String();
+             tempURL = tempURL.replaceFirst("#", "");
+           }
+           switch (i)
+           {
+           case 0:
+             comment = tempURL;
+             break;
+           case 1:
+             data[0] = tempURL;
+             break;
+           case 2:
+             data[1] = tempURL;
+             break;
+           case 3:
+             data[2] = tempURL;
+             break;
+           }
+ 
+           i++;
+           tempURL = "";
+         }
+       }
+       return returnVal;
+     }
+     catch (FileNotFoundException e) {
+       e.printStackTrace();
+     }
+     catch (IOException e) {
+       e.printStackTrace();
+     }
+     Vector ret = new Vector();
+     ret.add("Error");
+     return ret;
+   }
+ 
+   public void mouseClicked(MouseEvent e)
+   {
+   }
+ 
+   public void mousePressed(MouseEvent e)
+   {
+     if (e.isPopupTrigger())
+     {
+       JTable source = (JTable)e.getSource();
+       int row = source.rowAtPoint(e.getPoint());
+       if (this.rowData.size() <= 0)
+       {
+         this.tableContextMenu.remove(this.contextRunBotItem);
+         this.tableContextMenu.remove(this.contextStopBotItem);
+       }
+       else if (this.looping.get(row) != null)
+       {
+         this.tableContextMenu.remove(this.contextRunBotItem);
+         this.tableContextMenu.add(this.contextStopBotItem);
+       }
+       else
+       {
+         this.tableContextMenu.add(this.contextRunBotItem);
+         this.tableContextMenu.remove(this.contextStopBotItem);
+       }
+ 
+       if (!this.botTable.isRowSelected(this.botTable.getSelectedRow()))
+       {
+         this.botTable.changeSelection(this.botTable.getSelectedRow(), 0, false, 
+           false);
+       }
+       this.tableContextMenu.add(this.contextRemoveBotItem);
+       if (this.botTable.getSelectedRowCount() == 0)
+       {
+         this.tableContextMenu.remove(this.contextRemoveBotItem);
+       }
+       this.tableContextMenu.show(e.getComponent(), e.getX(), e.getY());
+       _inv();
+     }
+   }
+ 
+   public void mouseReleased(MouseEvent e)
+   {
+     if (e.isPopupTrigger())
+     {
+       JTable source = (JTable)e.getSource();
+       int row = source.rowAtPoint(e.getPoint());
+       if (this.rowData.size() <= 0)
+       {
+         this.tableContextMenu.remove(this.contextRunBotItem);
+         this.tableContextMenu.remove(this.contextStopBotItem);
+       }
+       else if (((Boolean)this.looping.get(row)).booleanValue())
+       {
+         this.tableContextMenu.remove(this.contextRunBotItem);
+         this.tableContextMenu.add(this.contextStopBotItem);
+       }
+       else
+       {
+         this.tableContextMenu.add(this.contextRunBotItem);
+         this.tableContextMenu.remove(this.contextStopBotItem);
+       }
+ 
+       if (!this.botTable.isRowSelected(this.botTable.getSelectedRow()))
+       {
+         this.botTable.changeSelection(this.botTable.getSelectedRow(), 0, false, 
+           false);
+       }
+       this.tableContextMenu.add(this.contextRemoveBotItem);
+       if (this.botTable.getSelectedRowCount() == 0)
+       {
+         this.tableContextMenu.remove(this.contextRemoveBotItem);
+       }
+       this.tableContextMenu.show(e.getComponent(), e.getX(), e.getY());
+       _inv();
+     }
+   }
+ 
+   public void mouseEntered(MouseEvent e)
+   {
+   }
+ 
+   public void mouseExited(MouseEvent e)
+   {
+   }
+ 
+   public void focusGained(FocusEvent e)
+   {
+   }
+ 
+   public void focusLost(FocusEvent e)
+   {
+     JComponent comp = (JComponent)e.getSource();
+     this.userInfo.put(comp.getName(), 
+       (comp instanceof JTextField) ? ((JTextField)comp).getText() : 
+       (String)((JComboBox)comp).getSelectedItem());
+     _inv();
+   }
+ 
+   public void itemStateChanged(ItemEvent e)
+   {
+     if ((e.getSource() instanceof JCheckBox))
+     {
+       if (e.getStateChange() == 1)
+       {
+         runBot(this.botTable.getSelectedRow());
+       }
+       else
+       {
+         this.looping.set(this.botTable.getSelectedRow(), Boolean.valueOf(false));
+       }
+     }
+   }
+ }
+

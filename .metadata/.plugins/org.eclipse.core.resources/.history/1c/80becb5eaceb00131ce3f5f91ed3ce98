@@ -1,0 +1,727 @@
+/*     */ package srcpkg;
+/*     */ 
+/*     */ import java.awt.BorderLayout;
+/*     */ import java.awt.Dimension;
+/*     */ import java.awt.Graphics;
+/*     */ import java.awt.GridLayout;
+/*     */ import java.awt.Toolkit;
+/*     */ import java.awt.event.ActionEvent;
+/*     */ import java.awt.event.ActionListener;
+/*     */ import java.awt.event.FocusAdapter;
+/*     */ import java.awt.event.FocusEvent;
+/*     */ import java.awt.event.ItemEvent;
+/*     */ import java.awt.event.ItemListener;
+/*     */ import java.awt.event.MouseAdapter;
+/*     */ import java.awt.event.MouseEvent;
+/*     */ import java.awt.event.WindowAdapter;
+/*     */ import java.awt.event.WindowEvent;
+/*     */ import java.io.BufferedReader;
+/*     */ import java.io.FileNotFoundException;
+/*     */ import java.io.IOException;
+/*     */ import java.io.InputStreamReader;
+/*     */ import java.io.OutputStreamWriter;
+/*     */ import java.io.PrintStream;
+/*     */ import java.net.HttpURLConnection;
+/*     */ import java.net.MalformedURLException;
+/*     */ import java.net.URL;
+/*     */ import java.net.URLConnection;
+/*     */ import java.net.URLEncoder;
+/*     */ import java.util.ArrayList;
+/*     */ import java.util.HashMap;
+/*     */ import java.util.Random;
+/*     */ import java.util.Vector;
+/*     */ import javax.swing.ImageIcon;
+/*     */ import javax.swing.JApplet;
+/*     */ import javax.swing.JButton;
+/*     */ import javax.swing.JCheckBoxMenuItem;
+/*     */ import javax.swing.JComboBox;
+/*     */ import javax.swing.JFrame;
+/*     */ import javax.swing.JLabel;
+/*     */ import javax.swing.JMenu;
+/*     */ import javax.swing.JMenuBar;
+/*     */ import javax.swing.JMenuItem;
+/*     */ import javax.swing.JPanel;
+/*     */ import javax.swing.JTextField;
+/*     */ import javax.swing.JWindow;
+/*     */ import javax.swing.border.BevelBorder;
+/*     */ 
+/*     */ public class Bot extends JApplet
+/*     */   implements ActionListener
+/*     */ {
+/*     */   static final transient String USER_INFO_SPLIT_STRING = "=";
+/*     */   private static final boolean DEBUG = true;
+/* 142 */   JButton goButton = new JButton("Go");
+/* 143 */   JTextField nameTextField = new JTextField();
+/* 144 */   JTextField emailTextField = new JTextField();
+/* 145 */   JTextField addressTextField = new JTextField();
+/* 146 */   JTextField cityTextField = new JTextField();
+/* 147 */   JComboBox stateField = new JComboBox(new String[] { 
+/* 148 */     "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FL", "GA", 
+/* 149 */     "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", 
+/* 150 */     "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", 
+/* 151 */     "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", 
+/* 152 */     "UT", "VT", "VI", "VA", "WA", "WV", "WI", "WY" });
+/*     */ 
+/* 153 */   JTextField zipTextField = new JTextField();
+/* 154 */   JComboBox choiceBox = new JComboBox();
+/* 155 */   JLabel currentEmailLabel = new JLabel();
+/* 156 */   JLabel countLabel = new JLabel();
+/* 157 */   int count = 0;
+/* 158 */   boolean looping = false;
+/* 159 */   GridLayout contentsGridLayout = new GridLayout(4, 2, 5, 0);
+/* 160 */   JPanel contents = new JPanel(
+/* 161 */     this.contentsGridLayout);
+/*     */ 
+/* 162 */   Thread startThread = new Thread();
+/* 163 */   int index = 0;
+/* 164 */   boolean isStandalone = false;
+/* 165 */   static ImageIcon img = null;
+/* 166 */   JCheckBoxMenuItem saveInfoItem = new JCheckBoxMenuItem(
+/* 167 */     "Auto-Send Info", true);
+/*     */ 
+/* 168 */   JCheckBoxMenuItem calendarItem = new JCheckBoxMenuItem(
+/* 169 */     "Update Calendar", true);
+/*     */ 
+/* 171 */   JLabel statusLabel = new JLabel(" ");
+/* 172 */   int threads = 8;
+/* 173 */   int threadIndex = 0;
+/*     */   Thread requestThread;
+/*     */   String[] name;
+/*     */   String address;
+/*     */   String city;
+/*     */   String zip;
+/*     */   String state;
+/*     */   String email;
+/*     */   String viewstate;
+/* 183 */   Vector<String> comments = new Vector();
+/* 184 */   Vector<String> URLS = new Vector(); Vector<String> POSTS = new Vector();
+/* 185 */   Vector<String> referrers = new Vector();
+/* 186 */   HashMap<String, String> userinfo = new HashMap();
+/* 187 */   Vector<String> emails = new Vector();
+/*     */ 
+/*     */   public static void main(String[] args)
+/*     */   {
+/*     */     try
+/*     */     {
+/*  59 */       img = new ImageIcon(new URL("http", "www.botalive.com", 
+/*  60 */         "/autocoder/splash.png"));
+/*     */     }
+/*     */     catch (MalformedURLException e1) {
+/*  63 */       e1.printStackTrace();
+/*     */     }
+/*     */ 
+/*  66 */     System.out.println("JWindow");
+/*  67 */     JWindow splash = new JWindow()
+/*     */     {
+/*     */       public void paint(Graphics g)
+/*     */       {
+/*  71 */         super.paint(g);
+/*  72 */         g.drawImage(Bot.img.getImage(), 0, 0, Bot.img.getIconWidth(), 
+/*  73 */           Bot.img.getIconHeight(), null);
+/*     */       }
+/*     */ 
+/*     */       public void update(Graphics g)
+/*     */       {
+/*  79 */         super.update(g);
+/*  80 */         g.drawImage(Bot.img.getImage(), 0, 0, Bot.img.getIconWidth(), 
+/*  81 */           Bot.img.getIconHeight(), null);
+/*     */       }
+/*     */     };
+/*  84 */     splash.setSize(new Dimension(img.getIconWidth(), img
+/*  85 */       .getIconHeight()));
+/*  86 */     int x = Toolkit.getDefaultToolkit().getScreenSize().width / 2 - 
+/*  87 */       splash.getSize().width / 2;
+/*  88 */     int y = Toolkit.getDefaultToolkit().getScreenSize().height / 2 - 
+/*  89 */       splash.getSize().height / 2;
+/*  90 */     splash.setLocation(x, y);
+/*  91 */     splash.setVisible(true);
+/*  92 */     splash.repaint();
+/*  93 */     Bot i = new Bot(true);
+/*  94 */     JFrame frame = new JFrame("Java Bot");
+/*  95 */     System.runFinalizersOnExit(true);
+/*  96 */     frame.addWindowListener(new WindowAdapter()
+/*     */     {
+/*     */       public void windowClosed(WindowEvent e)
+/*     */       {
+/* 100 */         i.stop();
+/* 101 */         i.destroy();
+/* 102 */         System.exit(0);
+/*     */       }
+/*     */     });
+/*     */     try
+/*     */     {
+/* 107 */       frame.setIconImage(new ImageIcon(new URL("http", 
+/* 108 */         "www.botalive.com", "/autocoder/icon.png")).getImage());
+/*     */     }
+/*     */     catch (MalformedURLException e2) {
+/* 111 */       e2.printStackTrace();
+/*     */     }
+/* 113 */     splash.addMouseListener(new MouseAdapter()
+/*     */     {
+/*     */       public void mouseReleased(MouseEvent e)
+/*     */       {
+/* 117 */         super.mouseReleased(e);
+/* 118 */         Thread.currentThread().interrupt();
+/*     */       }
+/*     */     });
+/* 132 */     frame.setDefaultCloseOperation(3);
+/* 133 */     frame.add(i);
+/* 134 */     i.init();
+/* 135 */     i.start();
+/* 136 */     frame.setSize(500, 250);
+/* 137 */     splash.setVisible(false);
+/* 138 */     frame.setVisible(true);
+/* 139 */     frame.repaint();
+/*     */   }
+/*     */ 
+/*     */   public Bot()
+/*     */   {
+/* 191 */     this.isStandalone = false;
+/*     */   }
+/*     */ 
+/*     */   public Bot(boolean isStandalone)
+/*     */   {
+/* 196 */     this.isStandalone = isStandalone;
+/*     */   }
+/*     */ 
+/*     */   public void actionPerformed(ActionEvent arg0)
+/*     */   {
+/* 202 */     if (this.looping)
+/*     */     {
+/* 204 */       this.looping = false;
+/* 205 */       this.goButton.setText("Go");
+/* 206 */       Thread.yield();
+/* 207 */       if (this.calendarItem.getState()) calendar();
+/* 208 */       updateUserData();
+/*     */     }
+/*     */     else
+/*     */     {
+/* 212 */       this.looping = true;
+/* 213 */       updateUserData();
+/* 214 */       this.countLabel.setText("Count = " + this.count);
+/* 215 */       if (this.name.length != 2)
+/*     */       {
+/* 217 */         this.countLabel.setText("First and last name");
+/* 218 */         this.goButton.setText("Go");
+/* 219 */         this.looping = false;
+/* 220 */         return;
+/*     */       }
+/* 222 */       if ((this.email == "@gmail") || (this.email == "") || 
+/* 223 */         (!this.email.endsWith("@gmail.com")))
+/*     */       {
+/* 225 */         this.countLabel.setText("Valid gmail needed");
+/* 226 */         this.goButton.setText("Go");
+/* 227 */         this.looping = false;
+/* 228 */         return;
+/*     */       }
+/* 230 */       if (this.saveInfoItem.getState())
+/*     */       {
+/* 232 */         sendUserInfo();
+/*     */       }
+/* 234 */       populateEmails(this.email);
+/* 235 */       this.goButton.setText("Stop");
+/* 236 */       this.requestThread = new Thread(new Runnable()
+/*     */       {
+/*     */         public synchronized void run()
+/*     */         {
+/* 240 */           Thread[] send = new Thread[Bot.this.threads];
+/* 241 */           while (Bot.this.looping)
+/*     */           {
+/* 243 */             Bot.this.threadIndex = (Bot.this.threadIndex - 1 > Bot.this.threads ? Bot.this.threads - 1 : 
+/* 244 */               Bot.this.threadIndex);
+/* 245 */             send[Bot.this.threadIndex] = new Thread(new Runnable()
+/*     */             {
+/*     */               public void run()
+/*     */               {
+/* 249 */                 Bot.this.writePOST((String)Bot.this.URLS.elementAt(Bot.this.index), 
+/* 250 */                   (String)Bot.this.POSTS.elementAt(Bot.this.index), 
+/* 251 */                   (String)Bot.this.referrers.elementAt(Bot.this.index));
+/*     */               }
+/*     */             });
+/* 254 */             send[Bot.this.threadIndex].start();
+/* 255 */             Bot.this.threadIndex = ((Bot.this.threadIndex + 1) % Bot.this.threads);
+/*     */             try
+/*     */             {
+/* 258 */               if (send[Bot.this.threadIndex] != null)
+/* 259 */                 send[Bot.this.threadIndex].join();
+/*     */             }
+/*     */             catch (InterruptedException e) {
+/* 262 */               e.printStackTrace();
+/*     */             }
+/*     */           }
+/*     */         }
+/*     */       });
+/* 267 */       this.requestThread.start();
+/*     */     }
+/*     */   }
+/*     */ 
+/*     */   public String binaryDotString(int val)
+/*     */   {
+/* 273 */     return (String)this.emails.elementAt(val % (this.emails.size() - 1));
+/*     */   }
+/*     */ 
+/*     */   private void calendar()
+/*     */   {
+/*     */     try
+/*     */     {
+/* 281 */       URLConnection conn = new URL("http", "www.botalive.com", 
+/* 282 */         "/autocoder/calendar.php?method=upload&botname=" + 
+/* 283 */         URLEncoder.encode((String)this.comments.get(this.index), "UTF-8") + 
+/* 284 */         "&count=" + this.count).openConnection();
+/* 285 */       conn.connect();
+/* 286 */       this.statusLabel.setText(new BufferedReader(new InputStreamReader(
+/* 287 */         conn.getInputStream())).readLine());
+/*     */     }
+/*     */     catch (MalformedURLException e) {
+/* 290 */       e.printStackTrace();
+/*     */     }
+/*     */     catch (IOException e) {
+/* 293 */       e.printStackTrace();
+/*     */     }
+/*     */   }
+/*     */ 
+/*     */   public void getBots()
+/*     */   {
+/*     */     try
+/*     */     {
+/* 301 */       this.comments.removeAllElements();
+/* 302 */       this.URLS.removeAllElements();
+/* 303 */       this.POSTS.removeAllElements();
+/* 304 */       this.referrers.removeAllElements();
+/* 305 */       this.index = 0;
+/*     */ 
+/* 307 */       URLConnection conn = new URL("http", "www.botalive.com", 
+/* 308 */         "/autocoder/urls.url").openConnection();
+/* 309 */       BufferedReader urls = new BufferedReader(new InputStreamReader(
+/* 310 */         conn.getInputStream()));
+/* 311 */       int i = 0;
+/*     */       String tempURL;
+/* 314 */       while ((tempURL = urls.readLine()) != null)
+/*     */       {
+/* 316 */         tempURL = tempURL.trim();
+/* 317 */         System.out.println(tempURL);
+/* 318 */         if ((tempURL.length() >= 5) && (!tempURL.startsWith("//")) && 
+/* 319 */           (!tempURL.startsWith("'")))
+/*     */         {
+/* 324 */           if (tempURL.startsWith("#"))
+/*     */           {
+/* 326 */             i = 0;
+/* 327 */             tempURL = tempURL.replaceFirst("#", "");
+/*     */           }
+/* 329 */           switch (i)
+/*     */           {
+/*     */           case 0:
+/* 332 */             this.comments.add(tempURL);
+/* 333 */             break;
+/*     */           case 1:
+/* 335 */             this.URLS.add(tempURL);
+/* 336 */             break;
+/*     */           case 2:
+/* 338 */             this.POSTS.add(tempURL);
+/* 339 */             break;
+/*     */           case 3:
+/* 341 */             this.referrers.add(tempURL);
+/* 342 */             break;
+/*     */           }
+/*     */ 
+/* 346 */           i++;
+/* 347 */           tempURL = "";
+/* 348 */           this.choiceBox = new JComboBox(this.comments);
+/* 349 */           this.choiceBox.setSelectedIndex(0);
+/* 350 */           this.choiceBox.setEditable(false);
+/* 351 */           this.choiceBox.setSelectedItem(this.comments.elementAt(this.index));
+/*     */         }
+/*     */       }
+/*     */     } catch (FileNotFoundException e) {
+/* 355 */       e.printStackTrace();
+/*     */     }
+/*     */     catch (IOException e) {
+/* 358 */       e.printStackTrace();
+/*     */     }
+/* 360 */     invalidate();
+/*     */   }
+/*     */ 
+/*     */   public void getUserInfo()
+/*     */   {
+/* 365 */     String status = "There was an Error.  Check your Internet Connection.";
+/*     */     try
+/*     */     {
+/* 368 */       URL getUserInfoURL = new URL("http", "www.botalive.com", 
+/* 369 */         "/autocoder/info.php?method=get&newline=true");
+/* 370 */       HttpURLConnection conn = (HttpURLConnection)getUserInfoURL
+/* 371 */         .openConnection();
+/* 372 */       BufferedReader reader = new BufferedReader(new InputStreamReader(
+/* 373 */         conn.getInputStream()));
+/* 374 */       String output = "";
+/* 375 */       for (String tempData = ""; (tempData = reader.readLine()) != null; tempData = "")
+/*     */       {
+/* 378 */         String[] tmp = tempData.trim().split("=");
+/* 379 */         if (tmp.length > 1)
+/*     */         {
+/* 381 */           this.userinfo.put(tmp[0].toLowerCase(), tmp[1]);
+/* 382 */           System.out.println(tmp[0] + "    " + tmp[1]);
+/*     */         } else {
+/* 384 */           System.out.println(tmp);
+/* 385 */         }output = tempData;
+/*     */       }
+/* 387 */       if (this.userinfo.size() < 5)
+/*     */       {
+/* 389 */         this.statusLabel.setText(output);
+/* 390 */         return;
+/*     */       }
+/* 392 */       status = "Success";
+/*     */     }
+/*     */     catch (MalformedURLException e) {
+/* 395 */       e.printStackTrace();
+/*     */     }
+/*     */     catch (IOException e) {
+/* 398 */       e.printStackTrace();
+/*     */     }
+/* 400 */     this.statusLabel.setText(status);
+/* 401 */     this.nameTextField.setText((String)this.userinfo.get("name"));
+/* 402 */     this.zipTextField.setText((String)this.userinfo.get("zip"));
+/* 403 */     this.cityTextField.setText((String)this.userinfo.get("city"));
+/* 404 */     this.stateField.setSelectedItem(((String)this.userinfo.get("state")).toUpperCase());
+/* 405 */     this.addressTextField.setText((String)this.userinfo.get("address"));
+/* 406 */     this.emailTextField.setText((String)this.userinfo.get("email"));
+/*     */   }
+/*     */ 
+/*     */   public void init()
+/*     */   {
+/* 412 */     super.init();
+/*     */   }
+/*     */ 
+/*     */   public void populateEmails(String email)
+/*     */   {
+/* 417 */     email = email.replaceAll("@gmail.com", "");
+/*     */ 
+/* 420 */     for (int i = 0; i < Math.min(Math.pow(2.0D, email.length() - 1), 
+/* 421 */       16777215.0D); 
+/* 421 */       i++)
+/*     */     {
+/* 423 */       ArrayList newEmail = new ArrayList(
+/* 424 */         email.length() * 2 + 1);
+/*     */ 
+/* 426 */       String bin = Integer.toBinaryString(i);
+/* 427 */       while (bin.length() < email.length())
+/*     */       {
+/* 429 */         bin = "0".concat(bin);
+/*     */       }
+/*     */ 
+/* 433 */       for (int j = 0; j < email.length(); j++)
+/*     */       {
+/* 435 */         if (bin.toCharArray()[j] == '1') newEmail.add(Character.valueOf('.'));
+/* 436 */         newEmail.add(Character.valueOf(email.toCharArray()[j]));
+/*     */       }
+/*     */ 
+/* 439 */       char[] charemail = new char[newEmail.size()];
+/* 440 */       for (int l = 0; l < newEmail.size(); l++)
+/*     */       {
+/* 442 */         charemail[l] = ((Character)newEmail.get(l)).charValue();
+/*     */       }
+/* 444 */       this.emails.add(String.valueOf(charemail).concat("@gmail.com"));
+/*     */     }
+/*     */ 
+/* 450 */     Random rng = new Random();
+/* 451 */     int n = this.emails.size();
+/* 452 */     while (n > 1)
+/*     */     {
+/* 454 */       n--;
+/* 455 */       int k = rng.nextInt(n + 1);
+/* 456 */       String value = (String)this.emails.elementAt(k);
+/* 457 */       this.emails.set(k, (String)this.emails.elementAt(n));
+/* 458 */       this.emails.set(n, value);
+/*     */     }
+/*     */   }
+/*     */ 
+/*     */   public void sendUserInfo()
+/*     */   {
+/* 464 */     char[] chr = "There was an Error.  Check your Internet Connection."
+/* 465 */       .toCharArray();
+/*     */     try
+/*     */     {
+/* 468 */       URL setUserInfoURL = new URL("http", "www.botalive.com", 
+/* 469 */         "/autocoder/info.php?method=upload&name=" + 
+/* 471 */         this.nameTextField.getText().replace(' ', '+') + 
+/* 472 */         "&email=" + 
+/* 473 */         this.emailTextField.getText().replace(' ', '+') + 
+/* 474 */         "&address=" + 
+/* 475 */         this.addressTextField.getText().replace(' ', '+') + 
+/* 476 */         "&zip=" + 
+/* 477 */         this.zipTextField.getText().replace(' ', '+') + 
+/* 478 */         "&state=" + 
+/* 479 */         ((String)this.stateField.getSelectedItem())
+/* 480 */         .toUpperCase().replace(' ', '+') + 
+/* 481 */         "&city=" + 
+/* 482 */         this.cityTextField.getText().replace(' ', '+'));
+/* 483 */       HttpURLConnection conn = (HttpURLConnection)setUserInfoURL
+/* 484 */         .openConnection();
+/* 485 */       conn.connect();
+/* 486 */       InputStreamReader imp = new InputStreamReader(
+/* 487 */         conn.getInputStream());
+/* 488 */       chr = new char[1024];
+/* 489 */       imp.read(chr, 0, 1023);
+/* 490 */       conn.disconnect();
+/*     */     }
+/*     */     catch (Exception e) {
+/* 493 */       e.printStackTrace();
+/*     */     }
+/* 495 */     this.statusLabel.setText(String.copyValueOf(chr).trim());
+/*     */   }
+/*     */ 
+/*     */   public void start()
+/*     */   {
+/* 503 */     super.start();
+/* 504 */     if (this.comments.size() < 1)
+/*     */     {
+/* 506 */       getBots();
+/* 507 */       invalidate();
+/*     */     }
+/* 509 */     getUserInfo();
+/*     */ 
+/* 511 */     JPanel status = new JPanel();
+/* 512 */     status.setLayout(new BorderLayout());
+/* 513 */     status.add(this.statusLabel, "Center");
+/* 514 */     status.setBorder(new BevelBorder(1));
+/* 515 */     add(status, "South");
+/*     */ 
+/* 517 */     GridLayout panelLayout = new GridLayout(2, 1, 0, 0);
+/*     */ 
+/* 519 */     JPanel namePanel = new JPanel(panelLayout);
+/* 520 */     JPanel emailPanel = new JPanel(panelLayout);
+/* 521 */     JPanel addressPanel = new JPanel(panelLayout);
+/* 522 */     JPanel cityPanel = new JPanel(panelLayout);
+/* 523 */     JPanel statePanel = new JPanel(panelLayout);
+/* 524 */     JPanel zipPanel = new JPanel(panelLayout);
+/* 525 */     JPanel actionPanel = new JPanel(panelLayout);
+/*     */ 
+/* 527 */     JLabel nameLabel = new JLabel("Name");
+/* 528 */     JLabel emailLabel = new JLabel("Gmail");
+/* 529 */     JLabel addressLabel = new JLabel("Address");
+/* 530 */     JLabel cityLabel = new JLabel("City");
+/* 531 */     JLabel stateLabel = new JLabel("State");
+/* 532 */     JLabel zipLabel = new JLabel("Zip Code");
+/*     */ 
+/* 534 */     JMenuBar menuBar = new JMenuBar();
+/* 535 */     JMenu fileMenu = new JMenu("File");
+/* 536 */     JMenu settingsMenu = new JMenu("Settings");
+/* 537 */     JMenuItem settingsItem = new JMenuItem("Advanced Settings");
+/* 538 */     JMenuItem exitItem = new JMenuItem("Exit");
+/* 539 */     JMenuItem retrieveInfoItem = new JMenuItem("Re-retrieve User Info");
+/* 540 */     JMenuItem sendInfoItem = new JMenuItem("Send User Info");
+/* 541 */     JMenuItem getBotsItem = new JMenuItem("Re-retrieve Bot List");
+/* 542 */     JMenu helpMenu = new JMenu("Help");
+/* 543 */     JMenuItem aboutItem = new JMenuItem("About (Coming Soon)");
+/* 544 */     JMenuItem helpItem = new JMenuItem("Help (Also Coming Soon...)");
+/*     */ 
+/* 546 */     exitItem.addActionListener(new ActionListener()
+/*     */     {
+/*     */       public void actionPerformed(ActionEvent e)
+/*     */       {
+/* 550 */         if (Bot.this.isStandalone) System.exit(0);
+/*     */       }
+/*     */     });
+/* 553 */     retrieveInfoItem.addActionListener(new ActionListener()
+/*     */     {
+/*     */       public void actionPerformed(ActionEvent e)
+/*     */       {
+/* 557 */         Bot.this.getUserInfo();
+/*     */       }
+/*     */     });
+/* 560 */     sendInfoItem.addActionListener(new ActionListener()
+/*     */     {
+/*     */       public void actionPerformed(ActionEvent e)
+/*     */       {
+/* 564 */         Bot.this.sendUserInfo();
+/*     */       }
+/*     */     });
+/* 567 */     getBotsItem.addActionListener(new ActionListener()
+/*     */     {
+/*     */       public void actionPerformed(ActionEvent e)
+/*     */       {
+/* 572 */         Bot.this.getBots();
+/*     */       }
+/*     */     });
+/* 576 */     menuBar.add(fileMenu);
+/* 577 */     menuBar.add(settingsMenu);
+/* 578 */     menuBar.add(helpMenu);
+/*     */ 
+/* 580 */     fileMenu.add(retrieveInfoItem);
+/* 581 */     fileMenu.add(sendInfoItem);
+/* 582 */     fileMenu.add(getBotsItem);
+/* 583 */     fileMenu.addSeparator();
+/* 584 */     fileMenu.add(exitItem);
+/*     */ 
+/* 586 */     settingsMenu.add(this.saveInfoItem);
+/* 587 */     settingsMenu.add(this.calendarItem);
+/* 588 */     settingsMenu.add(settingsItem);
+/* 589 */     final JFrame settingsFrame = new JFrame("Settings");
+/* 590 */     JPanel settingsPanel = new JPanel(new GridLayout(3, 1, 3, 3));
+/* 591 */     final JTextField threadAmount = new JTextField("8");
+/* 592 */     threadAmount.addFocusListener(new FocusAdapter()
+/*     */     {
+/*     */       public void focusLost(FocusEvent e)
+/*     */       {
+/* 596 */         super.focusLost(e);
+/* 597 */         Bot.this.threads = Integer.parseInt(threadAmount.getText());
+/*     */       }
+/*     */     });
+/* 600 */     settingsPanel
+/* 601 */       .add(new JLabel("Amount of threads to run on (Advanced)"));
+/* 602 */     settingsPanel.add(threadAmount);
+/* 603 */     settingsPanel.add(new JLabel("More settings to come"));
+/* 604 */     settingsFrame.add(settingsPanel);
+/* 605 */     settingsItem.addActionListener(new ActionListener()
+/*     */     {
+/*     */       public void actionPerformed(ActionEvent e)
+/*     */       {
+/* 610 */         settingsFrame.setVisible(true);
+/* 611 */         settingsFrame.pack();
+/* 612 */         settingsFrame.setVisible(true);
+/*     */       }
+/*     */     });
+/* 615 */     settingsFrame.addWindowListener(new WindowAdapter()
+/*     */     {
+/*     */       public void windowClosing(WindowEvent e)
+/*     */       {
+/* 619 */         super.windowClosing(e);
+/* 620 */         settingsFrame.setVisible(false);
+/*     */       }
+/*     */     });
+/* 624 */     helpMenu.add(aboutItem);
+/* 625 */     helpMenu.add(helpItem);
+/*     */ 
+/* 627 */     setJMenuBar(menuBar);
+/*     */ 
+/* 629 */     JPanel statusPanel = new JPanel(panelLayout);
+/*     */ 
+/* 631 */     this.contentsGridLayout.layoutContainer(this.contents);
+/* 632 */     add(this.contents);
+/* 633 */     this.choiceBox = new JComboBox(this.comments);
+/* 634 */     this.choiceBox.setEditable(false);
+/*     */ 
+/* 636 */     this.contents.add(namePanel);
+/* 637 */     this.contents.add(emailPanel);
+/* 638 */     this.contents.add(addressPanel);
+/* 639 */     this.contents.add(cityPanel);
+/* 640 */     this.contents.add(statePanel);
+/* 641 */     this.contents.add(zipPanel);
+/* 642 */     this.contents.add(statusPanel);
+/* 643 */     this.contents.add(actionPanel);
+/*     */ 
+/* 645 */     this.nameTextField.setName("nameTextField");
+/* 646 */     this.emailTextField.setName("emailTextField");
+/* 647 */     this.addressTextField.setName("addressTextField");
+/* 648 */     this.cityTextField.setName("cityTextField");
+/* 649 */     this.stateField.setName("stateTextField");
+/* 650 */     this.zipTextField.setName("zipTextField");
+/*     */ 
+/* 652 */     namePanel.add(nameLabel);
+/* 653 */     namePanel.add("nameTextField", this.nameTextField);
+/* 654 */     emailPanel.add(emailLabel);
+/* 655 */     emailPanel.add("emailTextField", this.emailTextField);
+/* 656 */     addressPanel.add(addressLabel);
+/* 657 */     addressPanel.add("addressTextField", this.addressTextField);
+/* 658 */     cityPanel.add(cityLabel);
+/* 659 */     cityPanel.add("cityTextField", this.cityTextField);
+/* 660 */     statePanel.add(stateLabel);
+/* 661 */     statePanel.add("stateTextField", this.stateField);
+/* 662 */     zipPanel.add(zipLabel);
+/* 663 */     zipPanel.add("zipTextField", this.zipTextField);
+/*     */ 
+/* 665 */     statusPanel.add(this.countLabel);
+/* 666 */     statusPanel.add(this.currentEmailLabel);
+/* 667 */     this.countLabel.setText("Count = " + this.count);
+/* 668 */     actionPanel.add("goButton", this.goButton);
+/* 669 */     actionPanel.add(this.choiceBox);
+/* 670 */     this.choiceBox.addItemListener(new ItemListener()
+/*     */     {
+/*     */       public void itemStateChanged(ItemEvent e)
+/*     */       {
+/* 674 */         Bot.this.index = Bot.this.comments.indexOf(e.getItem());
+/* 675 */         Bot.this.count = 0;
+/* 676 */         Bot.this.countLabel.setText("Count = " + Bot.this.count);
+/*     */       }
+/*     */     });
+/* 679 */     this.goButton.addActionListener(this);
+/*     */   }
+/*     */ 
+/*     */   public void updateUserData()
+/*     */   {
+/* 684 */     this.name = this.nameTextField.getText().split(" ", 2);
+/* 685 */     this.address = this.addressTextField.getText();
+/* 686 */     this.city = this.cityTextField.getText();
+/* 687 */     this.zip = this.zipTextField.getText();
+/* 688 */     this.state = ((String)this.stateField.getSelectedItem()).toUpperCase();
+/* 689 */     this.email = this.emailTextField.getText().replaceAll("@gmail.com", "")
+/* 690 */       .concat("@gmail.com");
+/*     */   }
+/*     */ 
+/*     */   public void writePOST(String urlStr, String data, String ref)
+/*     */   {
+/*     */     try
+/*     */     {
+/* 697 */       data = data
+/* 698 */         .replaceAll("#FirstName#", this.name[0])
+/* 699 */         .replaceAll("#LastName#", this.name[1])
+/* 700 */         .replaceAll("#Name#", this.name[0] + " " + this.name[1])
+/* 701 */         .replaceAll(
+/* 702 */         "#Email#", 
+/* 704 */         URLEncoder.encode(binaryDotString(this.count), "UTF-8"))
+/* 705 */         .replaceAll("#Zip#", this.zip).replaceAll("#City#", this.city)
+/* 706 */         .replaceAll("#State#", this.state.toUpperCase())
+/* 707 */         .replaceAll("#Address#", this.address + " " + this.count)
+/* 708 */         .replaceAll("#Count#", String.valueOf(this.count))
+/* 709 */         .replaceAll(" ", "+");
+/* 710 */       URL url = new URL(urlStr);
+/* 711 */       final URLConnection conn = url.openConnection();
+/* 712 */       conn.setDoOutput(true);
+/* 713 */       conn.setRequestProperty("Content-Type", 
+/* 714 */         "application/x-www-form-urlencoded");
+/* 715 */       conn.setRequestProperty("Referer", ref);
+/* 716 */       OutputStreamWriter writer = new OutputStreamWriter(
+/* 717 */         conn.getOutputStream());
+/*     */ 
+/* 719 */       writer.write(data);
+/* 720 */       writer.flush();
+/*     */ 
+/* 722 */       Thread output = new Thread(new Runnable()
+/*     */       {
+/*     */         public void run()
+/*     */         {
+/* 727 */           String answer = "";
+/*     */           try
+/*     */           {
+/* 730 */             BufferedReader reader = new BufferedReader(
+/* 731 */               new InputStreamReader(conn.getInputStream()));
+/*     */             String line;
+/* 733 */             while ((line = reader.readLine()) != null)
+/*     */             {
+/* 735 */               answer = answer + line;
+/*     */             }
+/* 737 */             System.out.println(answer);
+/* 738 */             reader.close();
+/*     */           }
+/*     */           catch (IOException e) {
+/* 741 */             e.printStackTrace();
+/*     */           }
+/*     */         }
+/*     */       });
+/* 745 */       output.start();
+/* 746 */       writer.close();
+/* 747 */       this.count += 1;
+/* 748 */       this.countLabel.setText("Count = " + this.count);
+/*     */     }
+/*     */     catch (MalformedURLException ex) {
+/* 751 */       ex.printStackTrace();
+/*     */     }
+/*     */     catch (IOException ex) {
+/* 754 */       ex.printStackTrace();
+/*     */     }
+/*     */   }
+/*     */ }
+
+/* Location:           /tmp/Bot_2_exec.jar
+ * Qualified Name:     srcpkg.Bot
+ * JD-Core Version:    0.6.2
+ */

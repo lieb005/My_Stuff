@@ -1,0 +1,13 @@
+//comment
+'comment
+#comment
+<!--comment(-->)
+/*comment(*/)
+--comment
+//blank lines ignored
+'name=Your_Name Here;
+'address=Your_address_here
+'zip=your_zip_here
+'state=state_abbr.
+'city=Your_city
+'email=email@gmail.com|email

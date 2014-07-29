@@ -10,3 +10,9 @@ Invoking: GCC C++ Linker
 g++  -o "QT Test Program"  ./Main.o   
 Finished building target: QT Test Program
  
+21:59:05 **** Build of configuration Default for project SasquatchCore ****
+make all 
+make: *** No rule to make target 'all'.  Schluss.
+21:59:08 **** Build of configuration Default for project Sasquatch-T-shirt-Shooter ****
+make all 
+make: *** No rule to make target 'all'.  Schluss.

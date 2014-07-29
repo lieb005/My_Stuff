@@ -1,0 +1,638 @@
+package srcpkg;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
+import java.util.Vector;
+import javax.swing.ImageIcon;
+import javax.swing.JApplet;
+import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JWindow;
+import javax.swing.border.BevelBorder;
+
+public class Bot extends JApplet implements ActionListener {
+	static final transient String USER_INFO_SPLIT_STRING = "=";
+	private static final boolean DEBUG = true;
+	JButton goButton = new JButton("Go");
+	JTextField nameTextField = new JTextField();
+	JTextField emailTextField = new JTextField();
+	JTextField addressTextField = new JTextField();
+	JTextField cityTextField = new JTextField();
+	JComboBox stateField = new JComboBox(new String[] { "AL", "AK", "AZ", "AR",
+			"CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL", "IN",
+			"IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO",
+			"MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK",
+			"OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VI", "VA",
+			"WA", "WV", "WI", "WY" });
+
+	JTextField zipTextField = new JTextField();
+	JComboBox choiceBox = new JComboBox();
+	JLabel currentEmailLabel = new JLabel();
+	JLabel countLabel = new JLabel();
+	int count = 0;
+	boolean looping = false;
+	GridLayout contentsGridLayout = new GridLayout(4, 2, 5, 0);
+	JPanel contents = new JPanel(contentsGridLayout);
+
+	Thread startThread = new Thread();
+	int index = 0;
+	boolean isStandalone = false;
+	static ImageIcon img = null;
+	JCheckBoxMenuItem saveInfoItem = new JCheckBoxMenuItem("Auto-Send Info",
+			true);
+
+	JCheckBoxMenuItem calendarItem = new JCheckBoxMenuItem("Update Calendar",
+			true);
+
+	JLabel statusLabel = new JLabel(" ");
+	int threads = 8;
+	int threadIndex = 0;
+	Thread requestThread;
+	String[] name;
+	String address;
+	String city;
+	String zip;
+	String state;
+	String email;
+	String viewstate;
+	Vector<String> comments = new Vector();
+	Vector<String> URLS = new Vector();
+	Vector<String> POSTS = new Vector();
+	Vector<String> referrers = new Vector();
+	HashMap<String, String> userinfo = new HashMap();
+	Vector<String> emails = new Vector();
+
+	public static void main(String[] args) {
+		try {
+			img = new ImageIcon(new URL("http", "www.botalive.com",
+					"/autocoder/splash.png"));
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
+		}
+
+		System.out.println("JWindow");
+		JWindow splash = new JWindow() {
+			public void paint(Graphics g) {
+				super.paint(g);
+				g.drawImage(Bot.img.getImage(), 0, 0, Bot.img.getIconWidth(),
+						Bot.img.getIconHeight(), null);
+			}
+
+			public void update(Graphics g) {
+				super.update(g);
+				g.drawImage(Bot.img.getImage(), 0, 0, Bot.img.getIconWidth(),
+						Bot.img.getIconHeight(), null);
+			}
+		};
+		splash.setSize(new Dimension(img.getIconWidth(), img.getIconHeight()));
+		int x = Toolkit.getDefaultToolkit().getScreenSize().width / 2
+				- splash.getSize().width / 2;
+		int y = Toolkit.getDefaultToolkit().getScreenSize().height / 2
+				- splash.getSize().height / 2;
+		splash.setLocation(x, y);
+		splash.setVisible(true);
+		splash.repaint();
+		final Bot i = new Bot(true);
+		JFrame frame = new JFrame("Java Bot");
+		System.runFinalizersOnExit(true);
+		frame.addWindowListener(new WindowAdapter() {
+			public void windowClosed(WindowEvent e) {
+				i.stop();
+				i.destroy();
+				System.exit(0);
+			}
+		});
+		try {
+			frame.setIconImage(new ImageIcon(new URL("http",
+					"www.botalive.com", "/autocoder/icon.png")).getImage());
+		} catch (MalformedURLException e2) {
+			e2.printStackTrace();
+		}
+		splash.addMouseListener(new MouseAdapter() {
+			public void mouseReleased(MouseEvent e) {
+				super.mouseReleased(e);
+				Thread.currentThread().interrupt();
+			}
+		});
+		frame.setDefaultCloseOperation(3);
+		frame.add(i);
+		i.init();
+		i.start();
+		frame.setSize(500, 250);
+		splash.setVisible(false);
+		frame.setVisible(true);
+		frame.repaint();
+	}
+
+	public Bot() {
+		this.isStandalone = false;
+	}
+
+	public Bot(boolean isStandalone) {
+		this.isStandalone = isStandalone;
+	}
+
+	public void actionPerformed(ActionEvent arg0) {
+		if (looping) {
+			looping = false;
+			goButton.setText("Go");
+			Thread.yield();
+			if (calendarItem.getState())
+				calendar();
+			updateUserData();
+		} else {
+			looping = true;
+			updateUserData();
+			countLabel.setText("Count = " + count);
+			if (name.length != 2) {
+				countLabel.setText("First and last name");
+				goButton.setText("Go");
+				looping = false;
+				return;
+			}
+			if ((email == "@gmail") || (email == "")
+					|| (!email.endsWith("@gmail.com"))) {
+				countLabel.setText("Valid gmail needed");
+				goButton.setText("Go");
+				looping = false;
+				return;
+			}
+			if (saveInfoItem.getState()) {
+				sendUserInfo();
+			}
+			populateEmails(email);
+			goButton.setText("Stop");
+			requestThread = new Thread(new Runnable() {
+				public synchronized void run() {
+					Thread[] send = new Thread[Bot.this.threads];
+					while (Bot.this.looping) {
+						Bot.this.threadIndex = (Bot.this.threadIndex - 1 > Bot.this.threads ? Bot.this.threads - 1
+								: Bot.this.threadIndex);
+						send[Bot.this.threadIndex] = new Thread(new Runnable() {
+							public void run() {
+								Bot.this.writePOST((String) Bot.this.URLS
+										.elementAt(Bot.this.index),
+										(String) Bot.this.POSTS
+												.elementAt(Bot.this.index),
+										(String) Bot.this.referrers
+												.elementAt(Bot.this.index));
+							}
+						});
+						send[Bot.this.threadIndex].start();
+						Bot.this.threadIndex = ((Bot.this.threadIndex + 1) % Bot.this.threads);
+						try {
+							if (send[Bot.this.threadIndex] != null)
+								send[Bot.this.threadIndex].join();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			});
+			this.requestThread.start();
+		}
+	}
+
+	public String binaryDotString(int val) {
+		return (String) this.emails.elementAt(val % (this.emails.size() - 1));
+	}
+
+	private void calendar() {
+		try {
+			URLConnection conn = new URL("http", "www.botalive.com",
+					"/autocoder/calendar.php?method=upload&botname="
+							+ URLEncoder.encode(
+									(String) this.comments.get(this.index),
+									"UTF-8") + "&count=" + this.count)
+					.openConnection();
+			conn.connect();
+			this.statusLabel.setText(new BufferedReader(new InputStreamReader(
+					conn.getInputStream())).readLine());
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void getBots() {
+		try {
+			this.comments.removeAllElements();
+			this.URLS.removeAllElements();
+			this.POSTS.removeAllElements();
+			this.referrers.removeAllElements();
+			this.index = 0;
+
+			URLConnection conn = new URL("http", "www.botalive.com",
+					"/autocoder/urls.url").openConnection();
+			BufferedReader urls = new BufferedReader(new InputStreamReader(
+					conn.getInputStream()));
+			int i = 0;
+			String tempURL;
+			while ((tempURL = urls.readLine()) != null) {
+				tempURL = tempURL.trim();
+				System.out.println(tempURL);
+				if ((tempURL.length() >= 5) && (!tempURL.startsWith("//"))
+						&& (!tempURL.startsWith("'"))) {
+					if (tempURL.startsWith("#")) {
+						i = 0;
+						tempURL = tempURL.replaceFirst("#", "");
+					}
+					switch (i) {
+					case 0:
+						this.comments.add(tempURL);
+						break;
+					case 1:
+						this.URLS.add(tempURL);
+						break;
+					case 2:
+						this.POSTS.add(tempURL);
+						break;
+					case 3:
+						referrers.add(tempURL);
+						break;
+					}
+
+					i++;
+					tempURL = "";
+					choiceBox = new JComboBox(comments);
+					choiceBox.setSelectedIndex(0);
+					choiceBox.setEditable(false);
+					choiceBox.setSelectedItem(comments.elementAt(index));
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		invalidate();
+	}
+
+	public void getUserInfo() {
+		String status = "There was an Error.  Check your Internet Connection.";
+		try {
+			URL getUserInfoURL = new URL("http", "www.botalive.com",
+					"/autocoder/info.php?method=get&newline=true");
+			HttpURLConnection conn = (HttpURLConnection) getUserInfoURL
+					.openConnection();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					conn.getInputStream()));
+			String output = "";
+			for (String tempData = ""; (tempData = reader.readLine()) != null; tempData = "") {
+				String[] tmp = tempData.trim().split("=");
+				if (tmp.length > 1) {
+					userinfo.put(tmp[0].toLowerCase(), tmp[1]);
+					System.out.println(tmp[0] + "    " + tmp[1]);
+				} else {
+					System.out.println(tmp);
+				}
+				output = tempData;
+			}
+			if (userinfo.size() < 5) {
+				statusLabel.setText(output);
+				return;
+			}
+			status = "Success";
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		statusLabel.setText(status);
+		nameTextField.setText((String) userinfo.get("name"));
+		zipTextField.setText((String) userinfo.get("zip"));
+		cityTextField.setText((String) userinfo.get("city"));
+		stateField.setSelectedItem(((String) userinfo.get("state"))
+				.toUpperCase());
+		addressTextField.setText((String) userinfo.get("address"));
+		emailTextField.setText((String) userinfo.get("email"));
+	}
+
+	public void init() {
+		super.init();
+	}
+
+	public void populateEmails(String email) {
+		email = email.replaceAll("@gmail.com", "");
+
+		for (int i = 0; i < Math.min(Math.pow(2.0D, email.length() - 1),
+				16777215.0D); i++) {
+			ArrayList newEmail = new ArrayList(email.length() * 2 + 1);
+
+			String bin = Integer.toBinaryString(i);
+			while (bin.length() < email.length()) {
+				bin = "0".concat(bin);
+			}
+
+			for (int j = 0; j < email.length(); j++) {
+				if (bin.toCharArray()[j] == '1')
+					newEmail.add(Character.valueOf('.'));
+				newEmail.add(Character.valueOf(email.toCharArray()[j]));
+			}
+
+			char[] charemail = new char[newEmail.size()];
+			for (int l = 0; l < newEmail.size(); l++) {
+				charemail[l] = ((Character) newEmail.get(l)).charValue();
+			}
+			emails.add(String.valueOf(charemail).concat("@gmail.com"));
+		}
+
+		Random rng = new Random();
+		int n = emails.size();
+		while (n > 1) {
+			n--;
+			int k = rng.nextInt(n + 1);
+			String value = (String) emails.elementAt(k);
+			emails.set(k, (String) emails.elementAt(n));
+			emails.set(n, value);
+		}
+	}
+
+	public void sendUserInfo() {
+		char[] chr = "There was an Error.  Check your Internet Connection."
+				.toCharArray();
+		try {
+			URL setUserInfoURL = new URL("http", "www.botalive.com",
+					"/autocoder/info.php?method=upload&name="
+							+ nameTextField.getText().replace(' ', '+')
+							+ "&email="
+							+ emailTextField.getText().replace(' ', '+')
+							+ "&address="
+							+ addressTextField.getText().replace(' ', '+')
+							+ "&zip="
+							+ zipTextField.getText().replace(' ', '+')
+							+ "&state="
+							+ ((String) stateField.getSelectedItem())
+									.toUpperCase().replace(' ', '+') + "&city="
+							+ cityTextField.getText().replace(' ', '+'));
+			HttpURLConnection conn = (HttpURLConnection) setUserInfoURL
+					.openConnection();
+			conn.connect();
+			InputStreamReader imp = new InputStreamReader(conn.getInputStream());
+			chr = new char[1024];
+			imp.read(chr, 0, 1023);
+			conn.disconnect();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		statusLabel.setText(String.copyValueOf(chr).trim());
+	}
+
+	public void start() {
+		super.start();
+		if (comments.size() < 1) {
+			getBots();
+			invalidate();
+		}
+		// getUserInfo();
+
+		JPanel status = new JPanel();
+		status.setLayout(new BorderLayout());
+		status.add(statusLabel, "Center");
+		status.setBorder(new BevelBorder(1));
+		add(status, "South");
+
+		GridLayout panelLayout = new GridLayout(2, 1, 0, 0);
+
+		JPanel namePanel = new JPanel(panelLayout);
+		JPanel emailPanel = new JPanel(panelLayout);
+		JPanel addressPanel = new JPanel(panelLayout);
+		JPanel cityPanel = new JPanel(panelLayout);
+		JPanel statePanel = new JPanel(panelLayout);
+		JPanel zipPanel = new JPanel(panelLayout);
+		JPanel actionPanel = new JPanel(panelLayout);
+
+		JLabel nameLabel = new JLabel("Name");
+		JLabel emailLabel = new JLabel("Gmail");
+		JLabel addressLabel = new JLabel("Address");
+		JLabel cityLabel = new JLabel("City");
+		JLabel stateLabel = new JLabel("State");
+		JLabel zipLabel = new JLabel("Zip Code");
+
+		JMenuBar menuBar = new JMenuBar();
+		JMenu fileMenu = new JMenu("File");
+		JMenu settingsMenu = new JMenu("Settings");
+		JMenuItem settingsItem = new JMenuItem("Advanced Settings");
+		JMenuItem exitItem = new JMenuItem("Exit");
+		JMenuItem retrieveInfoItem = new JMenuItem("Re-retrieve User Info");
+		JMenuItem sendInfoItem = new JMenuItem("Send User Info");
+		JMenuItem getBotsItem = new JMenuItem("Re-retrieve Bot List");
+		JMenu helpMenu = new JMenu("Help");
+		JMenuItem aboutItem = new JMenuItem("About (Coming Soon)");
+		JMenuItem helpItem = new JMenuItem("Help (Also Coming Soon...)");
+
+		exitItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (Bot.this.isStandalone)
+					System.exit(0);
+			}
+		});
+		retrieveInfoItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Bot.this.getUserInfo();
+			}
+		});
+		sendInfoItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Bot.this.sendUserInfo();
+			}
+		});
+		getBotsItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Bot.this.getBots();
+			}
+		});
+		menuBar.add(fileMenu);
+		menuBar.add(settingsMenu);
+		menuBar.add(helpMenu);
+
+		fileMenu.add(retrieveInfoItem);
+		fileMenu.add(sendInfoItem);
+		fileMenu.add(getBotsItem);
+		fileMenu.addSeparator();
+		fileMenu.add(exitItem);
+
+		settingsMenu.add(saveInfoItem);
+		settingsMenu.add(calendarItem);
+		settingsMenu.add(settingsItem);
+		final JFrame settingsFrame = new JFrame("Settings");
+		JPanel settingsPanel = new JPanel(new GridLayout(3, 1, 3, 3));
+		final JTextField threadAmount = new JTextField("8");
+		threadAmount.addFocusListener(new FocusAdapter() {
+			public void focusLost(FocusEvent e) {
+				super.focusLost(e);
+				Bot.this.threads = Integer.parseInt(threadAmount.getText());
+			}
+		});
+		settingsPanel.add(new JLabel("Amount of threads to run on (Advanced)"));
+		settingsPanel.add(threadAmount);
+		settingsPanel.add(new JLabel("More settings to come"));
+		settingsFrame.add(settingsPanel);
+		settingsItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				settingsFrame.setVisible(true);
+				settingsFrame.pack();
+				settingsFrame.setVisible(true);
+			}
+		});
+		settingsFrame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				super.windowClosing(e);
+				settingsFrame.setVisible(false);
+			}
+		});
+		helpMenu.add(aboutItem);
+		helpMenu.add(helpItem);
+
+		setJMenuBar(menuBar);
+
+		JPanel statusPanel = new JPanel(panelLayout);
+
+		contentsGridLayout.layoutContainer(contents);
+		add(contents);
+		choiceBox = new JComboBox(comments);
+		choiceBox.setEditable(false);
+
+		contents.add(namePanel);
+		contents.add(emailPanel);
+		contents.add(addressPanel);
+		contents.add(cityPanel);
+		contents.add(statePanel);
+		contents.add(zipPanel);
+		contents.add(statusPanel);
+		contents.add(actionPanel);
+
+		nameTextField.setName("nameTextField");
+		emailTextField.setName("emailTextField");
+		addressTextField.setName("addressTextField");
+		cityTextField.setName("cityTextField");
+		stateField.setName("stateTextField");
+		zipTextField.setName("zipTextField");
+
+		namePanel.add(nameLabel);
+		namePanel.add("nameTextField", nameTextField);
+		emailPanel.add(emailLabel);
+		emailPanel.add("emailTextField", emailTextField);
+		addressPanel.add(addressLabel);
+		addressPanel.add("addressTextField", addressTextField);
+		cityPanel.add(cityLabel);
+		cityPanel.add("cityTextField", cityTextField);
+		statePanel.add(stateLabel);
+		statePanel.add("stateTextField", stateField);
+		zipPanel.add(zipLabel);
+		zipPanel.add("zipTextField", zipTextField);
+
+		statusPanel.add(countLabel);
+		statusPanel.add(currentEmailLabel);
+		countLabel.setText("Count = " + count);
+		actionPanel.add("goButton", goButton);
+		actionPanel.add(choiceBox);
+		choiceBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				Bot.this.index = Bot.this.comments.indexOf(e.getItem());
+				Bot.this.count = 0;
+				Bot.this.countLabel.setText("Count = " + Bot.this.count);
+			}
+		});
+		goButton.addActionListener(this);
+	}
+
+	public void updateUserData() {
+		name = nameTextField.getText().split(" ", 2);
+		address = addressTextField.getText();
+		city = cityTextField.getText();
+		zip = zipTextField.getText();
+		state = ((String) stateField.getSelectedItem()).toUpperCase();
+		email = emailTextField.getText().replaceAll("@gmail.com", "")
+				.concat("@gmail.com");
+	}
+
+	public void writePOST(String urlStr, String data, String ref) {
+		try {
+			data = data
+					.replaceAll("#FirstName#", name[0])
+					.replaceAll("#LastName#", name[1])
+					.replaceAll("#Name#", name[0] + " " + name[1])
+					.replaceAll("#Email#",
+							URLEncoder.encode(binaryDotString(count), "UTF-8"))
+					.replaceAll("#Zip#", zip).replaceAll("#City#", city)
+					.replaceAll("#State#", state.toUpperCase())
+					.replaceAll("#Address#", address + " " + count)
+					.replaceAll("#Count#", String.valueOf(count))
+					.replaceAll(" ", "+");
+			URL url = new URL(urlStr);
+			final URLConnection conn = url.openConnection();
+			conn.setDoOutput(true);
+			conn.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded");
+			conn.setRequestProperty("Referer", ref);
+			OutputStreamWriter writer = new OutputStreamWriter(
+					conn.getOutputStream());
+
+			writer.write(data);
+			writer.flush();
+
+			Thread output = new Thread(new Runnable() {
+				public void run() {
+					String answer = "";
+					try {
+						BufferedReader reader = new BufferedReader(
+								new InputStreamReader(conn.getInputStream()));
+						String line;
+						while ((line = reader.readLine()) != null) {
+							answer = answer + line;
+						}
+						System.out.println(answer);
+						reader.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			output.start();
+			writer.close();
+			count += 1;
+			countLabel.setText("Count = " + count);
+		} catch (MalformedURLException ex) {
+			ex.printStackTrace();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+}

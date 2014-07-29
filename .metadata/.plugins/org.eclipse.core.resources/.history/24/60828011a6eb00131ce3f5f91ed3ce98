@@ -1,0 +1,552 @@
+package srcpkg;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.ConnectException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.HashMap;
+
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JApplet;
+import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JWindow;
+import javax.swing.border.BevelBorder;
+import javax.swing.text.JTextComponent;
+
+public class Autocoder extends JApplet implements ActionListener, FocusListener {
+	static final transient String USER_INFO_SPLIT_STRING = "=";
+	static final transient boolean DEBUG = false;
+	boolean isStandalone = false;
+	File file;
+	String name;
+	String url;
+	String post;
+	String referrer;
+	String description;
+	String userName;
+	String userAddress;
+	String userZip;
+	String userState;
+	String userEmail;
+	String userCity;
+	String botName;
+	String api;
+	String confirmationEmailString;
+	JLabel statusLabel = new JLabel("Ready");
+	JFrame settingsFrame = new JFrame("Settings");
+
+	HashMap<String, String> userinfo = new HashMap();
+
+	JCheckBoxMenuItem saveInfoItem = new JCheckBoxMenuItem("Auto-Send Info",
+			true);
+
+	JTextField nameField = new JTextField(24);
+	JTextField emailField = new JTextField(24);
+	JTextField addressField = new JTextField(24);
+	JComboBox stateField = new JComboBox(new String[] { "AL", "AK", "AZ", "AR",
+			"CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL", "IN",
+			"IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO",
+			"MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK",
+			"OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VI", "VA",
+			"WA", "WV", "WI", "WY" });
+
+	JTextField zipField = new JTextField(24);
+
+	JTextField cityField = new JTextField(24);
+	static ImageIcon img = null;
+
+	public static void main(String[] args) {
+		try {
+			img = new ImageIcon(new URL("http", "www.botalive.com",
+			"/autocoder/splash.png"));
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
+		}
+
+		System.out.println("JWindow");
+		JWindow splash = new JWindow() {
+			public void paint(Graphics g) {
+				super.paint(g);
+				g.drawImage(Autocoder.img.getImage(), 0, 0,
+						Autocoder.img.getIconWidth(),
+						Autocoder.img.getIconHeight(), null);
+			}
+
+			public void update(Graphics g) {
+				super.update(g);
+				g.drawImage(Autocoder.img.getImage(), 0, 0,
+						Autocoder.img.getIconWidth(),
+						Autocoder.img.getIconHeight(), null);
+			}
+
+		};
+		splash.setSize(new Dimension(img.getIconWidth(), img
+		.getIconHeight()));
+		int x = Toolkit.getDefaultToolkit().getScreenSize().width / 2 -
+		splash.getSize().width / 2;
+		int y = Toolkit.getDefaultToolkit().getScreenSize().height / 2 -
+		splash.getSize().height / 2;
+		splash.setLocation(x, y);
+		splash.setVisible(true);
+		splash.repaint();
+		final Autocoder i = new Autocoder(true);
+		JFrame frame = new JFrame("Java Autocoder");
+		frame.setIconImage(img.getImage().getScaledInstance(32, 32, 1));
+		frame.addWindowListener(new WindowAdapter() {
+			public void windowClosed(WindowEvent e) {
+				i.stop();
+				i.destroy();
+				System.runFinalization();
+				System.exit(0);
+			}
+
+		});
+		try {
+			frame.setIconImage(new ImageIcon(new URL("http",
+					"www.botalive.com", "/autocoder/icon.png")).getImage());
+		} catch (MalformedURLException e2) {
+			e2.printStackTrace();
+		}
+		splash.addMouseListener(new MouseAdapter() {
+			public void mouseReleased(MouseEvent e) {
+				super.mouseReleased(e);
+				Thread.currentThread().interrupt();
+			}
+
+		});
+		for (int time = 0; time < 200; time++) {
+			try {
+				Thread.sleep(10L);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+		}
+		frame.setDefaultCloseOperation(3);
+		frame.add(i);
+		i.init();
+		i.start();
+		splash.setVisible(false);
+
+		frame.setVisible(true);
+		frame.pack();
+		frame.setVisible(true);
+	}
+
+	public Autocoder() {
+	}
+
+	public Autocoder(boolean isStandalone) {
+		this.isStandalone = isStandalone;
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		JComponent comp = (JComponent) e.getSource();
+		String name = comp.getName();
+		if ((comp instanceof JMenuItem)) {
+			name = ((JMenuItem) e.getSource()).getName();
+			if (name == "export") {
+				export();
+			}
+			if (name == "settings") {
+				doSettings();
+			}
+
+		} else {
+			export();
+		}
+	}
+
+	private void doSettings() {
+		this.nameField.setText(this.userName);
+		this.addressField.setText(this.userAddress);
+		this.stateField.setSelectedItem(this.userState);
+		this.emailField.setText(this.userEmail);
+		this.zipField.setText(this.userZip);
+		this.cityField.setText(this.userCity);
+
+		this.settingsFrame.pack();
+		this.settingsFrame.setVisible(true);
+	}
+
+	public void export() {
+		try {
+			if (this.userName.split(" ").length <= 1) {
+				this.statusLabel.setText("Must enter First and Last Names.");
+				return;
+			}
+			this.post = this.post
+					.replaceAll("\\+", " ")
+					.replaceAll(this.userName, "#Name#")
+					.replaceAll(this.userName.split(" ", 2)[1], "#LastName#")
+					.replaceAll(this.userName.split(" ", 2)[0], "#FirstName#")
+					.replaceAll(URLEncoder.encode(this.userEmail, "UTF-8"),
+							"#Email#")
+					.replaceAll(this.userZip, "#Zip#")
+					.replaceAll(this.userCity, "#City#")
+					.replaceAll(this.userState.substring(0, 2).toUpperCase(),
+							"#State#")
+					.replaceAll(this.userAddress, "#Address#")
+					.replaceAll(this.userEmail, "#Email#").replaceAll(" ", "+");
+			String appender = "/autocoder/upload.php?method=text&api="
+					+ this.api + "&name=" + this.botName + "&url=" + this.url
+					+ "&ref=" + this.referrer + "&description="
+					+ this.description + "&confirmation="
+					+ this.confirmationEmailString + "&post="
+					+ URLEncoder.encode(this.post, "UTF-8");
+			URL url = new URL("http", "www.botalive.com", appender.replaceAll(
+					" ", "+"));
+
+			URLConnection conn = url.openConnection();
+			String temp = new BufferedReader(new InputStreamReader(
+					conn.getInputStream())).readLine();
+
+			this.statusLabel.setText(temp);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void focusGained(FocusEvent e) {
+	}
+
+	public void focusLost(FocusEvent e) {
+		JComponent comp = (JComponent) e.getSource();
+		String name = comp.getName();
+		if (name == "url") {
+			this.url = ((JTextComponent) comp).getText();
+		}
+		if (name == "post") {
+			this.post = ((JTextComponent) comp).getText();
+		}
+		if (name == "referrer") {
+			this.referrer = ((JTextComponent) comp).getText();
+		}
+		if (name == "botname") {
+			this.botName = ((JTextComponent) comp).getText();
+		}
+		if (name == "description") {
+			this.description = ((JTextComponent) comp).getText();
+		}
+		if (name == "name") {
+			this.userName = ((JTextComponent) comp).getText();
+		}
+		if (name == "email") {
+			this.userEmail = ((JTextComponent) comp).getText();
+		}
+		if (name == "address") {
+			this.userAddress = ((JTextComponent) comp).getText();
+		}
+		if (name == "city") {
+			this.userCity = ((JTextComponent) comp).getText();
+		}
+		if (name == "zip") {
+			this.userZip = ((JTextComponent) comp).getText();
+		}
+		if (name == "api") {
+			this.api = ((JTextComponent) comp).getText();
+		}
+		if (name == "state") {
+			this.userState = ((String) ((JComboBox) comp).getSelectedItem());
+			System.out.println((String) ((JComboBox) comp).getSelectedItem());
+		}
+		if (name == "confirmation") {
+			this.confirmationEmailString = ((JTextComponent) comp).getText();
+		}
+	}
+
+	public void getUserInfo() {
+		String status = "There was an Error.  Check your Internet Connection.";
+		try {
+			URL getUserInfoURL = new URL("http", "www.botalive.com",
+					"/autocoder/info.php?method=get&newline=true&success=true");
+			HttpURLConnection conn = (HttpURLConnection) getUserInfoURL
+					.openConnection();
+			BufferedReader reader = null;
+			try  {
+				reader = new BufferedReader(new InputStreamReader(
+					conn.getInputStream()));
+			} catch (ConnectException ce)
+			{
+				System.err.println("HTTP Connection Died");
+				ce.printStackTrace();
+				System.out.println(ce.getLocalizedMessage());
+				reader = new BufferedReader(new InputStreamReader(System.in));
+			}
+			String output = "";
+			for (String tempData = ""; (tempData = reader.readLine()) != null; tempData = "") {
+				String[] tmp = tempData.trim().split("=");
+				if (tmp.length > 1) {
+					this.userinfo.put(tmp[0].toLowerCase(), tmp[1]);
+					System.out.println(tmp[0] + "    " + tmp[1]);
+				} else {
+					System.out.println(tmp[0]);
+				}
+				output = tempData;
+			}
+			status = output;
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			status = e.getLocalizedMessage();
+		} catch (IOException e) {
+			e.printStackTrace();
+			status = e.getLocalizedMessage();
+		}
+		this.statusLabel.setText(status);
+		this.userName = ((String) this.userinfo.get("name"));
+		this.userZip = ((String) this.userinfo.get("zip"));
+		this.userCity = ((String) this.userinfo.get("city"));
+		this.userState = ((String) this.userinfo.get("state")).toUpperCase();
+		this.userAddress = ((String) this.userinfo.get("address"));
+		this.userEmail = ((String) this.userinfo.get("email"));
+	}
+
+	public void init() {
+		super.init();
+		JMenuBar menuBar = new JMenuBar();
+		JMenu fileMenu = new JMenu("File");
+		JMenu helpMenu = new JMenu("Help");
+		JMenuItem retrieveInfoItem = new JMenuItem("Re-retrieve User Info");
+		JMenuItem sendInfoItem = new JMenuItem("Send User Info");
+		JMenuItem settingsItem = new JMenuItem("Settings...");
+		JMenuItem exportItem = new JMenuItem("Export");
+		JMenuItem exitItem = new JMenuItem("Exit");
+		JMenuItem helpItem = new JMenuItem("Help (Coming Soon)");
+		JMenuItem aboutItem = new JMenuItem("About (Coming Soon)");
+
+		retrieveInfoItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Autocoder.this.getUserInfo();
+			}
+
+		});
+		sendInfoItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Autocoder.this.sendUserInfo();
+			}
+
+		});
+		menuBar.add(fileMenu);
+		menuBar.add(helpMenu);
+
+		fileMenu.add(retrieveInfoItem);
+		fileMenu.add(sendInfoItem);
+		fileMenu.add(this.saveInfoItem);
+		fileMenu.add(settingsItem);
+		fileMenu.add(exportItem);
+		fileMenu.addSeparator();
+		fileMenu.add(exitItem);
+		helpMenu.add(helpItem);
+		helpMenu.add(aboutItem);
+		exitItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.runFinalization();
+				System.exit(0);
+			}
+
+		});
+		settingsItem.addActionListener(this);
+		exportItem.addActionListener(this);
+		exitItem.addActionListener(this);
+		helpItem.addActionListener(this);
+		aboutItem.addActionListener(this);
+
+		settingsItem.setName("settings");
+		exportItem.setName("export");
+		exitItem.setName("exit");
+		helpItem.setName("help");
+		aboutItem.setName("about");
+
+		setJMenuBar(menuBar);
+
+		JPanel userDataPanel = new JPanel();
+
+		this.nameField.addFocusListener(this);
+		this.emailField.addFocusListener(this);
+		this.addressField.addFocusListener(this);
+		this.stateField.addFocusListener(this);
+		this.zipField.addFocusListener(this);
+		this.cityField.addFocusListener(this);
+
+		this.nameField.setName("name");
+		this.emailField.setName("email");
+		this.addressField.setName("address");
+		this.stateField.setName("state");
+		this.zipField.setName("zip");
+		this.cityField.setName("city");
+
+		JLabel nameLabel = new JLabel("Name (You used in form)");
+		JLabel emailLabel = new JLabel("Email (You used in form)");
+		JLabel addressLabel = new JLabel("Address (You used in form)");
+		JLabel cityLabel = new JLabel("City (You get the point)");
+		JLabel stateLabel = new JLabel("State");
+		JLabel zipLabel = new JLabel("Zip");
+		userDataPanel.setLayout(new GridLayout(7, 2, 5, 5));
+
+		userDataPanel.add(nameLabel);
+		userDataPanel.add(emailLabel);
+		userDataPanel.add(this.nameField);
+		userDataPanel.add(this.emailField);
+
+		userDataPanel.add(addressLabel);
+		userDataPanel.add(cityLabel);
+		userDataPanel.add(this.addressField);
+		userDataPanel.add(this.cityField);
+
+		userDataPanel.add(stateLabel);
+		userDataPanel.add(zipLabel);
+		userDataPanel.add(this.stateField);
+		userDataPanel.add(this.zipField);
+
+		JLabel botNameLabel = new JLabel("Bot Name");
+		JLabel urlLabel = new JLabel("URL");
+		JLabel postLabel = new JLabel("POST");
+		JLabel referrerLabel = new JLabel("Referrer");
+
+		JTextField botNameField = new JTextField();
+		JTextField url = new JTextField();
+		JTextArea postText = new JTextArea();
+		postText.setLineWrap(true);
+		JScrollPane post = new JScrollPane(postText);
+		JTextField referrer = new JTextField();
+
+		botNameField.addFocusListener(this);
+		url.addFocusListener(this);
+		postText.addFocusListener(this);
+		referrer.addFocusListener(this);
+
+		url.setName("url");
+		postText.setName("post");
+		referrer.setName("referrer");
+		botNameField.setName("botname");
+
+		getContentPane().setLayout(new BoxLayout(getContentPane(), 3));
+
+		JPanel requestInfo = new JPanel(new GridLayout(6, 1, 5, 5));
+		requestInfo.add(botNameLabel);
+		requestInfo.add(botNameField);
+		requestInfo.add(urlLabel);
+		requestInfo.add(url);
+		requestInfo.add(referrerLabel);
+		requestInfo.add(referrer);
+		add(requestInfo, "Center");
+
+		JButton testButton = new JButton("Export");
+		JPanel buttonPanel = new JPanel();
+
+		buttonPanel.add(testButton);
+		JTextArea descriptionTextArea = new JTextArea(4, 0);
+		descriptionTextArea.addFocusListener(this);
+		descriptionTextArea.setName("description");
+		JScrollPane descriptionScrollPane = new JScrollPane(descriptionTextArea);
+		descriptionTextArea.setLineWrap(true);
+		descriptionTextArea.setWrapStyleWord(true);
+
+		this.settingsFrame.getContentPane().setLayout(
+				new BoxLayout(this.settingsFrame.getContentPane(), 3));
+		JTextField apiTextField = new JTextField();
+		apiTextField.addFocusListener(this);
+		apiTextField.setName("api");
+		JPanel apiPanel = new JPanel(new GridLayout(2, 1));
+		apiPanel.add(new JLabel("API Key (For authenticity)"));
+		apiPanel.add(apiTextField);
+		this.settingsFrame.add(userDataPanel, "North");
+		this.settingsFrame.add(apiPanel);
+		this.settingsFrame.setVisible(false);
+		this.settingsFrame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				super.windowClosing(e);
+				Autocoder.this.settingsFrame.setVisible(false);
+			}
+
+		});
+		JPanel extra = new JPanel();
+		extra.setLayout(new BoxLayout(extra, 3));
+		JPanel descriptionPanel = new JPanel();
+		descriptionPanel.setLayout(new GridLayout(4, 1));
+		descriptionPanel.add(postLabel);
+		descriptionPanel.add(post);
+		descriptionPanel.add(new JLabel(
+				"Description (What it is, what is the lead time, etc.)"));
+		descriptionPanel.add(descriptionScrollPane);
+
+		extra.add(descriptionPanel);
+		extra.add(buttonPanel);
+		JPanel statusPanel = new JPanel(new BorderLayout());
+		statusPanel.add(this.statusLabel);
+		extra.add(statusPanel);
+		this.statusLabel.setBorder(new BevelBorder(1));
+		add(extra);
+		testButton.setPreferredSize(new Dimension(128, 32));
+		testButton.addActionListener(this);
+		setVisible(true);
+		repaint();
+		getUserInfo();
+	}
+
+	public void sendUserInfo() {
+		String status = "There was an Error.  Check your Internet Connection.";
+		try {
+			URL setUserInfoURL = new URL("http", "www.botalive.com",
+					"/autocoder/info.php?method=upload&name="
+							+ this.nameField.getText().replace(' ', '+')
+							+ "&email="
+							+ this.emailField.getText().replace(' ', '+')
+							+ "&address="
+							+ this.addressField.getText().replace(' ', '+')
+							+ "&zip="
+							+ this.zipField.getText().replace(' ', '+')
+							+ "&state="
+							+ ((String) this.stateField.getSelectedItem())
+									.toUpperCase().replace(' ', '+') + "&city="
+							+ this.cityField.getText().replace(' ', '+'));
+			HttpURLConnection conn = (HttpURLConnection) setUserInfoURL
+					.openConnection();
+			conn.connect();
+			BufferedReader imp = new BufferedReader(new InputStreamReader(
+					conn.getInputStream()));
+			status = imp.readLine();
+			conn.disconnect();
+		} catch (Exception e) {
+			e.printStackTrace();
+			status = e.getLocalizedMessage();
+		}
+		this.statusLabel.setText(status);
+	}
+
+	public void start() {
+		super.start();
+	}
+
+}

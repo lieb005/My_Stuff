@@ -1,0 +1,602 @@
+/*     */ package srcpkg;
+/*     */ 
+/*     */ import java.awt.BorderLayout;
+/*     */ import java.awt.Container;
+/*     */ import java.awt.Dimension;
+/*     */ import java.awt.Graphics;
+/*     */ import java.awt.GridLayout;
+/*     */ import java.awt.Image;
+/*     */ import java.awt.Toolkit;
+/*     */ import java.awt.event.ActionEvent;
+/*     */ import java.awt.event.ActionListener;
+/*     */ import java.awt.event.FocusEvent;
+/*     */ import java.awt.event.FocusListener;
+/*     */ import java.awt.event.MouseAdapter;
+/*     */ import java.awt.event.MouseEvent;
+/*     */ import java.awt.event.WindowAdapter;
+/*     */ import java.awt.event.WindowEvent;
+/*     */ import java.io.BufferedReader;
+/*     */ import java.io.File;
+/*     */ import java.io.IOException;
+/*     */ import java.io.InputStreamReader;
+/*     */ import java.io.PrintStream;
+/*     */ import java.net.HttpURLConnection;
+/*     */ import java.net.MalformedURLException;
+/*     */ import java.net.URL;
+/*     */ import java.net.URLConnection;
+/*     */ import java.net.URLEncoder;
+/*     */ import java.util.HashMap;
+/*     */ import javax.swing.BoxLayout;
+/*     */ import javax.swing.ImageIcon;
+/*     */ import javax.swing.JApplet;
+/*     */ import javax.swing.JButton;
+/*     */ import javax.swing.JCheckBoxMenuItem;
+/*     */ import javax.swing.JComboBox;
+/*     */ import javax.swing.JComponent;
+/*     */ import javax.swing.JFrame;
+/*     */ import javax.swing.JLabel;
+/*     */ import javax.swing.JMenu;
+/*     */ import javax.swing.JMenuBar;
+/*     */ import javax.swing.JMenuItem;
+/*     */ import javax.swing.JPanel;
+/*     */ import javax.swing.JScrollPane;
+/*     */ import javax.swing.JTextArea;
+/*     */ import javax.swing.JTextField;
+/*     */ import javax.swing.JWindow;
+/*     */ import javax.swing.border.BevelBorder;
+/*     */ import javax.swing.text.JTextComponent;
+/*     */ 
+/*     */ public class Autocoder extends JApplet
+/*     */   implements ActionListener, FocusListener
+/*     */ {
+/*     */   static final transient String USER_INFO_SPLIT_STRING = "=";
+/*     */   static final transient boolean DEBUG = false;
+/* 149 */   boolean isStandalone = false;
+/*     */   File file;
+/*     */   String name;
+/*     */   String url;
+/*     */   String post;
+/*     */   String referrer;
+/*     */   String description;
+/*     */   String userName;
+/*     */   String userAddress;
+/*     */   String userZip;
+/*     */   String userState;
+/*     */   String userEmail;
+/*     */   String userCity;
+/*     */   String botName;
+/*     */   String api;
+/*     */   String confirmationEmailString;
+/* 154 */   JLabel statusLabel = new JLabel("Ready");
+/* 155 */   JFrame settingsFrame = new JFrame("Settings");
+/*     */ 
+/* 157 */   HashMap<String, String> userinfo = new HashMap();
+/*     */ 
+/* 159 */   JCheckBoxMenuItem saveInfoItem = new JCheckBoxMenuItem(
+/* 160 */     "Auto-Send Info", true);
+/*     */ 
+/* 161 */   JTextField nameField = new JTextField(24);
+/* 162 */   JTextField emailField = new JTextField(24);
+/* 163 */   JTextField addressField = new JTextField(24);
+/* 164 */   JComboBox stateField = new JComboBox(new String[] { 
+/* 165 */     "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FL", "GA", 
+/* 166 */     "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", 
+/* 167 */     "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", 
+/* 168 */     "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", 
+/* 169 */     "UT", "VT", "VI", "VA", "WA", "WV", "WI", "WY" });
+/*     */ 
+/* 170 */   JTextField zipField = new JTextField(24);
+/*     */ 
+/* 172 */   JTextField cityField = new JTextField(24);
+/* 173 */   static ImageIcon img = null;
+/*     */ 
+/*     */   public static void main(String[] args)
+/*     */   {
+/*     */     try
+/*     */     {
+/*  65 */       img = new ImageIcon(new URL("http", "www.botalive.com", 
+/*  66 */         "/autocoder/splash.png"));
+/*     */     }
+/*     */     catch (MalformedURLException e1) {
+/*  69 */       e1.printStackTrace();
+/*     */     }
+/*     */ 
+/*  72 */     System.out.println("JWindow");
+/*  73 */     JWindow splash = new JWindow()
+/*     */     {
+/*     */       public void paint(Graphics g)
+/*     */       {
+/*  77 */         super.paint(g);
+/*  78 */         g.drawImage(Autocoder.img.getImage(), 0, 0, Autocoder.img.getIconWidth(), 
+/*  79 */           Autocoder.img.getIconHeight(), null);
+/*     */       }
+/*     */ 
+/*     */       public void update(Graphics g)
+/*     */       {
+/*  85 */         super.update(g);
+/*  86 */         g.drawImage(Autocoder.img.getImage(), 0, 0, Autocoder.img.getIconWidth(), 
+/*  87 */           Autocoder.img.getIconHeight(), null);
+/*     */       }
+/*     */     };
+/*  90 */     splash.setSize(new Dimension(img.getIconWidth(), img
+/*  91 */       .getIconHeight()));
+/*  92 */     int x = Toolkit.getDefaultToolkit().getScreenSize().width / 2 - 
+/*  93 */       splash.getSize().width / 2;
+/*  94 */     int y = Toolkit.getDefaultToolkit().getScreenSize().height / 2 - 
+/*  95 */       splash.getSize().height / 2;
+/*  96 */     splash.setLocation(x, y);
+/*  97 */     splash.setVisible(true);
+/*  98 */     splash.repaint();
+/*  99 */     Autocoder i = new Autocoder(true);
+/* 100 */     JFrame frame = new JFrame("Java Autocoder");
+/* 101 */     frame.setIconImage(img.getImage().getScaledInstance(32, 32, 
+/* 102 */       1));
+/* 103 */     frame.addWindowListener(new WindowAdapter()
+/*     */     {
+/*     */       public void windowClosed(WindowEvent e) {
+/* 106 */         Autocoder.this.stop();
+/* 107 */         Autocoder.this.destroy();
+/* 108 */         System.runFinalization();
+/* 109 */         System.exit(0);
+/*     */       }
+/*     */     });
+/*     */     try
+/*     */     {
+/* 114 */       frame.setIconImage(new ImageIcon(new URL("http", 
+/* 115 */         "www.botalive.com", "/autocoder/icon.png")).getImage());
+/*     */     }
+/*     */     catch (MalformedURLException e2) {
+/* 118 */       e2.printStackTrace();
+/*     */     }
+/* 120 */     splash.addMouseListener(new MouseAdapter()
+/*     */     {
+/*     */       public void mouseReleased(MouseEvent e)
+/*     */       {
+/* 124 */         super.mouseReleased(e);
+/* 125 */         Thread.currentThread().interrupt();
+/*     */       }
+/*     */     });
+/* 128 */     for (int time = 0; time < 200; time++)
+/*     */     {
+/*     */       try
+/*     */       {
+/* 132 */         Thread.sleep(10L);
+/*     */       }
+/*     */       catch (InterruptedException e1) {
+/* 135 */         e1.printStackTrace();
+/*     */       }
+/*     */     }
+/* 138 */     frame.setDefaultCloseOperation(3);
+/* 139 */     frame.add(i);
+/* 140 */     i.init();
+/* 141 */     i.start();
+/* 142 */     splash.setVisible(false);
+/*     */ 
+/* 144 */     frame.setVisible(true);
+/* 145 */     frame.pack();
+/* 146 */     frame.setVisible(true);
+/*     */   }
+/*     */ 
+/*     */   public Autocoder()
+/*     */   {
+/*     */   }
+/*     */ 
+/*     */   public Autocoder(boolean isStandalone)
+/*     */   {
+/* 180 */     this.isStandalone = isStandalone;
+/*     */   }
+/*     */ 
+/*     */   public void actionPerformed(ActionEvent e)
+/*     */   {
+/* 186 */     JComponent comp = (JComponent)e.getSource();
+/* 187 */     String name = comp.getName();
+/* 188 */     if ((comp instanceof JMenuItem))
+/*     */     {
+/* 190 */       name = ((JMenuItem)e.getSource()).getName();
+/* 191 */       if (name == "export")
+/*     */       {
+/* 193 */         export();
+/*     */       }
+/* 195 */       if (name == "settings")
+/*     */       {
+/* 197 */         doSettings();
+/*     */       }
+/*     */ 
+/*     */     }
+/*     */     else
+/*     */     {
+/* 203 */       export();
+/*     */     }
+/*     */   }
+/*     */ 
+/*     */   private void doSettings()
+/*     */   {
+/* 209 */     this.nameField.setText(this.userName);
+/* 210 */     this.addressField.setText(this.userAddress);
+/* 211 */     this.stateField.setSelectedItem(this.userState);
+/* 212 */     this.emailField.setText(this.userEmail);
+/* 213 */     this.zipField.setText(this.userZip);
+/* 214 */     this.cityField.setText(this.userCity);
+/*     */ 
+/* 216 */     this.settingsFrame.pack();
+/* 217 */     this.settingsFrame.setVisible(true);
+/*     */   }
+/*     */ 
+/*     */   public void export()
+/*     */   {
+/*     */     try
+/*     */     {
+/* 224 */       if (this.userName.split(" ").length <= 1)
+/*     */       {
+/* 226 */         this.statusLabel.setText("Must enter First and Last Names.");
+/* 227 */         return;
+/*     */       }
+/* 229 */       this.post = this.post
+/* 230 */         .replaceAll("\\+", " ")
+/* 231 */         .replaceAll(this.userName, "#Name#")
+/* 232 */         .replaceAll(this.userName.split(" ", 2)[1], "#LastName#")
+/* 233 */         .replaceAll(this.userName.split(" ", 2)[0], "#FirstName#")
+/* 234 */         .replaceAll(URLEncoder.encode(this.userEmail, "UTF-8"), 
+/* 235 */         "#Email#")
+/* 236 */         .replaceAll(this.userZip, "#Zip#")
+/* 237 */         .replaceAll(this.userCity, "#City#")
+/* 238 */         .replaceAll(this.userState.substring(0, 2).toUpperCase(), 
+/* 239 */         "#State#").replaceAll(this.userAddress, "#Address#")
+/* 240 */         .replaceAll(this.userEmail, "#Email#").replaceAll(" ", "+");
+/* 241 */       String appender = "/autocoder/upload.php?method=text&api=" + 
+/* 242 */         this.api + "&name=" + this.botName + "&url=" + this.url + "&ref=" + 
+/* 243 */         this.referrer + "&description=" + this.description + 
+/* 244 */         "&confirmation=" + this.confirmationEmailString + "&post=" + 
+/* 245 */         URLEncoder.encode(this.post, "UTF-8");
+/* 246 */       URL url = new URL("http", "www.botalive.com", appender.replaceAll(
+/* 247 */         " ", "+"));
+/*     */ 
+/* 249 */       URLConnection conn = url.openConnection();
+/* 250 */       String temp = new BufferedReader(new InputStreamReader(
+/* 251 */         conn.getInputStream())).readLine();
+/*     */ 
+/* 253 */       this.statusLabel.setText(temp);
+/*     */     }
+/*     */     catch (IOException e) {
+/* 256 */       e.printStackTrace();
+/*     */     }
+/*     */   }
+/*     */ 
+/*     */   public void focusGained(FocusEvent e)
+/*     */   {
+/*     */   }
+/*     */ 
+/*     */   public void focusLost(FocusEvent e)
+/*     */   {
+/* 268 */     JComponent comp = (JComponent)e.getSource();
+/* 269 */     String name = comp.getName();
+/* 270 */     if (name == "url")
+/*     */     {
+/* 272 */       this.url = ((JTextComponent)comp).getText();
+/*     */     }
+/* 274 */     if (name == "post")
+/*     */     {
+/* 276 */       this.post = ((JTextComponent)comp).getText();
+/*     */     }
+/* 278 */     if (name == "referrer")
+/*     */     {
+/* 280 */       this.referrer = ((JTextComponent)comp).getText();
+/*     */     }
+/* 282 */     if (name == "botname")
+/*     */     {
+/* 284 */       this.botName = ((JTextComponent)comp).getText();
+/*     */     }
+/* 286 */     if (name == "description")
+/*     */     {
+/* 288 */       this.description = ((JTextComponent)comp).getText();
+/*     */     }
+/* 290 */     if (name == "name")
+/*     */     {
+/* 292 */       this.userName = ((JTextComponent)comp).getText();
+/*     */     }
+/* 294 */     if (name == "email")
+/*     */     {
+/* 296 */       this.userEmail = ((JTextComponent)comp).getText();
+/*     */     }
+/* 298 */     if (name == "address")
+/*     */     {
+/* 300 */       this.userAddress = ((JTextComponent)comp).getText();
+/*     */     }
+/* 302 */     if (name == "city")
+/*     */     {
+/* 304 */       this.userCity = ((JTextComponent)comp).getText();
+/*     */     }
+/* 306 */     if (name == "zip")
+/*     */     {
+/* 308 */       this.userZip = ((JTextComponent)comp).getText();
+/*     */     }
+/* 310 */     if (name == "api")
+/*     */     {
+/* 312 */       this.api = ((JTextComponent)comp).getText();
+/*     */     }
+/* 314 */     if (name == "state")
+/*     */     {
+/* 316 */       this.userState = ((String)((JComboBox)comp).getSelectedItem());
+/* 317 */       System.out.println((String)((JComboBox)comp).getSelectedItem());
+/*     */     }
+/* 319 */     if (name == "confirmation")
+/*     */     {
+/* 321 */       this.confirmationEmailString = ((JTextComponent)comp).getText();
+/*     */     }
+/*     */   }
+/*     */ 
+/*     */   public void getUserInfo()
+/*     */   {
+/* 327 */     String status = "There was an Error.  Check your Internet Connection.";
+/*     */     try
+/*     */     {
+/* 330 */       URL getUserInfoURL = new URL("http", "www.botalive.com", 
+/* 331 */         "/autocoder/info.php?method=get&newline=true&success=true");
+/* 332 */       HttpURLConnection conn = (HttpURLConnection)getUserInfoURL
+/* 333 */         .openConnection();
+/* 334 */       BufferedReader reader = new BufferedReader(new InputStreamReader(
+/* 335 */         conn.getInputStream()));
+/* 336 */       String output = "";
+/* 337 */       for (String tempData = ""; (tempData = reader.readLine()) != null; tempData = "")
+/*     */       {
+/* 340 */         String[] tmp = tempData.trim().split("=");
+/* 341 */         if (tmp.length > 1)
+/*     */         {
+/* 343 */           this.userinfo.put(tmp[0].toLowerCase(), tmp[1]);
+/* 344 */           System.out.println(tmp[0] + "    " + tmp[1]);
+/*     */         } else {
+/* 346 */           System.out.println(tmp[0]);
+/* 347 */         }output = tempData;
+/*     */       }
+/* 349 */       status = output;
+/*     */     }
+/*     */     catch (MalformedURLException e) {
+/* 352 */       e.printStackTrace();
+/* 353 */       status = e.getLocalizedMessage();
+/*     */     }
+/*     */     catch (IOException e) {
+/* 356 */       e.printStackTrace();
+/* 357 */       status = e.getLocalizedMessage();
+/*     */     }
+/* 359 */     this.statusLabel.setText(status);
+/* 360 */     this.userName = ((String)this.userinfo.get("name"));
+/* 361 */     this.userZip = ((String)this.userinfo.get("zip"));
+/* 362 */     this.userCity = ((String)this.userinfo.get("city"));
+/* 363 */     this.userState = ((String)this.userinfo.get("state")).toUpperCase();
+/* 364 */     this.userAddress = ((String)this.userinfo.get("address"));
+/* 365 */     this.userEmail = ((String)this.userinfo.get("email"));
+/*     */   }
+/*     */ 
+/*     */   public void init()
+/*     */   {
+/* 371 */     super.init();
+/* 372 */     JMenuBar menuBar = new JMenuBar();
+/* 373 */     JMenu fileMenu = new JMenu("File");
+/* 374 */     JMenu helpMenu = new JMenu("Help");
+/* 375 */     JMenuItem retrieveInfoItem = new JMenuItem("Re-retrieve User Info");
+/* 376 */     JMenuItem sendInfoItem = new JMenuItem("Send User Info");
+/* 377 */     JMenuItem settingsItem = new JMenuItem("Settings...");
+/* 378 */     JMenuItem exportItem = new JMenuItem("Export");
+/* 379 */     JMenuItem exitItem = new JMenuItem("Exit");
+/* 380 */     JMenuItem helpItem = new JMenuItem("Help (Coming Soon)");
+/* 381 */     JMenuItem aboutItem = new JMenuItem("About (Coming Soon)");
+/*     */ 
+/* 383 */     retrieveInfoItem.addActionListener(new ActionListener()
+/*     */     {
+/*     */       public void actionPerformed(ActionEvent e) {
+/* 386 */         Autocoder.this.getUserInfo();
+/*     */       }
+/*     */     });
+/* 389 */     sendInfoItem.addActionListener(new ActionListener()
+/*     */     {
+/*     */       public void actionPerformed(ActionEvent e) {
+/* 392 */         Autocoder.this.sendUserInfo();
+/*     */       }
+/*     */     });
+/* 396 */     menuBar.add(fileMenu);
+/* 397 */     menuBar.add(helpMenu);
+/*     */ 
+/* 399 */     fileMenu.add(retrieveInfoItem);
+/* 400 */     fileMenu.add(sendInfoItem);
+/* 401 */     fileMenu.add(this.saveInfoItem);
+/* 402 */     fileMenu.add(settingsItem);
+/* 403 */     fileMenu.add(exportItem);
+/* 404 */     fileMenu.addSeparator();
+/* 405 */     fileMenu.add(exitItem);
+/* 406 */     helpMenu.add(helpItem);
+/* 407 */     helpMenu.add(aboutItem);
+/* 408 */     exitItem.addActionListener(new ActionListener()
+/*     */     {
+/*     */       public void actionPerformed(ActionEvent e)
+/*     */       {
+/* 413 */         System.runFinalization();
+/* 414 */         System.exit(0);
+/*     */       }
+/*     */     });
+/* 418 */     settingsItem.addActionListener(this);
+/* 419 */     exportItem.addActionListener(this);
+/* 420 */     exitItem.addActionListener(this);
+/* 421 */     helpItem.addActionListener(this);
+/* 422 */     aboutItem.addActionListener(this);
+/*     */ 
+/* 424 */     settingsItem.setName("settings");
+/* 425 */     exportItem.setName("export");
+/* 426 */     exitItem.setName("exit");
+/* 427 */     helpItem.setName("help");
+/* 428 */     aboutItem.setName("about");
+/*     */ 
+/* 430 */     setJMenuBar(menuBar);
+/*     */ 
+/* 432 */     JPanel userDataPanel = new JPanel();
+/*     */ 
+/* 434 */     this.nameField.addFocusListener(this);
+/* 435 */     this.emailField.addFocusListener(this);
+/* 436 */     this.addressField.addFocusListener(this);
+/* 437 */     this.stateField.addFocusListener(this);
+/* 438 */     this.zipField.addFocusListener(this);
+/* 439 */     this.cityField.addFocusListener(this);
+/*     */ 
+/* 441 */     this.nameField.setName("name");
+/* 442 */     this.emailField.setName("email");
+/* 443 */     this.addressField.setName("address");
+/* 444 */     this.stateField.setName("state");
+/* 445 */     this.zipField.setName("zip");
+/* 446 */     this.cityField.setName("city");
+/*     */ 
+/* 448 */     JLabel nameLabel = new JLabel("Name (You used in form)");
+/* 449 */     JLabel emailLabel = new JLabel("Email (You used in form)");
+/* 450 */     JLabel addressLabel = new JLabel("Address (You used in form)");
+/* 451 */     JLabel cityLabel = new JLabel("City (You get the point)");
+/* 452 */     JLabel stateLabel = new JLabel("State");
+/* 453 */     JLabel zipLabel = new JLabel("Zip");
+/* 454 */     userDataPanel.setLayout(new GridLayout(7, 2, 5, 5));
+/*     */ 
+/* 456 */     userDataPanel.add(nameLabel);
+/* 457 */     userDataPanel.add(emailLabel);
+/* 458 */     userDataPanel.add(this.nameField);
+/* 459 */     userDataPanel.add(this.emailField);
+/*     */ 
+/* 461 */     userDataPanel.add(addressLabel);
+/* 462 */     userDataPanel.add(cityLabel);
+/* 463 */     userDataPanel.add(this.addressField);
+/* 464 */     userDataPanel.add(this.cityField);
+/*     */ 
+/* 466 */     userDataPanel.add(stateLabel);
+/* 467 */     userDataPanel.add(zipLabel);
+/* 468 */     userDataPanel.add(this.stateField);
+/* 469 */     userDataPanel.add(this.zipField);
+/*     */ 
+/* 471 */     JLabel botNameLabel = new JLabel("Bot Name");
+/* 472 */     JLabel urlLabel = new JLabel("URL");
+/* 473 */     JLabel postLabel = new JLabel("POST");
+/* 474 */     JLabel referrerLabel = new JLabel("Referrer");
+/*     */ 
+/* 476 */     JTextField botNameField = new JTextField();
+/* 477 */     JTextField url = new JTextField();
+/* 478 */     JTextArea postText = new JTextArea();
+/* 479 */     postText.setLineWrap(true);
+/* 480 */     JScrollPane post = new JScrollPane(postText);
+/* 481 */     JTextField referrer = new JTextField();
+/*     */ 
+/* 483 */     botNameField.addFocusListener(this);
+/* 484 */     url.addFocusListener(this);
+/* 485 */     postText.addFocusListener(this);
+/* 486 */     referrer.addFocusListener(this);
+/*     */ 
+/* 488 */     url.setName("url");
+/* 489 */     postText.setName("post");
+/* 490 */     referrer.setName("referrer");
+/* 491 */     botNameField.setName("botname");
+/*     */ 
+/* 493 */     getContentPane().setLayout(
+/* 494 */       new BoxLayout(getContentPane(), 3));
+/*     */ 
+/* 496 */     JPanel requestInfo = new JPanel(new GridLayout(6, 1, 5, 5));
+/* 497 */     requestInfo.add(botNameLabel);
+/* 498 */     requestInfo.add(botNameField);
+/* 499 */     requestInfo.add(urlLabel);
+/* 500 */     requestInfo.add(url);
+/* 501 */     requestInfo.add(referrerLabel);
+/* 502 */     requestInfo.add(referrer);
+/* 503 */     add(requestInfo, "Center");
+/*     */ 
+/* 506 */     JButton testButton = new JButton("Export");
+/* 507 */     JPanel buttonPanel = new JPanel();
+/*     */ 
+/* 509 */     buttonPanel.add(testButton);
+/* 510 */     JTextArea descriptionTextArea = new JTextArea(4, 0);
+/* 511 */     descriptionTextArea.addFocusListener(this);
+/* 512 */     descriptionTextArea.setName("description");
+/* 513 */     JScrollPane descriptionScrollPane = new JScrollPane(
+/* 514 */       descriptionTextArea);
+/* 515 */     descriptionTextArea.setLineWrap(true);
+/* 516 */     descriptionTextArea.setWrapStyleWord(true);
+/*     */ 
+/* 518 */     this.settingsFrame.getContentPane().setLayout(
+/* 519 */       new BoxLayout(this.settingsFrame.getContentPane(), 
+/* 520 */       3));
+/* 521 */     JTextField apiTextField = new JTextField();
+/* 522 */     apiTextField.addFocusListener(this);
+/* 523 */     apiTextField.setName("api");
+/* 524 */     JPanel apiPanel = new JPanel(new GridLayout(2, 1));
+/* 525 */     apiPanel.add(new JLabel("API Key (For authenticity)"));
+/* 526 */     apiPanel.add(apiTextField);
+/* 527 */     this.settingsFrame.add(userDataPanel, "North");
+/* 528 */     this.settingsFrame.add(apiPanel);
+/* 529 */     this.settingsFrame.setVisible(false);
+/* 530 */     this.settingsFrame.addWindowListener(new WindowAdapter()
+/*     */     {
+/*     */       public void windowClosing(WindowEvent e)
+/*     */       {
+/* 534 */         super.windowClosing(e);
+/* 535 */         Autocoder.this.settingsFrame.setVisible(false);
+/*     */       }
+/*     */     });
+/* 538 */     JPanel extra = new JPanel();
+/* 539 */     extra.setLayout(new BoxLayout(extra, 3));
+/* 540 */     JPanel descriptionPanel = new JPanel();
+/* 541 */     descriptionPanel.setLayout(new GridLayout(4, 1));
+/* 542 */     descriptionPanel.add(postLabel);
+/* 543 */     descriptionPanel.add(post);
+/* 544 */     descriptionPanel.add(new JLabel(
+/* 545 */       "Description (What it is, what is the lead time, etc.)"));
+/* 546 */     descriptionPanel.add(descriptionScrollPane);
+/*     */ 
+/* 548 */     extra.add(descriptionPanel);
+/* 549 */     extra.add(buttonPanel);
+/* 550 */     JPanel statusPanel = new JPanel(new BorderLayout());
+/* 551 */     statusPanel.add(this.statusLabel);
+/* 552 */     extra.add(statusPanel);
+/* 553 */     this.statusLabel.setBorder(new BevelBorder(1));
+/* 554 */     add(extra);
+/* 555 */     testButton.setPreferredSize(new Dimension(128, 32));
+/* 556 */     testButton.addActionListener(this);
+/* 557 */     setVisible(true);
+/* 558 */     repaint();
+/* 559 */     getUserInfo();
+/*     */   }
+/*     */ 
+/*     */   public void sendUserInfo()
+/*     */   {
+/* 564 */     String status = "There was an Error.  Check your Internet Connection.";
+/*     */     try
+/*     */     {
+/* 567 */       URL setUserInfoURL = new URL("http", "www.botalive.com", 
+/* 568 */         "/autocoder/info.php?method=upload&name=" + 
+/* 570 */         this.nameField.getText().replace(' ', '+') + 
+/* 571 */         "&email=" + 
+/* 572 */         this.emailField.getText().replace(' ', '+') + 
+/* 573 */         "&address=" + 
+/* 574 */         this.addressField.getText().replace(' ', '+') + 
+/* 575 */         "&zip=" + 
+/* 576 */         this.zipField.getText().replace(' ', '+') + 
+/* 577 */         "&state=" + 
+/* 578 */         ((String)this.stateField.getSelectedItem())
+/* 579 */         .toUpperCase().replace(' ', '+') + 
+/* 580 */         "&city=" + 
+/* 581 */         this.cityField.getText().replace(' ', '+'));
+/* 582 */       HttpURLConnection conn = (HttpURLConnection)setUserInfoURL
+/* 583 */         .openConnection();
+/* 584 */       conn.connect();
+/* 585 */       BufferedReader imp = new BufferedReader(new InputStreamReader(
+/* 586 */         conn.getInputStream()));
+/* 587 */       status = imp.readLine();
+/* 588 */       conn.disconnect();
+/*     */     }
+/*     */     catch (Exception e) {
+/* 591 */       e.printStackTrace();
+/* 592 */       status = e.getLocalizedMessage();
+/*     */     }
+/* 594 */     this.statusLabel.setText(status);
+/*     */   }
+/*     */ 
+/*     */   public void start()
+/*     */   {
+/* 600 */     super.start();
+/*     */   }
+/*     */ }
+
+/* Location:           /tmp/Autocoder_exec.jar
+ * Qualified Name:     srcpkg.Autocoder
+ * JD-Core Version:    0.6.2
+ */

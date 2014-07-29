@@ -1,6 +1,6 @@
-11:00:47 **** Incremental Build of configuration Default for project Sasquatch-T-shirt-Shooter ****
+21:59:08 **** Build of configuration Default for project Sasquatch-T-shirt-Shooter ****
 make all 
 make: *** No rule to make target 'all'.  Schluss.
 
-11:00:47 Build Finished (took 125ms)
+21:59:08 Build Finished (took 157ms)
 
